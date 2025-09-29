@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite Places App - Tourist Intensity</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-title">📍 My Favorite Places</h1>
+            <div class="nav-links">
+                <button class="nav-btn active" onclick="showPage('map-page')">
+                    <i class="fas fa-map"></i> Map
+                </button>
+                <button class="nav-btn" onclick="showPage('favorites-page')">
+                    <i class="fas fa-heart"></i> Favorites
+                    <span id="favorites-badge" class="badge">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Map Page -->
+    <div id="map-page" class="page active">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search for places (e.g., museums, parks, restaurants)..." />
+                <button id="search-btn" onclick="searchPlaces()">Search</button>
+                <button id="nearby-btn" onclick="searchNearby()" class="nearby-btn">
+                    <i class="fas fa-location-arrow"></i> Nearby
+                </button>
+            </div>
+            
+            <!-- Category Quick Filters -->
+            <div class="category-filters">
+                <button class="category-btn" onclick="searchCategory('museum')">
+                    <i class="fas fa-landmark"></i> Museums
+                </button>
+                <button class="category-btn" onclick="searchCategory('park')">
+                    <i class="fas fa-tree"></i> Parks
+                </button>
+                <button class="category-btn" onclick="searchCategory('restaurant')">
+                    <i class="fas fa-utensils"></i> Restaurants
+                </button>
+                <button class="category-btn" onclick="searchCategory('tourist attraction')">
+                    <i class="fas fa-camera"></i> Attractions
+                </button>
+                <button class="category-btn" onclick="searchCategory('hotel')">
+                    <i class="fas fa-bed"></i> Hotels
+                </button>
+                <button class="category-btn" onclick="searchCategory('monument')">
+                    <i class="fas fa-monument"></i> Monuments
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Results Panel -->
+        <div id="search-results" class="search-results">
+            <div class="results-header">
+                <h3>Search Results</h3>
+                <button onclick="closeSearchResults()" class="close-btn">&times;</button>
+            </div>
+            <div id="results-list" class="results-list">
+                <!-- Results will be added here -->
+            </div>
+        </div>
+
+        <!-- Place Details Modal -->
+        <div id="place-details-modal" class="place-modal">
+            <div class="modal-content">
+                <button onclick="closePlaceDetails()" class="modal-close">&times;</button>
+                <div id="modal-loading" class="modal-loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing tourist intensity...</p>
+                </div>
+                <div id="modal-details" class="modal-details">
+                    <!-- Details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div id="map"></div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Searching places...</p>
+        </div>
+
+        <!-- Tourist Intensity Legend -->
+        <div class="map-legend">
+            <h4>Tourist Intensity</h4>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #27ae60"></span>
+                <span>Low</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #f39c12"></span>
+                <span>Medium</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #e74c3c"></span>
+                <span>High</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #8b0000"></span>
+                <span>Very High</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorites Page -->
+    <div id="favorites-page" class="page">
+        <div class="favorites-container">
+            <div class="favorites-header">
+                <h2>My Favorite Places</h2>
+                <div class="favorites-controls">
+                    <select id="filter-category" onchange="filterFavorites()">
+                        <option value="all">All Categories</option>
+                        <option value="low">Low Tourist Intensity</option>
+                        <option value="medium">Medium Tourist Intensity</option>
+                        <option value="high">High Tourist Intensity</option>
+                        <option value="very_high">Very High Tourist Intensity</option>
+                    </select>
+                    <button onclick="exportFavorites()" class="export-btn">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+            
+            <div id="favorites-list" class="favorites-list">
+                <!-- Favorites will be dynamically added here -->
+            </div>
+            
+            <div id="empty-state" class="empty-state">
+                <i class="fas fa-heart-broken fa-3x"></i>
+                <p>No favorite places yet!</p>
+                <p>Go to the map and search for places to add them to your favorites.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Chart.js for tourist intensity visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
