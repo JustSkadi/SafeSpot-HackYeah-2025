@@ -1,3 +1,49 @@
+// Function to get coordinates from a place name using Nominatim API
+async function getCoordinates(placeName) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(placeName)}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.length > 0) {
+            return {
+                latitude: parseFloat(data[0].lat),
+                longitude: parseFloat(data[0].lon)
+            };
+        }
+    } catch (error) {
+        console.error('Error fetching coordinates:', error);
+    }
+    return null; // Return null if not found or if there's an error
+}
+
+// Function to handle the search
+async function searchPlaces() {
+    const placeName = document.getElementById('search-input').value.trim();
+    if (!placeName) return;
+
+    const coords = await getCoordinates(placeName);
+    if (coords) {
+        // If coordinates are found, move the map and marker
+        map.setView([coords.latitude, coords.longitude], 15);
+        mainMarker.setLatLng([coords.latitude, coords.longitude])
+            .setPopupContent(`<b>${placeName}</b>`)
+            .openPopup();
+    } else {
+        // If no coordinates are found, show a popup
+        L.popup()
+            .setLatLng(map.getCenter())
+            .setContent(`Could not find '${placeName}'`)
+            .openOn(map);
+    }
+}
+
+// Event listener for the search input (when Enter is pressed)
+document.getElementById('search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchPlaces();
+    }
+});
+
 const Cracow = {
     lat: 50.0647,
     lng: 19.9450
@@ -11,18 +57,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
     maxZoom: 19
 }).addTo(map);
-
-// Add a marker for Kraków
-// const marker = L.marker([krakow.lat, krakow.lng]).addTo(map);
-// marker.bindPopup('<b>Kraków</b><br>Centrum miasta').openPopup();
-
-// Add a circle around the city center
-// L.circle([krakow.lat, krakow.lng], {
-//     color: 'red',
-//     fillColor: '#f03',
-//     fillOpacity: 0.1,
-//     radius: 2000
-// }).addTo(map);
 
 
 
@@ -77,7 +111,7 @@ async function loadIncidents() {
                     <div style="max-width: 300px;">
                         <h3 style="margin-top: 0; color: #333;">${incident.location}</h3>
                         <p style="margin: 10px 0;"><strong>Danger type:</strong> ${incident.type_of_threat || 'Unknown'}</p>
-                        ${incident.date ? `<p style="margin: 10px 0;"><strong>Data:</strong> ${incident.date}</p>` : ''}
+                        ${incident.date ? `<p style="margin: 10px 0;"><strong>Date:</strong> ${incident.date}</p>` : ''}
                         <p style="margin: 10px 0; text-align: justify;">${incident.summary || 'No description available'}</p>
                         ${incident.url ? `<p style="margin: 10px 0;"><a href="${incident.url}" target="_blank" style="color: #0066cc;">See more →</a></p>` : ''}
                     </div>
