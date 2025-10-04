@@ -1,5 +1,3 @@
-
-
 // Function to get coordinates from a place name using Nominatim API
 async function getCoordinates(placeName) {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(placeName)}`;
@@ -60,7 +58,40 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19
 }).addTo(map);
 
+// Store circles for updating opacity
+const dangerZoneCircles = [];
 
+// Function to calculate opacity based on zoom level
+function getOpacityByZoom(zoomLevel) {
+    // Zoom levels typically range from 1 to 19
+    // At zoom 10 -> opacity 0.5
+    // At zoom 15 -> opacity 0.25
+    // At zoom 19 -> opacity 0.01
+    const minZoom = 10;
+    const maxZoom = 19;
+    const maxOpacity = 0.325;
+    const minOpacity = 0.001;
+    
+    if (zoomLevel <= minZoom) return maxOpacity;
+    if (zoomLevel >= maxZoom) return minOpacity;
+    
+    // Linear interpolation
+    const ratio = (zoomLevel - minZoom) / (maxZoom - minZoom);
+    return maxOpacity - (ratio * (maxOpacity - minOpacity));
+}
+
+// Update circle opacity when zoom changes
+function updateCircleOpacity() {
+    const currentZoom = map.getZoom();
+    const opacity = getOpacityByZoom(currentZoom);
+    
+    dangerZoneCircles.forEach(circle => {
+        circle.setStyle({ fillOpacity: opacity });
+    });
+}
+
+// Add zoom event listener
+map.on('zoomend', updateCircleOpacity);
 
 //Marker color function
 function getThreatColor(category) {
@@ -166,7 +197,6 @@ function getZoneColor(crime_rate) {
     return 'green';
 }
 
-
 async function loadDangerZones() {
     try {
         const response = await fetch('dangerzones.json');
@@ -180,21 +210,28 @@ async function loadDangerZones() {
         // a czerwone (wysoki crime_rate) będą dodane ostatnie (na wierzchu)
         const sortedZones = zones.sort((a, b) => a.crime_rate - b.crime_rate);
 
+        // Get initial opacity based on current zoom
+        const currentZoom = map.getZoom();
+        const initialOpacity = getOpacityByZoom(currentZoom);
+
         sortedZones.forEach(zone => {
             if (zone.latitude && zone.longitude && zone.crime_rate !== undefined && zone.size) {
                 const color = getZoneColor(zone.crime_rate);
                 
                 const radius = Math.sqrt((zone.size / Math.PI));
 
-                L.circle([zone.latitude, zone.longitude], {
+                const circle = L.circle([zone.latitude, zone.longitude], {
                     color: 'none',
                     fillColor: color,
-                    fillOpacity: 0.4,
+                    fillOpacity: initialOpacity, // Use dynamic opacity
                     radius: radius
                 }).addTo(map).bindPopup(`
                     <b>District:</b> ${zone.district_name}<br>
                     <b>Crime rate:</b> ${zone.crime_rate}<br>
                 `);
+                
+                // Store circle reference for opacity updates
+                dangerZoneCircles.push(circle);
             }
         });
         
