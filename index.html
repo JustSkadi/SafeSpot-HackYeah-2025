@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation UI with Options</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    
+    <style>
+        /* General Setup */
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #1a1a1a;
+            display: flex; justify-content: center; align-items: center;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Mobile Screen Simulation */
+        .mobile-container {
+            width: 390px; height: 844px;
+            background-color: #e0e0e0;
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        /* Top Bar Elements */
+        .top-bar {
+            position: absolute; top: 30px; left: 20px; right: 20px; z-index: 10;
+        }
+        .search-container {
+            position: relative; width: 100%; display: flex; align-items: center;
+        }
+        .search-container input {
+            width: 100%; padding: 16px 50px 16px 25px;
+            border: none; border-radius: 30px; background-color: #383838;
+            color: #f0f0f0; font-size: 1.1em; box-sizing: border-box;
+        }
+        .search-container input::placeholder { color: #a0a0a0; }
+        .search-container input:focus { outline: none; box-shadow: 0 0 0 2px #5a5a5a; }
+        .search-icon {
+            position: absolute; right: 20px; color: #a0a0a0; pointer-events: none;
+        }
+        .options-button {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 12px; margin-left: auto; padding: 10px 18px;
+            background-color: #383838; color: #f0f0f0; border: none;
+            border-radius: 20px; font-size: 0.9em; cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .options-button:hover { background-color: #4a4a4a; }
+        
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 85px; background-color: #383838;
+            border-top-left-radius: 35px; border-top-right-radius: 35px;
+            display: flex; justify-content: space-around; align-items: flex-start;
+            padding-top: 15px; box-sizing: border-box;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #a0a0a0; font-size: 0.8em; cursor: pointer;
+            transition: color 0.2s; flex-basis: 33.33%; text-decoration: none;
+        }
+        .nav-item:hover { color: #ffffff; }
+        
+        .nav-item .material-icons {
+            font-size: 28px;
+            margin-bottom: 2px;
+        }
+        
+        .start-button {
+            position: relative; bottom: 35px; color: #f0f0f0; font-weight: bold;
+        }
+        .start-button .start-icon-wrapper {
+            width: 64px; height: 64px; background-color: #5a5a5a;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            margin-bottom: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 4px solid #383838; transition: background-color 0.2s;
+        }
+        .start-button:hover .start-icon-wrapper { background-color: #6c6c6c; }
+        .start-button .material-icons { color: #f0f0f0; font-size: 36px; margin: 0; }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 100; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background-color: #4a4a4a; color: #f0f0f0;
+            padding: 25px; border-radius: 15px;
+            width: 80%; max-width: 320px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; border-bottom: 1px solid #666; padding-bottom: 10px;
+        }
+        .modal-header h2 { margin: 0; font-size: 1.4em; }
+        .close-button {
+            font-size: 2em; font-weight: bold; color: #aaa;
+            cursor: pointer; transition: color 0.2s; user-select: none;
+        }
+        .close-button:hover { color: #fff; }
+
+        .modal-body { padding: 10px 0; }
+        .options-list { list-style-type: none; padding: 0; margin: 0; }
+        .options-list li {
+            display: flex;
+            align-items: center;
+            padding: 12px 5px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        .options-list li:hover { background-color: #5a5a5a; }
+        .options-list input[type="checkbox"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            accent-color: #e0e0e0; 
+            cursor: pointer;
+        }
+        .options-list label { font-size: 1.1em; cursor: pointer; flex-grow: 1; }
+
+        .modal-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #666;
+            text-align: right;
+        }
+        #applyBtn {
+            padding: 10px 25px;
+            background-color: #f0f0f0;
+            color: #383838;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        #applyBtn:hover { opacity: 0.85; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <div class="top-bar">
+            <div class="search-container">
+                <input type="search" placeholder="Destination">
+                <span class="material-icons search-icon">search</span>
+            </div>
+            <button class="options-button" id="openOptionsBtn">
+                <span class="material-icons">filter_alt</span>
+                <span>Options</span>
+            </button>
+        </div>
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item">
+                <span class="material-icons">public</span>
+                <span>Map</span>
+            </a>
+            <a href="#" class="nav-item start-button">
+                 <div class="start-icon-wrapper"><span class="material-icons">location_on</span></div>
+                <span>Start</span>
+            </a>
+            <!-- UPDATED to List Icon and Text -->
+            <a href="#" class="nav-item">
+                <span class="material-icons">list</span>
+                <span>List</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- The Modal Window -->
+    <div id="optionsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Incident Type</h2>
+                <span class="close-button" id="closeOptionsBtn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <ul class="options-list">
+                    <li>
+                        <input type="checkbox" id="type1" name="routeOptions" value="Avoid Highways">
+                        <label for="type1">Random Event</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="type2" name="routeOptions" value="Avoid Tolls">
+                        <label for="type2">Road accident</label>
+                    </li>
+                    <li>
+                        <input type="checkbox" id="type3" name="routeOptions" value="Scenic Route">
+                        <label for="type3">Felony</label>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button id="applyBtn">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('optionsModal');
+        const openBtn = document.getElementById('openOptionsBtn');
+        const closeBtn = document.getElementById('closeOptionsBtn');
+        const applyBtn = document.getElementById('applyBtn');
+
+        const openModal = () => { modal.style.display = 'flex'; };
+        const closeModal = () => { modal.style.display = 'none'; };
+
+        openBtn.addEventListener('click', openModal);
+        closeBtn.addEventListener('click', closeModal);
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        applyBtn.addEventListener('click', () => {
+            const selectedOptions = [];
+            const checkedBoxes = document.querySelectorAll('#optionsModal input[type="checkbox"]:checked');
+            
+            checkedBoxes.forEach(checkbox => {
+                selectedOptions.push(checkbox.value);
+            });
+            
+            if (selectedOptions.length > 0) {
+                alert('Applied options: ' + selectedOptions.join(', '));
+            } else {
+                alert('No special options applied.');
+            }
+            
+            closeModal();
+        });
+    </script>
+
+</body>
+</html>
+```
