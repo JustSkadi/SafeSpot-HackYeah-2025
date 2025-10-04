@@ -155,7 +155,55 @@ function addLegend() {
         return div;
     };
     
-    legend.addTo(map);
+    // legend.addTo(map);
+}
+
+function getZoneColor(crime_rate) {
+    if (crime_rate > 51) return 'red';
+    if (crime_rate > 40) return 'orange';
+    if (crime_rate > 29) return 'yellow';
+    if (crime_rate > 20) return 'lightgreen';
+    return 'green';
+}
+
+
+async function loadDangerZones() {
+    try {
+        const response = await fetch('dangerzones.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const zones = await response.json();
+
+        // ZMIANA: Sortujemy strefy według crime_rate (rosnąco)
+        // Dzięki temu zielone (niski crime_rate) będą dodane pierwsze (na dole),
+        // a czerwone (wysoki crime_rate) będą dodane ostatnie (na wierzchu)
+        const sortedZones = zones.sort((a, b) => a.crime_rate - b.crime_rate);
+
+        sortedZones.forEach(zone => {
+            if (zone.latitude && zone.longitude && zone.crime_rate !== undefined && zone.size) {
+                const color = getZoneColor(zone.crime_rate);
+                
+                const radius = Math.sqrt((zone.size / Math.PI));
+
+                L.circle([zone.latitude, zone.longitude], {
+                    color: 'none',
+                    fillColor: color,
+                    fillOpacity: 0.4,
+                    radius: radius
+                }).addTo(map).bindPopup(`
+                    <b>District:</b> ${zone.district_name}<br>
+                    <b>Crime rate:</b> ${zone.crime_rate}<br>
+                `);
+            }
+        });
+        
+        // addZoneLegend();
+
+    } catch (error) {
+        console.error("Nie udało się wczytać lub przetworzyć pliku dangerzones.json:", error);
+    }
 }
 
 loadIncidents();
+loadDangerZones();
