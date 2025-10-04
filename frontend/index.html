@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Spot</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="mobile-container">
+        <div class="top-bar">
+            <div class="search-container" id="search-container">
+                <input type="search" placeholder="Search for destination..." id="search-input" autocomplete="off">
+                <span class="material-icons search-icon">search</span>
+                <ul id="suggestionsList" class="suggestions-list"></ul>
+            </div>
+            <button class="options-button" id="openOptionsBtn">
+                <span class="material-icons">filter_alt</span>
+                <span>Options</span>
+            </button>
+        </div>
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" id="mapBtn"><span class="material-icons">public</span><span>Map</span></a>
+            <a href="#" class="nav-item start-button">
+                 <div class="start-icon-wrapper"><span class="material-icons">location_on</span></div>
+                <span>Start</span>
+            </a>
+            <a href="#" class="nav-item" id="openListBtn">
+                <span class="material-icons">list</span><span>List</span>
+            </a>
+        </nav>
+        <div id="listPanel" class="slide-in-panel">
+            <div class="panel-header"><h2>Incident list in the area</h2></div>
+            <div class="panel-body">
+                <ul class="incident-list">
+                    <li>Road closed on Main St due to accident.</li>
+                    <li>Heavy traffic on Highway 101 N.</li>
+                    <li>Construction on Oak Ave. Expect delays.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="optionsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Incident Types</h2><span class="close-button" id="closeOptionsBtn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <ul class="options-list">
+                    <li><input type="checkbox" id="type1" name="routeOptions" value="Criminal"><label for="type1">Criminal</label></li>
+                    <li><input type="checkbox" id="type2" name="routeOptions" value="Road Accidents"><label for="type2">Road Accidents</label></li>
+					<li><input type="checkbox" id="type2" name="routeOptions" value="Others"><label for="type2">Others</label></li>
+                </ul>
+            </div>
+            <div class="modal-footer"><button id="applyBtn">Apply</button></div>
+        </div>
+    </div>
+
+
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
