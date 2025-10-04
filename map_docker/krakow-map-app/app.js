@@ -1,11 +1,10 @@
-// Kraków coordinates
-const krakow = {
+const Cracow = {
     lat: 50.0647,
     lng: 19.9450
 };
 
 // Initialize the map
-const map = L.map('map').setView([krakow.lat, krakow.lng], 13);
+const map = L.map('map').setView([Cracow.lat, Cracow.lng], 13);
 
 // Add OpenStreetMap tiles
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -14,58 +13,31 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Add a marker for Kraków
-const marker = L.marker([krakow.lat, krakow.lng]).addTo(map);
-marker.bindPopup('<b>Kraków</b><br>Centrum miasta').openPopup();
+// const marker = L.marker([krakow.lat, krakow.lng]).addTo(map);
+// marker.bindPopup('<b>Kraków</b><br>Centrum miasta').openPopup();
 
 // Add a circle around the city center
-L.circle([krakow.lat, krakow.lng], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.1,
-    radius: 2000
-}).addTo(map);
+// L.circle([krakow.lat, krakow.lng], {
+//     color: 'red',
+//     fillColor: '#f03',
+//     fillOpacity: 0.1,
+//     radius: 2000
+// }).addTo(map);
 
-// --- POCZĄTEK NOWEGO KODU ---
 
-// Funkcja do parsowania linii CSV z obsługą cudzysłowów
-function parseCSVLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-    
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        
-        if (char === '"') {
-            inQuotes = !inQuotes;
-        } else if (char === ',' && !inQuotes) {
-            result.push(current.trim());
-            current = '';
-        } else {
-            current += char;
-        }
-    }
-    
-    // Dodaj ostatnie pole
-    result.push(current.trim());
-    
-    return result;
-}
 
-// Funkcja do określenia koloru markera na podstawie typu zagrożenia
-function getThreatColor(threatType) {
-    if (threatType.includes('Kradzież') || threatType.includes('Kieszonkowcy')) {
+//Marker color function
+function getThreatColor(category) {
+    if (category === 'criminal') {
         return 'red';
-    } else if (threatType.includes('Wandalizm') || threatType.includes('Niszczenie')) {
+    } else if (category === 'road accident') {
         return 'orange';
-    } else if (threatType.includes('Zakłócanie') || threatType.includes('Agresywne')) {
-        return 'yellow';
     } else {
-        return 'blue';
+        return 'blue'; 
     }
 }
 
-// Funkcja do tworzenia niestandardowej ikony markera
+// Marker icon function
 function createCustomIcon(color) {
     return L.icon({
         iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
@@ -77,46 +49,37 @@ function createCustomIcon(color) {
     });
 }
 
-// Function to load and process CSV data
+// Function to load and process JSON data
 async function loadIncidents() {
     try {
-        const response = await fetch('incidents.csv'); // Wczytaj plik
+        const response = await fetch('incidents.json'); // Wczytaj plik JSON
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const csvData = await response.text(); // Pobierz zawartość jako tekst
+        const jsonData = await response.json(); // Pobierz zawartość jako JSON
 
-        // Przetwarzanie danych CSV
-        const lines = csvData.trim().split('\n'); // Podziel na linie
-        const header = lines.shift(); // Usuń i zignoruj pierwszą linię (nagłówek)
+        // Przetwarzanie danych JSON
+        const incidents = jsonData; // Zakładam, że JSON to tablica obiektów
 
-        lines.forEach(line => {
-            // Pomiń puste linie
-            if (line.trim() === '') return;
-
-            // Parsuj linię CSV
-            const fields = parseCSVLine(line);
-            
-            // Rozpakuj pola
-            const [latitude, longitude, location, summary, articleUrl, threatType] = fields;
-
+        incidents.forEach(incident => {
             // Sprawdź, czy mamy wszystkie wymagane pola
-            if (latitude && longitude && location) {
+            if (incident.latitude && incident.longitude && incident.location) {
                 // Konwertuj współrzędne na liczby
-                const lat = parseFloat(latitude);
-                const lng = parseFloat(longitude);
+                const lat = parseFloat(incident.latitude);
+                const lng = parseFloat(incident.longitude);
 
                 // Określ kolor markera na podstawie typu zagrożenia
-                const markerColor = getThreatColor(threatType || '');
+                const markerColor = getThreatColor(incident.type_of_threat || '');
                 const customIcon = createCustomIcon(markerColor);
 
                 // Stwórz zawartość popup
                 const popupContent = `
                     <div style="max-width: 300px;">
-                        <h3 style="margin-top: 0; color: #333;">${location}</h3>
-                        <p style="margin: 10px 0;"><strong>Danger type:</strong> ${threatType || 'Nieznany'}</p>
-                        <p style="margin: 10px 0; text-align: justify;">${summary || 'Brak opisu'}</p>
-                        ${articleUrl ? `<p style="margin: 10px 0;"><a href="${articleUrl}" target="_blank" style="color: #0066cc;">Read more →</a></p>` : ''}
+                        <h3 style="margin-top: 0; color: #333;">${incident.location}</h3>
+                        <p style="margin: 10px 0;"><strong>Danger type:</strong> ${incident.type_of_threat || 'Unknown'}</p>
+                        ${incident.date ? `<p style="margin: 10px 0;"><strong>Data:</strong> ${incident.date}</p>` : ''}
+                        <p style="margin: 10px 0; text-align: justify;">${incident.summary || 'No description available'}</p>
+                        ${incident.url ? `<p style="margin: 10px 0;"><a href="${incident.url}" target="_blank" style="color: #0066cc;">See more →</a></p>` : ''}
                     </div>
                 `;
 
@@ -131,7 +94,7 @@ async function loadIncidents() {
         addLegend();
 
     } catch (error) {
-        console.error("Nie udało się wczytać lub przetworzyć pliku incidents.csv:", error);
+        console.error("Nie udało się wczytać lub przetworzyć pliku incidents.json:", error);
     }
 }
 
@@ -147,11 +110,10 @@ function addLegend() {
         div.style.borderRadius = '5px';
         
         div.innerHTML = `
-            <h4 style="margin: 0 0 10px 0;">Typy zagrożeń</h4>
-            <div><span style="color: red;">●</span> Kradzież / Kieszonkowcy</div>
-            <div><span style="color: orange;">●</span> Wandalizm / Niszczenie mienia</div>
-            <div><span style="color: gold;">●</span> Zakłócanie porządku</div>
-            <div><span style="color: blue;">●</span> Inne</div>
+            <h4 style="margin: 0 0 10px 0;">Danger types</h4>
+            <div><span style="color: red;">●</span> Criminal</div>
+            <div><span style="color: orange;">●</span> Road accident</div>
+            <div><span style="color: blue;">●</span> Other</div>
         `;
         
         return div;
@@ -160,7 +122,4 @@ function addLegend() {
     legend.addTo(map);
 }
 
-// Wywołaj funkcję wczytującą dane
 loadIncidents();
-
-// --- KONIEC NOWEGO KODU --- 
