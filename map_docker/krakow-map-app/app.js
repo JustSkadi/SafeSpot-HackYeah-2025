@@ -163,4 +163,4 @@ function addLegend() {
 // Wywołaj funkcję wczytującą dane
 loadIncidents();
 
-// --- KONIEC NOWEGO KODU ---
+// --- KONIEC NOWEGO KODU --- 
