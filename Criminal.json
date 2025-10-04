@@ -1,0 +1,416 @@
+{
+  "name": "Criminal",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -416,
+        0
+      ],
+      "id": "480cf3bb-1a7d-4337-ad84-9a918f50243b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"city\": \"Krakow\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "516498bd-b383-46c9-9608-8290d80c5c5d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        256,
+        0
+      ],
+      "id": "937aeb95-b517-42d3-a4e9-b04ebced0e6c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.data;\n\n// Regex do wyciągnięcia URL-ów z markdown\nconst urlRegex = /\\[.*?\\]\\((https:\\/\\/cowkrakowie\\.pl\\/[^\\)]+)\\)/g;\n\n// Znajdź wszystkie URL-e\nconst matches = [...data.matchAll(urlRegex)];\n\n// Filtruj tylko artykuły (bez rozszerzeń plików graficznych)\nconst articleUrls = matches\n  .map(match => match[1])\n  .filter(url => !/\\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url))\n  .slice(0, 10)\n  .map(url => ({\n    json: { url }\n  }));\n\nreturn articleUrls;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        0
+      ],
+      "id": "ef3231bf-4b1c-471d-a54a-8b02cc0389e7",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.url }}",
+        "options": {
+          "batching": {
+            "batch": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        848,
+        0
+      ],
+      "id": "f51bca32-21fc-4a5d-82e6-f855f542b1e6",
+      "name": "HTTP Request1",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=For each \"data\" entry : {{ $json.title }} {{ $json.content }} in the provided document, extract and output a JSON object with the following structure:\n\n{\n  \"type_of_threat\": \"type of threat or crime committed\",\n  \"summary\": \"brief description in maximum 100 words\",\n  \"location\": \"specific location where the incident occurred\",\n  \"date\": \"date when the incident occurred (if mentioned) or article publication date\",\n  \"url\": {{ $json.url }}\n}\n\nOutput only valid JSON objects with these exact fields. Do not include any additional commentary or fields.\n\nAll of the text must be in ENGLISH.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        0
+      ],
+      "id": "a4a049dd-c470-45bc-a578-fde27ce28529",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.0-flash-lite-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        240
+      ],
+      "id": "1f346bb6-b02f-4269-97cf-39c380e7c132",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "tAucVYSbIfHxuj5p",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items from previous node\nconst items = $input.all();\n\n// Extract and clean JSON from each item\nconst cleanedData = items.map((item, index) => {\n  try {\n    // Get the output field\n    let jsonString = item.json.output;\n    \n    // Remove ```json and ``` markers\n    jsonString = jsonString.replace(/```json\\n/g, '').replace(/\\n```/g, '');\n    \n    // Parse the JSON\n    const parsedData = JSON.parse(jsonString);\n    \n    return parsedData;\n  } catch (error) {\n    console.error(`Error parsing item at index ${index}:`, error.message);\n    return null;\n  }\n}).filter(item => item !== null);\n\n// Return as separate items for n8n\nreturn cleanedData.map(data => ({\n  json: data\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        0
+      ],
+      "id": "5a0164e0-294c-4d11-b518-266bac987a1d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Based on the location provided, find the exact geographical coordinates (latitude and longitude).\n\nLocation: {{$json.location}}\n\nReturn ONLY a JSON object in this exact format (no markdown, no code blocks):\n{\n  \"latitude\": <number>,\n  \"longitude\": <number>\n}\n\nBe as precise as possible. For specific addresses, use the exact coordinates. For general locations like \"Krakow Airport\", use the main coordinates of that place.\n\nGenerate all text and words in ENGLISH.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1952,
+        0
+      ],
+      "id": "2cd386a4-160d-4423-a84c-51a8bd79cbad",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.0-flash-lite-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        240
+      ],
+      "id": "28c96114-b4ca-4afe-ad03-feaec93ac19c",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "tAucVYSbIfHxuj5p",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get data from both previous nodes\nconst threatData = $('Code in JavaScript').all();\nconst coordinatesData = $('AI Agent1').all();\n\n// Merge the data\nreturn threatData.map((threat, index) => {\n  try {\n    // Get coordinates for this item\n    const coordItem = coordinatesData[index];\n    let coordinates;\n    \n    // Parse coordinates if they're in string format\n    if (typeof coordItem.json.output === 'string') {\n      // Remove markdown code blocks and extra formatting\n      let cleanString = coordItem.json.output\n        .replace(/```json\\n?/g, '')  // Usuń ```json\n        .replace(/```\\n?/g, '')       // Usuń ```\n        .replace(/\\n/g, '')\n        .replace(/\\\\/g, '')\n        .trim();\n      \n      coordinates = JSON.parse(cleanString);\n    } else if (coordItem.json.latitude && coordItem.json.longitude) {\n      // If already parsed\n      coordinates = {\n        latitude: coordItem.json.latitude,\n        longitude: coordItem.json.longitude\n      };\n    } else {\n      coordinates = coordItem.json;\n    }\n    \n    // Merge everything together\n    return {\n      json: {\n        type_of_threat: \"criminal\",\n        summary: threat.json.summary,\n        location: threat.json.location,\n        date: threat.json.date,\n        url: threat.json.url,\n        latitude: coordinates.latitude,\n        longitude: coordinates.longitude\n      }\n    };\n  } catch (error) {\n    console.error(`Error at index ${index}:`, error);\n    \n    // Return with null coordinates if error\n    return {\n      json: {\n        ...threat.json,\n        latitude: null,\n        longitude: null,\n        error: `Coordinate parsing error: ${error.message}`\n      }\n    };\n  }\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2304,
+        0
+      ],
+      "id": "fc350475-dff0-454f-b450-67e974adee07",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { \n    url: \"https://cowkrakowie.pl/category/kryminalne\",\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e61c65a9-eca4-4471-8e1a-5e26c115961c",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dla każdego elementu z inputu\nreturn items.map(item => {\n  let data = item.json.data;\n  \n  // Usuń niepotrzebne elementy\n  data = data\n    // Usuń linki do obrazków\n    .replace(/!\\[Image \\d+:.*?\\]\\(https?:\\/\\/[^\\)]+\\)/g, '')\n    // Usuń bloki reklam \"reklama\\n\\nZobacz więcej\\n...\" wraz z całą zawartością do następnego paragrafu\n    .replace(/reklama\\n\\nZobacz więcej\\n[\\s\\S]*?(?=\\n\\n[A-ZŁĆĘŚĄŻŹŃ]|\\n\\n\\*|\\n\\n###|\\n\\n\\[|$)/g, '')\n    // Usuń sekcje \"Te artykuły mogą Cię zainteresować:\"\n    .replace(/\\*\\*Te artykuły mogą Cię zainteresować:\\*\\*[\\s\\S]*$/g, '')\n    // Usuń linki typu [tekst](url)\n    .replace(/\\[([^\\]]+)\\]\\(https?:\\/\\/[^\\)]+\\)/g, '$1')\n    // Usuń pozostałe linki markdown\n    .replace(/\\* \\[.*?\\]\\(.*?\\)/g, '')\n    // Usuń wielokrotne puste linie\n    .replace(/\\n{3,}/g, '\\n\\n')\n    // Usuń białe znaki na początku i końcu\n    .trim();\n  \n  return {\n    json: {\n      title: data.match(/Title: (.*?)\\n/)?.[1] || '',\n      url: item.json.data.match(/URL Source: (.*?)\\n/)?.[1] || '',\n      content: data\n        .replace(/Title: .*?\\n/, '')\n        .trim()\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "ce9971d3-d3bf-4a45-90a3-44d1cced536b",
+      "name": "Code in JavaScript6"
+    }
+  ],
+  "pinData": {
+    "AI Agent1": [
+      {
+        "json": {
+          "output": "```json\n{\n  \"latitude\": 49.98587,\n  \"longitude\": 20.06478\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 49.80577, \"longitude\": 19.88529}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 49.99833, \"longitude\": 19.85861}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.077778, \"longitude\": 19.784722}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.07778, \"longitude\": 19.78472}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.06143, \"longitude\": 19.93658}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 49.99304, \"longitude\": 19.91452}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.064778, \"longitude\": 19.945329}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.03388, \"longitude\": 19.94209}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.07273, \"longitude\": 19.99921}\n"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "77c15541-62e7-425b-a6c4-3be24742cd87",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c5ed1f7d683bc2004db329a62b7f50bf2f134e1bd588a2f714b164409a182e14"
+  },
+  "id": "OQyBKQrAZ9DZ5Bt4",
+  "tags": []
+}

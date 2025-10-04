@@ -1,0 +1,560 @@
+{
+  "name": "Road accident",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -416,
+        0
+      ],
+      "id": "67a1e7e4-5604-4d9a-8fce-4b582a09a8fd",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"city\": \"Krakow\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "ebfafdca-34f6-4687-97ff-86b38fd04dc6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        256,
+        0
+      ],
+      "id": "d4c08931-b945-4fb2-acaf-b995ffd40cd5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.data;\n\n// Regex do wyciągnięcia URL-ów z markdown\nconst urlRegex = /\\[.*?\\]\\((https:\\/\\/cowkrakowie\\.pl\\/[^\\)]+)\\)/g;\n\n// Znajdź wszystkie URL-e\nconst matches = [...data.matchAll(urlRegex)];\n\n// Filtruj tylko artykuły (bez rozszerzeń plików graficznych)\nconst articleUrls = matches\n  .map(match => match[1])\n  .filter(url => !/\\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url))\n  .slice(0, 10)\n  .map(url => ({\n    json: { url }\n  }));\n\nreturn articleUrls;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        544,
+        0
+      ],
+      "id": "310a6a24-a56a-45f6-be1f-55a415444b28",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.url }}",
+        "options": {
+          "batching": {
+            "batch": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        848,
+        0
+      ],
+      "id": "5c2ef5a5-2400-40e5-8f5e-3314d8bf64e0",
+      "name": "HTTP Request1",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=For each \"data\" entry : {{ $json.title }} {{ $json.content }} in the provided document, extract and output a JSON object with the following structure:\n\n{\n  \"type_of_threat\": \"type of threat or crime committed\",\n  \"summary\": \"brief description in maximum 100 words\",\n  \"location\": \"specific location where the incident occurred\",\n  \"date\": \"date when the incident occurred (if mentioned) or article publication date\",\n  \"url\": {{ $json.url }}\n}\n\nOutput only valid JSON objects with these exact fields. Do not include any additional commentary or fields.\n\nAll of the text must be in ENGLISH.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1312,
+        0
+      ],
+      "id": "4a040ecd-ed4a-4866-a1a7-acdf6ec2d5d1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.0-flash-lite-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        240
+      ],
+      "id": "15594441-c464-419b-874f-2b5dad79f94f",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "tAucVYSbIfHxuj5p",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items from previous node\nconst items = $input.all();\n\n// Extract and clean JSON from each item\nconst cleanedData = items.map((item, index) => {\n  try {\n    // Get the output field\n    let jsonString = item.json.output;\n    \n    // Remove ```json and ``` markers\n    jsonString = jsonString.replace(/```json\\n/g, '').replace(/\\n```/g, '');\n    \n    // Parse the JSON\n    const parsedData = JSON.parse(jsonString);\n    \n    return parsedData;\n  } catch (error) {\n    console.error(`Error parsing item at index ${index}:`, error.message);\n    return null;\n  }\n}).filter(item => item !== null);\n\n// Return as separate items for n8n\nreturn cleanedData.map(data => ({\n  json: data\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        0
+      ],
+      "id": "a61fbdd3-2786-4e3d-ae29-2a3e2c31460d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Based on the location provided, find the exact geographical coordinates (latitude and longitude).\n\nLocation: {{$json.location}}\n\nReturn ONLY a JSON object in this exact format (no markdown, no code blocks):\n{\n  \"latitude\": <number>,\n  \"longitude\": <number>\n}\n\nBe as precise as possible. For specific addresses, use the exact coordinates. For general locations like \"Krakow Airport\", use the main coordinates of that place.\n\nGenerate all text and words in ENGLISH.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1952,
+        0
+      ],
+      "id": "cb46787f-44d1-4532-aab2-efe043b3c849",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.0-flash-lite-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1952,
+        240
+      ],
+      "id": "505845e7-5cbc-4cd0-b9d3-160219561a01",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "tAucVYSbIfHxuj5p",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get data from both previous nodes\nconst threatData = $('Code in JavaScript').all();\nconst coordinatesData = $('AI Agent1').all();\n\n// Merge the data\nreturn threatData.map((threat, index) => {\n  try {\n    // Get coordinates for this item\n    const coordItem = coordinatesData[index];\n    let coordinates;\n    \n    // Parse coordinates if they're in string format\n    if (typeof coordItem.json.output === 'string') {\n      // Remove markdown code blocks and extra formatting\n      let cleanString = coordItem.json.output\n        .replace(/```json\\n?/g, '')  // Usuń ```json\n        .replace(/```\\n?/g, '')       // Usuń ```\n        .replace(/\\n/g, '')\n        .replace(/\\\\/g, '')\n        .trim();\n      \n      coordinates = JSON.parse(cleanString);\n    } else if (coordItem.json.latitude && coordItem.json.longitude) {\n      // If already parsed\n      coordinates = {\n        latitude: coordItem.json.latitude,\n        longitude: coordItem.json.longitude\n      };\n    } else {\n      coordinates = coordItem.json;\n    }\n    \n    // Merge everything together\n    return {\n      json: {\n        type_of_threat: \"road accident\",\n        summary: threat.json.summary,\n        location: threat.json.location,\n        date: threat.json.date,\n        url: threat.json.url,\n        latitude: coordinates.latitude,\n        longitude: coordinates.longitude\n      }\n    };\n  } catch (error) {\n    console.error(`Error at index ${index}:`, error);\n    \n    // Return with null coordinates if error\n    return {\n      json: {\n        ...threat.json,\n        latitude: null,\n        longitude: null,\n        error: `Coordinate parsing error: ${error.message}`\n      }\n    };\n  }\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2304,
+        0
+      ],
+      "id": "485c5aa9-4683-4d86-989a-f9d84c1a8200",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { \n    url: \"https://cowkrakowie.pl/category/wypadki\",\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "36fa70fb-fda5-4c3f-861d-c52cdf130868",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dla każdego elementu z inputu\nreturn items.map(item => {\n  let data = item.json.data;\n  \n  // Usuń niepotrzebne elementy\n  data = data\n    // Usuń linki do obrazków\n    .replace(/!\\[Image \\d+:.*?\\]\\(https?:\\/\\/[^\\)]+\\)/g, '')\n    // Usuń bloki reklam \"reklama\\n\\nZobacz więcej\\n...\" wraz z całą zawartością do następnego paragrafu\n    .replace(/reklama\\n\\nZobacz więcej\\n[\\s\\S]*?(?=\\n\\n[A-ZŁĆĘŚĄŻŹŃ]|\\n\\n\\*|\\n\\n###|\\n\\n\\[|$)/g, '')\n    // Usuń sekcje \"Te artykuły mogą Cię zainteresować:\"\n    .replace(/\\*\\*Te artykuły mogą Cię zainteresować:\\*\\*[\\s\\S]*$/g, '')\n    // Usuń linki typu [tekst](url)\n    .replace(/\\[([^\\]]+)\\]\\(https?:\\/\\/[^\\)]+\\)/g, '$1')\n    // Usuń pozostałe linki markdown\n    .replace(/\\* \\[.*?\\]\\(.*?\\)/g, '')\n    // Usuń wielokrotne puste linie\n    .replace(/\\n{3,}/g, '\\n\\n')\n    // Usuń białe znaki na początku i końcu\n    .trim();\n  \n  return {\n    json: {\n      title: data.match(/Title: (.*?)\\n/)?.[1] || '',\n      url: item.json.data.match(/URL Source: (.*?)\\n/)?.[1] || '',\n      content: data\n        .replace(/Title: .*?\\n/, '')\n        .trim()\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "bf6ef8f5-c7fb-4852-8e8e-1af6580f9913",
+      "name": "Code in JavaScript6"
+    }
+  ],
+  "pinData": {
+    "Code in JavaScript3": [
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/10/pociag-relacji-krakow-glowny-chabowka-potracil-smiertelnie-kobiete"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/10/na-stacji-kolejowej-krakow-glowny-doszlo-do-niebezpiecznej-sytuacji"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/10/wypadek-w-centrum-krakowa-zderzyl-sie-tramwaj-z-samochodem"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/09/wypadek-rowerzysty-lotnicze-pogotowie-ratunkowe-przetransportowalo-go-do-szpitala"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/09/kolejne-zderzenie-tramwaju-z-samochodem-w-krakowie"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/09/niecodzienny-wypadek-w-krakowie-uszkodzona-tablica-i-kladka"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/09/samochod-zderzyl-sie-z-dwoma-tramwajami-jeden-z-nich-wykoleil-sie"
+        }
+      },
+      {
+        "json": {
+          "url": "https://cowkrakowie.pl/2025/09/straz-pozarna-odda-dzis-hold-zmarlemu-druhowi"
+        }
+      }
+    ],
+    "Code in JavaScript": [
+      {
+        "json": {
+          "type_of_threat": "traffic accident",
+          "summary": "A traffic accident involving a motorcyclist occurred on al. Bora Komorowskiego in Krakow. Emergency services, including the Lotnicze Pogotowie Ratunkowe (Air Ambulance), were dispatched to the scene. The helicopter landed near a gas station. More information will follow.",
+          "location": "al. Bora Komorowskiego, Krakow",
+          "date": "2025-10-04",
+          "url": "https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Fatal accident involving a train and a pedestrian",
+          "summary": "A train traveling from Kraków Główny to Chabówka fatally struck a woman in Leńcze on October 2, before 5:00 PM. Train traffic towards Zakopane was halted, and passengers were awaiting replacement transport.",
+          "location": "Leńcze, near Kraków",
+          "date": "2025-10-02",
+          "url": "https://cowkrakowie.pl/2025/10/pociag-relacji-krakow-glowny-chabowka-potracil-smiertelnie-kobiete"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Accident/Medical emergency",
+          "summary": "A man, under the influence of alcohol, fell from a platform onto the train tracks at Kraków Główny train station and was unable to get up. Railway Protection Force officers and PKP Intercity staff rescued the man, provided first aid, and called an ambulance. The man was then taken to the hospital.",
+          "location": "Kraków Główny train station",
+          "date": "2025-10-01",
+          "url": "https://cowkrakowie.pl/2025/10/na-stacji-kolejowej-krakow-glowny-doszlo-do-niebezpiecznej-sytuacji"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Traffic accident",
+          "summary": "A tram and a car collided in the center of Krakow, causing disruptions to tram services. Tram lines are rerouted due to the accident near Wielopole street. The affected trams are not running on Dietla street towards Rondo Grzegórzeckiego.",
+          "location": "Center of Krakow, Wielopole street, Dietla street, Rondo Grzegórzeckiego",
+          "date": "2025-10-01",
+          "url": "https://cowkrakowie.pl/2025/10/wypadek-w-centrum-krakowa-zderzyl-sie-tramwaj-z-samochodem"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Traffic accident",
+          "summary": "A car overturned on Zakopianka road near Krakow on October 1st. The accident happened in Głogoczów, Myślenice County, causing traffic delays in the direction of Krakow. Authorities are on the scene, and drivers are urged to be cautious.",
+          "location": "Głogoczów, Myślenice County, Poland (on the Zakopianka road towards Krakow)",
+          "date": "2025-10-01",
+          "url": "https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Traffic accident",
+          "summary": "A cyclist was involved in a serious accident in the Tyniecki forest area on September 27th. The cyclist did not adjust their speed to the conditions and fell, sustaining injuries. The incident occurred in a difficult-to-access area, and the patient was transported to the hospital by the Air Ambulance Service.",
+          "location": "Tyniecki forest",
+          "date": "2025-09-27",
+          "url": "https://cowkrakowie.pl/2025/09/wypadek-rowerzysty-lotnicze-pogotowie-ratunkowe-przetransportowalo-go-do-szpitala"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Traffic accident",
+          "summary": "A tram collided with a car on Kocmyrzowska street in Krakow. The incident occurred around 10:00 AM, leading to tram diversions via al. Andersa and Solidarności. This is one of several recent collisions between trams and cars in Krakow.",
+          "location": "Kocmyrzowska street, Krakow",
+          "date": "2025-09-26",
+          "url": "https://cowkrakowie.pl/2025/09/kolejne-zderzenie-tramwaju-z-samochodem-w-krakowie"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Traffic accident involving a heavy goods vehicle causing damage to infrastructure",
+          "summary": "A heavy goods vehicle damaged an information sign and then collided with a footbridge in Krakow, Poland. The accident occurred around 6 PM on Gen. Sosabowskiego Street. Emergency services are on site, and traffic is disrupted towards Krowodrza Górka.",
+          "location": "Krakow, ul. gen. Sosabowskiego",
+          "date": "2025-09-24",
+          "url": "https://cowkrakowie.pl/2025/09/niecodzienny-wypadek-w-krakowie-uszkodzona-tablica-i-kladka"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Traffic accident",
+          "summary": "A car collided with two trams on Krakowska street, resulting in the derailment of one tram. Tram traffic was halted, and trams were redirected via Starowiślna street. The incident occurred before Piłsudski Bridge.",
+          "location": "Krakowska street, before Piłsudski Bridge, Kraków",
+          "date": "2025-09-22",
+          "url": "https://cowkrakowie.pl/2025/09/samochod-zderzyl-sie-z-dwoma-tramwajami-jeden-z-nich-wykoleil-sie"
+        }
+      },
+      {
+        "json": {
+          "type_of_threat": "Death resulting from injuries sustained during rescue operations",
+          "summary": "A firefighter, Sławomir Nocuń, from the Voluntary Fire Brigade in Michałów (Pińczów district) died from injuries sustained during a rescue operation on September 11th. The incident involved removing a wasps' nest. A tribute will be paid at 18:00 with sirens.",
+          "location": "Michałów (Pińczów district)",
+          "date": "2025-09-22",
+          "url": "https://cowkrakowie.pl/2025/09/straz-pozarna-odda-dzis-hold-zmarlemu-druhowi"
+        }
+      }
+    ],
+    "AI Agent1": [
+      {
+        "json": {
+          "output": "{\"latitude\": 50.07325, \"longitude\": 19.99837}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"latitude\": 49.90638,\n  \"longitude\": 19.84043\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.0636, \"longitude\": 19.9506}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.05874, \"longitude\": 19.95488}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 49.91944, \"longitude\": 19.90194}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"latitude\": 50.0066,\n  \"longitude\": 19.8751\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"latitude\": 50.08601,\n  \"longitude\": 20.11959\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"latitude\": 50.09463,\n  \"longitude\": 19.92973\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.05691, \"longitude\": 19.94583}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.51627, \"longitude\": 20.44841}\n"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2c585b8f-4e72-48f4-bf4b-1c174bfeec6a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c5ed1f7d683bc2004db329a62b7f50bf2f134e1bd588a2f714b164409a182e14"
+  },
+  "id": "cm2VDEPaaLu8B9jz",
+  "tags": []
+}
