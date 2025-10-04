@@ -1,3 +1,5 @@
+
+
 // Function to get coordinates from a place name using Nominatim API
 async function getCoordinates(placeName) {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(placeName)}`;

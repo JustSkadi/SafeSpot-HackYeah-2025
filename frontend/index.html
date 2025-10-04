@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navigation UI with Options</title>
-    
-    <!-- Link to Google Material Icons -->
+    <title>Safe Spot</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
-    
-    <!-- Link to your external CSS file -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <div class="mobile-container">
         <div class="top-bar">
-            <div class="search-container">
-                <input type="search" placeholder="Search for destination..." id="destinationInput" autocomplete="off">
+            <div class="search-container" id="search-container">
+                <input type="search" placeholder="Search for destination..." id="search-input" autocomplete="off">
                 <span class="material-icons search-icon">search</span>
                 <ul id="suggestionsList" class="suggestions-list"></ul>
             </div>
@@ -62,8 +59,10 @@
             <div class="modal-footer"><button id="applyBtn">Apply</button></div>
         </div>
     </div>
-    
-    <!-- Link to your external JavaScript file -->
-    <script src="script.js"></script>
+
+
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
