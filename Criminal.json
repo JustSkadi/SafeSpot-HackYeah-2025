@@ -1,0 +1,486 @@
+{
+  "name": "Criminal",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"city\": \"Krakow\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        0
+      ],
+      "id": "0c41fe1e-2773-43db-873f-e5d274e5de1e",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "fb61a1ab-7fef-4834-b9d1-d8985e12878b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.data;\n\n// Regex do wyciągnięcia URL-ów z markdown\nconst urlRegex = /\\[.*?\\]\\((https:\\/\\/cowkrakowie\\.pl\\/[^\\)]+)\\)/g;\n\n// Znajdź wszystkie URL-e\nconst matches = [...data.matchAll(urlRegex)];\n\n// Filtruj tylko artykuły (bez rozszerzeń plików graficznych)\nconst articleUrls = matches\n  .map(match => match[1])\n  .filter(url => !/\\.(jpg|jpeg|png|gif|webp|svg)$/i.test(url))\n  .slice(0, 10)\n  .map(url => ({\n    json: { url }\n  }));\n\nreturn articleUrls;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        0
+      ],
+      "id": "e2a1385f-525a-4631-bf05-01b67b05e740",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "url": "=https://r.jina.ai/{{ $json.url }}",
+        "options": {
+          "batching": {
+            "batch": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1264,
+        0
+      ],
+      "id": "349ea5d3-6184-4a0d-aa32-6df37aee5884",
+      "name": "HTTP Request1",
+      "retryOnFail": true,
+      "maxTries": 2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=For each \"data\" entry : {{ $json.title }} {{ $json.content }} in the provided document, extract and output a JSON object with the following structure:\n\n{\n  \"type_of_threat\": \"type of threat or crime committed\",\n  \"summary\": \"brief description in maximum 100 words\",\n  \"location\": \"specific location where the incident occurred\",\n  \"date\": \"date when the incident occurred (if mentioned) or article publication date\",\n  \"url\": {{ $json.url }}\n}\n\nOutput only valid JSON objects with these exact fields. Do not include any additional commentary or fields.\n\nAll of the text must be in ENGLISH.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1728,
+        0
+      ],
+      "id": "2fd1931a-948f-4aa8-98e9-da4bf98de59f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.0-flash-lite-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1728,
+        240
+      ],
+      "id": "9be5178e-6def-428c-a7dd-bf9fe114afba",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Z1HGSEjhi41D7H53",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all items from previous node\nconst items = $input.all();\n\n// Extract and clean JSON from each item\nconst cleanedData = items.map((item, index) => {\n  try {\n    // Get the output field\n    let jsonString = item.json.output;\n    \n    // Remove ```json and ``` markers\n    jsonString = jsonString.replace(/```json\\n/g, '').replace(/\\n```/g, '');\n    \n    // Parse the JSON\n    const parsedData = JSON.parse(jsonString);\n    \n    return parsedData;\n  } catch (error) {\n    console.error(`Error parsing item at index ${index}:`, error.message);\n    return null;\n  }\n}).filter(item => item !== null);\n\n// Return as separate items for n8n\nreturn cleanedData.map(data => ({\n  json: data\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        0
+      ],
+      "id": "2c0d79b0-da84-4478-8fd3-10c51a35515f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Based on the location provided, find the exact geographical coordinates (latitude and longitude).\n\nLocation: {{$json.location}}\n\nReturn ONLY a JSON object in this exact format (no markdown, no code blocks):\n{\n  \"latitude\": <number>,\n  \"longitude\": <number>\n}\n\nBe as precise as possible. For specific addresses, use the exact coordinates. For general locations like \"Krakow Airport\", use the main coordinates of that place.\n\nGenerate all text and words in ENGLISH.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2368,
+        0
+      ],
+      "id": "12b7557f-fcdc-4960-9e70-139af953fd08",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.0-flash-lite-001",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        2368,
+        240
+      ],
+      "id": "ea8c0c02-8ec2-4fcc-b6e3-5510fd11a030",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "Z1HGSEjhi41D7H53",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get data from both previous nodes\nconst threatData = $('Code in JavaScript').all();\nconst coordinatesData = $('AI Agent1').all();\n\n// Merge the data\nreturn threatData.map((threat, index) => {\n  try {\n    // Get coordinates for this item\n    const coordItem = coordinatesData[index];\n    let coordinates;\n    \n    // Parse coordinates if they're in string format\n    if (typeof coordItem.json.output === 'string') {\n      // Remove markdown code blocks and extra formatting\n      let cleanString = coordItem.json.output\n        .replace(/```json\\n?/g, '')  // Usuń ```json\n        .replace(/```\\n?/g, '')       // Usuń ```\n        .replace(/\\n/g, '')\n        .replace(/\\\\/g, '')\n        .trim();\n      \n      coordinates = JSON.parse(cleanString);\n    } else if (coordItem.json.latitude && coordItem.json.longitude) {\n      // If already parsed\n      coordinates = {\n        latitude: coordItem.json.latitude,\n        longitude: coordItem.json.longitude\n      };\n    } else {\n      coordinates = coordItem.json;\n    }\n    \n    // Merge everything together\n    return {\n      json: {\n        type_of_threat: \"criminal\",\n        summary: threat.json.summary,\n        location: threat.json.location,\n        date: threat.json.date,\n        url: threat.json.url,\n        latitude: coordinates.latitude,\n        longitude: coordinates.longitude\n      }\n    };\n  } catch (error) {\n    console.error(`Error at index ${index}:`, error);\n    \n    // Return with null coordinates if error\n    return {\n      json: {\n        ...threat.json,\n        latitude: null,\n        longitude: null,\n        error: `Coordinate parsing error: ${error.message}`\n      }\n    };\n  }\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2720,
+        0
+      ],
+      "id": "fd2a6874-9651-48b6-863b-d63f9929e3bd",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { \n    url: \"https://cowkrakowie.pl/category/kryminalne\",\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "619049aa-e66f-48fe-bf16-eec93b40327c",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dla każdego elementu z inputu\nreturn items.map(item => {\n  let data = item.json.data;\n  \n  // Usuń niepotrzebne elementy\n  data = data\n    // Usuń linki do obrazków\n    .replace(/!\\[Image \\d+:.*?\\]\\(https?:\\/\\/[^\\)]+\\)/g, '')\n    // Usuń bloki reklam \"reklama\\n\\nZobacz więcej\\n...\" wraz z całą zawartością do następnego paragrafu\n    .replace(/reklama\\n\\nZobacz więcej\\n[\\s\\S]*?(?=\\n\\n[A-ZŁĆĘŚĄŻŹŃ]|\\n\\n\\*|\\n\\n###|\\n\\n\\[|$)/g, '')\n    // Usuń sekcje \"Te artykuły mogą Cię zainteresować:\"\n    .replace(/\\*\\*Te artykuły mogą Cię zainteresować:\\*\\*[\\s\\S]*$/g, '')\n    // Usuń linki typu [tekst](url)\n    .replace(/\\[([^\\]]+)\\]\\(https?:\\/\\/[^\\)]+\\)/g, '$1')\n    // Usuń pozostałe linki markdown\n    .replace(/\\* \\[.*?\\]\\(.*?\\)/g, '')\n    // Usuń wielokrotne puste linie\n    .replace(/\\n{3,}/g, '\\n\\n')\n    // Usuń białe znaki na początku i końcu\n    .trim();\n  \n  return {\n    json: {\n      title: data.match(/Title: (.*?)\\n/)?.[1] || '',\n      url: item.json.data.match(/URL Source: (.*?)\\n/)?.[1] || '',\n      content: data\n        .replace(/Title: .*?\\n/, '')\n        .trim()\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        0
+      ],
+      "id": "2b0a1022-fe8e-4fff-9aee-a12aeb410de7",
+      "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger-criminal-workflow",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -48,
+        -16
+      ],
+      "id": "a332bd65-8e30-41d0-95d3-290b3a781db0",
+      "name": "Webhook",
+      "webhookId": "d36216c8-e0d8-497c-bae0-7fd6ee33cb0f"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2928,
+        0
+      ],
+      "id": "27638796-342e-4e70-83ed-a5896a96c062",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {
+    "AI Agent1": [
+      {
+        "json": {
+          "output": "```json\n{\n  \"latitude\": 49.98587,\n  \"longitude\": 20.06478\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 49.80577, \"longitude\": 19.88529}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 49.99833, \"longitude\": 19.85861}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.077778, \"longitude\": 19.784722}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.07778, \"longitude\": 19.78472}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.06143, \"longitude\": 19.93658}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 49.99304, \"longitude\": 19.91452}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.064778, \"longitude\": 19.945329}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.03388, \"longitude\": 19.94209}\n"
+        }
+      },
+      {
+        "json": {
+          "output": "{\"latitude\": 50.07273, \"longitude\": 19.99921}\n"
+        }
+      }
+    ],
+    "HTTP Request1": [
+      {
+        "json": {
+          "data": "Title: Podczas próby ucieczki młode osoby zostały zatrzymane przez policjantów\n\nURL Source: https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow\n\nPublished Time: 2025-10-04T14:20:20+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Podczas próby ucieczki młode osoby zostały zatrzymane przez policjantów](https://cowkrakowie.pl/wp-content/uploads/2025/10/maczeta-1024x677.jpg)\n\nFot. Policja\n\n**Dwie osoby zostały ujęte przez wielickich funkcjonariuszy policji. Mundurowi zabezpieczyli 22 puszki farb w sprayu, dwa gazy pieprzowe oraz nóż z emblematem drużyny piłkarskiej.**\n\nreklama\n\nW ostatnich kryminalni z Wieliczki przeprowadzili działania wobec osób powiązanych ze środowiskiem pseudokibiców.\n\nreklama\n\nKilka dni temu mundurowi otrzymali zgłoszenie, że na ul. św. Barbary w Wieliczce jakieś osoby nanoszą graffiti na betonowe ogrodzenie. **Funkcjonariusze, którzy bezzwłocznie udali się na miejsce, zauważyli dwóch młodych mężczyzn w kominiarkach z emblematami jednego z krakowskich klubów piłkarskich.**\n\nNieudana próba ucieczki\n-----------------------\n\nPodczas próby ucieczki zostali zatrzymani przez policjantów. Przy 17-latkach funkcjonariusze zabezpieczyli 22 puszki farb w sprayu, dwa gazy pieprzowe oraz nóż z emblematem drużyny piłkarskiej.\n\nKolejne zatrzymanie\n-------------------\n\nDo kolejnego ujęcia doszło podczas kontroli drogowej. Wieliccy kryminalni, działając na podstawie posiadanych informacji, skontrolowali na jednym z osiedli w Wieliczce pojazd osobowy. Kierował nim 20-letni mieszkaniec Wieliczki, powiązany z pseudokibicami jednego z krakowskich klubów piłkarskich.\n\nW samochodzie znaleziono niebezpieczne narzędzia, dwa gazy pieprzowe oraz kilka puszek farby w sprayu. Mężczyzna nie potrafił racjonalnie wyjaśnić, do czego służą mu te przedmioty. Wszystkie zostały zabezpieczone, a on sam odpowie za wykroczenie.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Komunikat lotniska. Uważajcie na oszustów!](https://cowkrakowie.pl/2025/10/komunikat-lotniska-uwazajcie-na-oszustow)\n\n[Mury Obronne Krakowa. Niebawem zostaną zamknięte dla zwiedzających [ZDJĘCIA]](https://cowkrakowie.pl/2025/10/mury-obronne-krakowa-niebawem-zostana-zamkniete-dla-zwiedzajacych-zdjecia)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Policjanci prowadzili pościg. Wcześniej sprawcy dokonali pobicia\n\nURL Source: https://cowkrakowie.pl/2025/10/policjanci-prowadzili-poscig-wczesniej-sprawcy-dokonali-pobicia\n\nPublished Time: 2025-10-02T12:51:59+00:00\n\nMarkdown Content:\nPolicjanci prowadzili pościg. Wcześniej sprawcy dokonali pobicia - Wiadomości z Krakowa, Kraków Informacje - Co w Krakowie\n\n===============\n\nSzukaj: \n\n*   [Strona główna](https://cowkrakowie.pl/) \n*   [Aktualności](https://cowkrakowie.pl/category/aktualnosci) \n*   [Wydarzenia](https://cowkrakowie.pl/category/wydarzenia)\n    *   [Koncerty](https://cowkrakowie.pl/category/koncerty)\n    *   [Za darmo](https://cowkrakowie.pl/category/za-darmo)\n\n*   [Na sygnale](https://cowkrakowie.pl/category/na-sygnale)\n    *   [Kryminalne](https://cowkrakowie.pl/category/kryminalne)\n    *   [Wypadki](https://cowkrakowie.pl/category/wypadki)\n\n*   [Fotorelacje](https://cowkrakowie.pl/category/fotorelacje) \n*   [Kontakt](https://cowkrakowie.pl/kontakt) \n*   [Reklama](https://cowkrakowie.pl/reklamy) \n\n[![Image 3: Co w Krakowie](https://cowkrakowie.pl/wp-content/uploads/2020/08/CowKrakowie_1x.png)](https://cowkrakowie.pl/ \"Co w Krakowie\")\n------------------------------------------------------------------------------------------------------------------------------------------\n\n[reklama![Image 4: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/10/800x200.jpg)](https://rweek.pl/COWKRAKOWIEPL)\n\n[![Image 5: Co w Krakowie](https://cowkrakowie.pl/wp-content/uploads/2020/08/cropped-CowKrakowie-bez-tla-%E2%80%94-kopia.png)](https://cowkrakowie.pl/ \"Co w Krakowie\")\n*   [Strona główna](https://cowkrakowie.pl/) \n*   [Aktualności](https://cowkrakowie.pl/category/aktualnosci) \n*   [Wydarzenia](https://cowkrakowie.pl/category/wydarzenia)\n    *   [Koncerty](https://cowkrakowie.pl/category/koncerty)\n    *   [Za darmo](https://cowkrakowie.pl/category/za-darmo)\n\n*   [Na sygnale](https://cowkrakowie.pl/category/na-sygnale)\n    *   [Kryminalne](https://cowkrakowie.pl/category/kryminalne)\n    *   [Wypadki](https://cowkrakowie.pl/category/wypadki)\n\n*   [Fotorelacje](https://cowkrakowie.pl/category/fotorelacje) \n*   [Kontakt](https://cowkrakowie.pl/kontakt) \n*   [Reklama](https://cowkrakowie.pl/reklamy) \n\n[](https://cowkrakowie.pl/feed)\n\nPolicjanci prowadzili pościg. Wcześniej sprawcy dokonali pobicia\n================================================================\n\n Wysłany dnia 2 października 2025 12:51\n\nAutor CowKrakowie.pl\n\n![Image 6: Policjanci prowadzili pościg. Wcześniej sprawcy dokonali pobicia](https://cowkrakowie.pl/wp-content/uploads/2025/10/zatrzymanie-1024x729.jpg)\n\nFot. Policja\n\n[reklama![Image 7: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/09/Krakow_800x200.jpg)](https://www.ikea.com/pl/pl/stores/krakow/zakonczenie-przebudowy-ikea-krakow-pub2d0e4df0/)\n\n**Zatrzymaniem dwóch mężczyzn zakończył się policyjny pościg. Wcześniej sprawcy zaatakowali jedną osobę.**\n\nreklama\n\nZobacz więcej\n\nkrakowskich\n\nkrakowscy\n\nKrakowie\n\nKraków\n\nkrakowskiego\n\nSalony samochodowe w pobliżu\n\nNoclegi Kraków\n\nUbezpieczenie podróży\n\nZarezerwuj wycieczkę po Krakowie\n\nHotele w Krakowie\n\nKilka dni temu krakowscy mundurowi otrzymali zgłoszenie o pobiciu, do którego doszło na jednej z ulic w rejonie Sidziny.\n\nreklama\n\nZobacz więcej\n\nkrakowskiego\n\nSalony samochodowe w pobliżu\n\nkrakowskich\n\nKrakowie\n\nkrakowscy\n\nKraków\n\nKup książkę o Krakowie\n\nKup mapę Krakowa\n\nRezerwuj parking w Krakowie\n\nWynajem aut Kraków\n\nPolicjanci, którzy przybyli na miejsce zdarzenia ustalili, że około godz. 20.00 z samochodu marki Peugeot wysiedli mężczyźni, którzy mieli uderzyć 17-latka w twarz, a następnie odjechali w nieznanym kierunku.\n\nZauważono auto sprawców. Rozpoczął się pościg\n---------------------------------------------\n\nW trakcie wykonywanych czynności, policjanci zauważyli, że właśnie ten samochód przejeżdża sąsiednią ulicą.**Funkcjonariusze ruszyli za nim w pościg.** Kierujący peugeotem w trakcie ucieczki przed policyjnym radiowozem wykonywał niebezpieczne manewry, gwałtownie hamował, przyspieszał, łamał obowiązujące przepisy ruchu drogowego oraz ignorował dawane przez policjantów sygnały do zatrzymania.\n\n**Pościg zakończył się w jednej z miejscowości powiatu krakowskiego, gdzie funkcjonariusze zatrzymali dwie osoby podróżujące peugeotem.**\n\nSprawcy są powiązani ze środowiskiem pseudokibiców\n--------------------------------------------------\n\n22-letni kierowca i 18-letni pasażer zostali sprawdzeni w policyjnych systemach, jak się okazało starszy z nich nie posiadał prawa jazdy. Mężczyzn poddano również badaniu trzeźwości, które wykazało, że 18-latek miał 0,3 promila alkoholu w organizmie. **Ponadto w ich samochodzie policjanci znaleźli i zabezpieczyli m.in. emblematy pseudokibicowskie, kominiarki, ostre przedmioty i pistolet gazowy, który został przekazany do analizy balistycznej. Jak ustalili funkcjonariusze mężczyźni są powiązani ze środowiskiem pseudokibiców jednego z krakowskich klubów sportowych.**\n\nUsłyszeli zarzuty\n-----------------\n\nŚledczy przedstawili mężczyznom zarzut udziału w pobiciu. Ponadto 22-latek odpowie za jazdę bez wymaganych uprawnień i niezatrzymanie się do policyjnej kontroli. Prokuratura podjęła decyzję o zastosowaniu wobec 22-latka i jego 18-letniego kolegi policyjnego dozoru oraz zakaz zbliżania się do pokrzywdzonego.\n\nZa niezatrzymanie się do policyjnej kontroli oraz jazdę bez wymaganych uprawnień 22-latkowoi grozi do 5 lat więzienia. Za udział w pobiciu mężczyźni muszą liczyć się z karą 5-letniego pozbawiania wolności.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[12 października czeka nas na paraliż komunikacyjny w Krakowie](https://cowkrakowie.pl/2025/10/12-pazdziernika-czeka-nas-na-paraliz-komunikacyjny-w-krakowie)\n\n[Za Ukrainką wydano najwyższy stopień międzynarodowych poszukiwań](https://cowkrakowie.pl/2025/10/za-ukrainka-wydano-najwyzszy-stopien-miedzynarodowych-poszukiwan)\n\n[ZUS. Zakończono wypłatę dodatkowego świadczenia](https://cowkrakowie.pl/2025/10/zus-zakonczono-wyplate-dodatkowego-swiadczenia)\n\n![Image 8: \"Zatrzymane przedmioty\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/zatrzymanie2-1024x727.jpg)\n\n[reklama![Image 9: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/10/Disturbed_800x200.jpg)](https://www.livenation.pl/event/disturbed-the-sickness-25th-anniversary-tour-krak%C3%B3w-tickets-edp1570568)\n\n[Poprzedni artykuł 12 października czeka nas na paraliż komunikacyjny w Krakowie](https://cowkrakowie.pl/2025/10/12-pazdziernika-czeka-nas-na-paraliz-komunikacyjny-w-krakowie)\n\n[Następny artykuł WORLD PRESS PHOTO 2025. Od piątku można zobaczyć tę wystawę [ZDJĘCIA]](https://cowkrakowie.pl/2025/10/world-press-photo-2025-od-piatku-mozna-zobaczyc-te-wystawe-zdjecia)\n\nreklama\n\nZobacz więcej\n\nkrakowscy\n\nkrakowskich\n\nSalony samochodowe w pobliżu\n\nKraków\n\nkrakowskiego\n\nKrakowie\n\nKsiążki o Małopolsce\n\nPakiety turystyczne Kraków\n\nSerwis informacyjny\n\nWydarzenia kulturalne\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/policjanci-prowadzili-poscig-wczesniej-sprawcy-dokonali-pobicia#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/policjanci-prowadzili-poscig-wczesniej-sprawcy-dokonali-pobicia#content-more-cat)\n\n*   [![Image 10: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb) ### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał … 4 października 2025 21:00     \n*   [![Image 11: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem) ### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za… 4 października 2025 19:00     \n*   [![Image 12: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr) ### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.… 4 października 2025 17:13     \n\n Załaduj więcej powiązanych artykułów\n\n*   [![Image 13: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb) ### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał … 4 października 2025 21:00     \n*   [![Image 14: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem) ### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za… 4 października 2025 19:00     \n*   [![Image 15: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr) ### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.… 4 października 2025 17:13     \n\n Wczytaj więcej Aktualności \n\n#### Najnowsze\n\n[![Image 16: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n4 października 2025 21:00\n\nNa terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał udział Burmistrz …\n\n[![Image 17: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-104x74.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n4 października 2025 19:00\n\n[![Image 18: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-104x74.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n4 października 2025 17:13\n\n[![Image 19: \"Grafitii\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/maczeta-104x74.jpg)](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow)\n\n### [Podczas próby ucieczki młode osoby zostały zatrzymane przez policjantów](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow)\n\n4 października 2025 14:20\n\n[![Image 20: \"Mury Obronne Krakowa\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/muryobronne6-104x74.jpg)](https://cowkrakowie.pl/2025/10/mury-obronne-krakowa-niebawem-zostana-zamkniete-dla-zwiedzajacych-zdjecia)\n\n### [Mury Obronne Krakowa. Niebawem zostaną zamknięte dla zwiedzających [ZDJĘCIA]](https://cowkrakowie.pl/2025/10/mury-obronne-krakowa-niebawem-zostana-zamkniete-dla-zwiedzajacych-zdjecia)\n\n4 października 2025 10:53\n\n#### Reklama\n\nreklama\n\nZobacz więcej\n\nKraków\n\nkrakowskich\n\nKrakowie\n\nkrakowscy\n\nkrakowskiego\n\nSalony samochodowe w pobliżu\n\nHotele w Krakowie\n\nKup bilety komunikacji miejskiej\n\nNieruchomości Kraków\n\n[![Image 21: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/10/Disturbed_400x500.jpg)](https://www.livenation.pl/event/disturbed-the-sickness-25th-anniversary-tour-krak%C3%B3w-tickets-edp1570568)\n\n[![Image 22](https://cowkrakowie.pl/wp-content/uploads/2025/09/400x500_FFF_5.png)](https://forumff.pl/)\n\n Copyright © 2025 Co w Krakowie - [Napisz do nas](mailto:kontakt@cowkrakowie.pl) - [Polityka prywatności](https://cowkrakowie.pl/polityka-cookies) - [Kontakt](https://cowkrakowie.pl/kontakt)\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Za Ukrainką wydano najwyższy stopień międzynarodowych poszukiwań\n\nURL Source: https://cowkrakowie.pl/2025/10/za-ukrainka-wydano-najwyzszy-stopien-miedzynarodowych-poszukiwan\n\nPublished Time: 2025-10-02T07:59:38+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Za Ukrainką wydano najwyższy stopień międzynarodowych poszukiwań](https://cowkrakowie.pl/wp-content/uploads/2025/09/policja-2-1-1024x683.jpg)\n\nFot. CowKrakowie.pl\n\n**Za obywatelką Ukrainy wydana była czerwona nota Interpolu – najwyższy stopień międzynarodowych poszukiwań. Kobieta została zatrzymana przez krakowskich policjantów.**\n\nreklama\n\nMundurowi z Krakowa prowadzili poszukiwania obywatelki Ukrainy, która ukrywała się w Polsce przed ukraińskim wymiarem sprawiedliwości.\n\nreklama\n\nPrzeprowadzone działania przez mundurowych dały efekt. Na terenie Skawiny wpadła 43-latka. Kobieta poszukiwana była czerwoną notą Interpolu **za oszustwa, fałszowania pieniędzy i korupcję** i miała do odbycia 3 lata i 6 miesięcy kary pozbawienia wolności.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[ZUS. Zakończono wypłatę dodatkowego świadczenia](https://cowkrakowie.pl/2025/10/zus-zakonczono-wyplate-dodatkowego-swiadczenia)\n\n[Światowej sławy gwiazdy wystąpią w październiku w Krakowie [LISTA KONCERTÓW]](https://cowkrakowie.pl/2025/10/swiatowej-slawy-gwiazdy-wystapia-w-pazdzierniku-w-krakowie-lista-koncertow)\n\n[Mieszkańcy Krakowa mają nowy park! Zobaczcie zdjęcia](https://cowkrakowie.pl/2025/10/mieszkancy-krakowa-maja-nowy-park-zobaczcie-zdjecia)\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKraków\n\nkrakowskich\n\nKrakowa\n\nKup przewodnik po Krakowie\n\nRezerwuj lot do Krakowa\n\nPamiątki z Krakowa\n\nPraca Kraków\n\nMuzea Kraków\n\nKrakowskie\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/za-ukrainka-wydano-najwyzszy-stopien-miedzynarodowych-poszukiwan#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/za-ukrainka-wydano-najwyzszy-stopien-miedzynarodowych-poszukiwan#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: 15 kg ludzkich włosów na lotnisku w Krakowie\n\nURL Source: https://cowkrakowie.pl/2025/10/15-kg-ludzkich-wlosow-na-lotnisku-w-krakowie\n\nPublished Time: 2025-10-01T10:25:55+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: 15 kg ludzkich włosów na lotnisku w Krakowie](https://cowkrakowie.pl/wp-content/uploads/2025/10/wlosy-1024x572.jpg)\n\nFot. Małopolskie KAS\n\n**Niecodzienne odkrycie na krakowskim lotnisku. Obywatel Ukrainy przewoził ludzkie włosy. Sprawą zajmują się służby.**\n\nreklama\n\nFunkcjonariusze z Małopolskiego Urzędu Celno-Skarbowego w Krakowie podczas kontroli podróżnego znaleźli ludzkie włosy.\n\nreklama\n\nJak informuje KAS, obywatel Ukrainy, który przyleciał z Dubaju przechodził przejściem „Nic do zgłoszenia” i nie zgłosił towaru do kontroli celnej. **W walizce rejestrowanej i bagażu podręcznym funkcjonariusze znaleźli 94 pukle włosów różnej długości o wadze ponad 15 kg.**\n\nNiezgłoszony towar pochodził z Turcji a jego szacunkowa rynkowa wartość to 270 tys. zł.\n\nW sprawie wszczęto postępowanie karne skarbowe.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Na tarasie w Sukiennicach odbędzie się koncert](https://cowkrakowie.pl/2025/10/na-tarasie-w-sukiennicach-odbedzie-sie-koncert)\n\n[Festiwal Roślin Kraków 2025. Wydarzenie już w pierwszy weekend października](https://cowkrakowie.pl/2025/09/festiwal-roslin-krakow-2025-wydarzenie-juz-w-pierwszy-weekend-pazdziernika)\n\n[PKP Intercity. Startują nowe szybkie połączenia z Krakowa i nie tylko!](https://cowkrakowie.pl/2025/10/pkp-intercity-startuja-nowe-szybkie-polaczenia-z-krakowa-i-nie-tylko)\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKraków\n\nKrakowa\n\nkrakowskich\n\nkrakowskim\n\nWiadomości z ostatniej chwili\n\nWynajem rowerów Kraków\n\nBilety na wydarzenia Kraków\n\nWydarzenia Kraków\n\nUsługi przewodnika miejskiego\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/15-kg-ludzkich-wlosow-na-lotnisku-w-krakowie#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/15-kg-ludzkich-wlosow-na-lotnisku-w-krakowie#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Przyleciał do Krakowa i trafił na rok do więzienia\n\nURL Source: https://cowkrakowie.pl/2025/09/przylecial-do-krakowa-i-trafil-na-rok-do-wiezienia\n\nPublished Time: 2025-09-30T06:41:00+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Przyleciał do Krakowa i trafił na rok do więzienia](https://cowkrakowie.pl/wp-content/uploads/2025/07/lotnisko15-1024x768.jpg)\n\nFot. CowKrakowie.pl\n\n**Pasażer, który przyleciał na krakowskie lotnisko z pewnością takiego obrotu spraw się nie spodziewał. Obywatel Polski był poszukiwany przez wymiar sprawiedliwości. Został zatrzymany przez funkcjonariuszy straży granicznej.**\n\nreklama\n\nZobacz więcej\n\nKrakowski\n\nKrakowa\n\nKraków\n\nkrakowskich\n\nkrakowskie\n\nKup bilety na koncert Kraków\n\nKup bilety na Wawel\n\nPraca Kraków\n\nWynajem aut Kraków\n\nRestauracje Kraków\n\nW ostatnią niedzielę września, 47-latek przyleciał Kraków Airport z Bristolu.\n\nreklama\n\nZobacz więcej\n\nKraków\n\nKrakowski\n\nkrakowskie\n\nKrakowa\n\nkrakowskich\n\nKup bilet na tramwaj\n\nRestauracje Kraków\n\nKup książkę o Krakowie\n\nRezerwuj lot do Krakowa\n\nZarezerwuj wycieczkę po Krakowie\n\nW trakcie kontroli okazało się, że jest poszukiwany listem gończym w celu odbycia kary 1 roku pozbawienia wolności za dokonanie kradzieży z włamaniem.Mężczyzna prosto z lotniska trafił za kratki.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[W jednym z krakowskich hoteli zatrzymano Ukrainkę. Młoda kobieta była zaskoczona](https://cowkrakowie.pl/2025/09/w-jednym-z-krakowskich-hoteli-zatrzymano-ukrainke-mloda-kobieta-byla-zaskoczona)\n\n[Magia światła na Wawelu](https://cowkrakowie.pl/2025/09/magia-swiatla-na-wawelu)\n\n[Krakowski cmentarz zostanie rozbudowany [WIZUALIZACJE]](https://cowkrakowie.pl/2025/09/krakowski-cmentarz-zostanie-rozbudowany-wizualizacje)\n\nreklama\n\nZobacz więcej\n\nKraków\n\nKrakowski\n\nKrakowa\n\nkrakowskie\n\nkrakowskich\n\nKrakowskie\n\nUbezpieczenie podróży\n\nBilety na wydarzenia\n\nTransport Kraków\n\nZarezerwuj wycieczkę po Krakowie\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/przylecial-do-krakowa-i-trafil-na-rok-do-wiezienia#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/przylecial-do-krakowa-i-trafil-na-rok-do-wiezienia#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: W jednym z krakowskich hoteli zatrzymano Ukrainkę. Młoda kobieta była zaskoczona\n\nURL Source: https://cowkrakowie.pl/2025/09/w-jednym-z-krakowskich-hoteli-zatrzymano-ukrainke-mloda-kobieta-byla-zaskoczona\n\nPublished Time: 2025-09-29T15:21:14+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: W jednym z krakowskich hoteli zatrzymano Ukrainkę. Młoda kobieta była zaskoczona](https://cowkrakowie.pl/wp-content/uploads/2025/09/oszustka-1024x629.jpg)\n\nFot. Policja\n\n**Krakowscy policjanci zatrzymali kolejną osobę, która brała udział w zorganizowanej grupie przestępczej. Kobieta wpadła 22 września w jednym z krakowskich hoteli.**\n\nreklama\n\nZobacz więcej\n\nSzkolenia z bezpieczeństwa\n\nKrakowscy\n\nUbezpieczenia od kradzieży\n\nPomoc prawna Ukraińcom\n\nHotele Kraków\n\nSzkolenia policyjne\n\nWiadomości lokalne\n\nOchrona przed oszustwami\n\nKarty SIM\n\nUsługi księgowe\n\nPolicjanci z stolicy Małopolski rozpracowali i rozbili grupę oszustów, którzy wyłudzili od mieszkańca Myślenic ponad 400 tys. złotych. Do sprawy w przeciągu kilku miesięcy zatrzymano już 9 osób. 22 września wpadła w Krakowie obywatelka Ukrainy.\n\nreklama\n\nZobacz więcej\n\nUbezpieczenia od kradzieży\n\nNoclegi w Krakowie\n\nKrakowski\n\nZamku na Wawelu\n\nUsługi prawne dla cudzoziemców\n\nOchrona przed oszustwami\n\nUsługi detektywistyczne\n\nkrakowskich\n\nReklama internetowa\n\nHotele Kraków\n\nJak relacjonują mundurowi, 24-letnia kobieta była całkowicie zaskoczona wizytą policjantów. **Po popełnieniu oszustwa w lutym uciekła do Ukrainy, gdzie przebywała na stałe.**Zatrzymana pełniła rolę tzw. wybieraka, czyli udostępniła konto do przelewów. Pieniądze, następnie były przelewane na kolejne rachunki lub wypłacane.\n\nDo Polski przyjeżdżała sporadycznie na krótkie pobyty, podczas których codziennie zmieniała hotel. W chwili zatrzymania próbowała się tłumaczyć, że ktoś ukradł jej kartę bankomatową. Funkcjonariusze zabezpieczyli 2400 dolarów w gotówce, które kobieta miała przy sobie.\n\nWszystkim zatrzymanym grozi do 8 lat pozbawienia wolności. Sprawa jest rozwojowa.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Magia światła na Wawelu](https://cowkrakowie.pl/2025/09/magia-swiatla-na-wawelu)\n\n[Przez ten remont komunikacja miejska skierowana została na objazdy [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/przez-ten-remont-komunikacja-miejska-skierowana-zostala-na-objazdy-zdjecia)\n\n[Krakowski cmentarz zostanie rozbudowany [WIZUALIZACJE]](https://cowkrakowie.pl/2025/09/krakowski-cmentarz-zostanie-rozbudowany-wizualizacje)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/w-jednym-z-krakowskich-hoteli-zatrzymano-ukrainke-mloda-kobieta-byla-zaskoczona#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/w-jednym-z-krakowskich-hoteli-zatrzymano-ukrainke-mloda-kobieta-byla-zaskoczona#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Agresor awanturował się w restauracji oraz uderzał w zaparkowane samochody\n\nURL Source: https://cowkrakowie.pl/2025/09/agresor-awanturowal-sie-w-restauracji-oraz-uderzal-w-zaparkowane-samochody\n\nPublished Time: 2025-09-27T09:53:23+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Agresor awanturował się w restauracji oraz uderzał w zaparkowane samochody](https://cowkrakowie.pl/wp-content/uploads/2025/09/policja-3-1024x633.jpg)\n\nFot. CowKrakowie.pl\n\n**Do 10 lat pozbawienia wolności grozi mężczyźnie, który został zatrzymany przez krakowskich funkcjonariuszy policji.**\n\nreklama\n\nZobacz więcej\n\nKrakowa\n\nkrakowskich\n\nKraków\n\nPojazd\n\nZakupy spożywcze\n\nkrakowskiej\n\nSalony samochodowe w pobliżu\n\npojazdy\n\nKrakowie\n\nZarezerwuj stolik restauracja Kraków\n\nDo zdarzenia doszło kilka dni temu. Mundurowi z Krakowa otrzymali zgłoszenie, że w jednym z lokali gastronomicznych w rejonie Borku Fałęckiego awanturuje się klient, **któremu z kieszeni miał wypaść woreczek z kryształkami.**\n\nreklama\n\nZobacz więcej\n\nKrakowa\n\nkrakowskich\n\nkrakowskiej\n\nSalony samochodowe w pobliżu\n\nPojazd\n\npojazdy\n\nKrakowie\n\nKraków\n\nZakupy spożywcze\n\nPoradnik turystyczny\n\nAtakował samochody\n------------------\n\nKiedy funkcjonariusze przyjechali pod wskazany adres porozmawiali z obsługą lokalu, a ponieważ agresywny klient opuścił już restaurację ustalili jego rysopis.\n\nNastępnie rozpoczęli sprawdzanie pobliskich ulic, gdzie **zauważyli mężczyznę, który nie tylko odpowiadał ustalonemu przez nich wizerunkowi, ale i głośno krzycząc uderzał w zaparkowane pojazdy.** Sprawca został zatrzymany.\n\nFunkcjonariusze zabezpieczyli również woreczek z kryształkami, który posiadał przy sobie 31-latek – było to ponad 100 gramów mefedronu.\n\nUsłyszał zarzut\n---------------\n\n31-latkowi przedstawiono zarzut posiadania znacznych ilości substancji psychotropowych. Wobec niego zastosowano środek zapobiegawczy w postaci dozoru policji.\n\n**Za posiadanie znacznej ilości narkotyków mężczyźnie grozi do 10 lat więzienia.**\n\n**Te artykuły mogą Cię zainteresować:**\n\n[W sercu Krakowa rozpoczął się kolejny jarmark. Potrwa do 5 października [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/w-sercu-krakowa-rozpoczal-sie-kolejny-jarmark-potrwa-do-5-pazdziernika-zdjecia)\n\n[Zmiany na liniach krakowskiej komunikacji miejskiej [INFORMATOR]](https://cowkrakowie.pl/2025/09/zmiany-na-liniach-krakowskiej-komunikacji-miejskiej-informator)\n\n[Kładka nad rzeką zamknięta. Eksploatacja przeprawy wiązałaby się z ryzykiem](https://cowkrakowie.pl/2025/09/kladka-nad-rzeka-zamknieta-eksploatacja-przeprawy-wiazalaby-sie-z-ryzykiem)\n\n[Awanturnik w tramwaju. Przez jego zachowanie inne linie skierowano na objazdy](https://cowkrakowie.pl/2025/09/awanturnik-w-tramwaju-przez-jego-zachowanie-inne-linie-skierowano-na-objazdy)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/agresor-awanturowal-sie-w-restauracji-oraz-uderzal-w-zaparkowane-samochody#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/agresor-awanturowal-sie-w-restauracji-oraz-uderzal-w-zaparkowane-samochody#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Wpadł w okolicy Dworca Głównego. Musi opuścić Polskę\n\nURL Source: https://cowkrakowie.pl/2025/09/wpadl-w-okolicy-dworca-glownego-musi-opuscic-polske\n\nPublished Time: 2025-09-26T07:22:00+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Wpadł w okolicy Dworca Głównego. Musi opuścić Polskę](https://cowkrakowie.pl/wp-content/uploads/2025/09/zatrzymany-2-1024x607.jpg)\n\nFot. PSG\n\nStraż graniczna zatrzymała w okolicy dworca autobusowego cudzoziemca. Mężczyzna przebywał w naszym kraju nielegalnie.\n\nreklama\n\nFunkcjonariusze straży granicznej w rejonie krakowskiego dworca głównego przeprowadzili działania kontrolne, polegające na sprawdzeniu legalności pobytu cudzoziemców.\n\nreklama\n\nWpadł obywatel Neapolu\n----------------------\n\nJak relacjonują mundurowi. Zatrzymano jedną osobę. 22-letni mężczyzna granicę Polski przekroczył w sposób nielegalny, nie posiadając dokumentów uprawniających go do tego. Zaraz po przyjeździe do naszego kraju, w sierpniu ubiegłego roku, powołując się na posiadaną wizę chorwacką, złożył do Wojewody Małopolskiego wniosek o udzielenie zezwolenia na pobyt czasowy, jednak było to już w chwili nielegalnego pobytu**. Do chwili obecnej cudzoziemiec pracował w gastronomii na terenie województwa**\n\nWydano obywatelowi Nepalu decyzje o zobowiązaniu do powrotu, w której określił zakaz wjazdu na terytorium RP i innych państw obszaru Schengen przez najbliższe 10 miesięcy.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Na tę wiadomość czekali okoliczni mieszkańcy. Lewiatan przy ul. Strzelców otwarty [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/na-te-wiadomosc-czekali-okoliczni-mieszkancy-lewiatan-przy-ul-strzelcow-otwarty-zdjecia)\n\n[W piątek rozpoczyna się kolejne wydarzenie Krakowie. Ostatnie przygotowania [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/w-piatek-rozpoczyna-sie-kolejne-wydarzenie-krakowie-ostatnie-przygotowania-zdjecia)\n\n[Niektóre linie czasowo wstrzymają swoje loty z Polski](https://cowkrakowie.pl/2025/09/niektore-linie-czasowo-wstrzymaja-swoje-loty-z-polski)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/wpadl-w-okolicy-dworca-glownego-musi-opuscic-polske#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/wpadl-w-okolicy-dworca-glownego-musi-opuscic-polske#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Żona podpaliła męża. Mężczyzna nie żyje\n\nURL Source: https://cowkrakowie.pl/2025/09/zona-podpalila-meza-mezczyzna-nie-zyje\n\nPublished Time: 2025-09-25T16:28:58+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Żona podpaliła męża. Mężczyzna nie żyje](https://cowkrakowie.pl/wp-content/uploads/2025/09/straz-1-1024x681.jpg)\n\nFot. poglądowe\n\n**Krakowska prokuratura przekazała tragiczne informacje dotyczące pożaru, który miał miejsce w niedaleko Krakowa. W wyniku tego zdarzenia zginęła jedna osoba.**\n\nreklama\n\nZobacz więcej\n\nKrakowa\n\nKraków\n\nKrakowska\n\nKrakowie\n\nLokalne produkty spożywcze Kraków\n\nTematy społeczne\n\nFotografie Krakowa\n\nZakupy w Krakowie\n\nWiadomości sportowe\n\nkrakowskich\n\nW nocy z poniedziałku na wtorek służby otrzymały zgłoszenie o pożarze jednego z domów w Zabierzowie Bocheńskim. W trakcie akcji gaśniczej w łazience ujawniono leżące na brzuchu zwłoki mężczyzny.\n\nreklama\n\nZobacz więcej\n\nKrakowska\n\nKrakowie\n\nKrakowa\n\nKraków\n\nOdzież z motywami Krakowa\n\nMapy Krakowa\n\nKrakowskie\n\nWydarzenia kulturalne\n\nPrzewodnik po Krakowie\n\nSerwis informacyjny\n\nProkuratura twierdzi, że to było podpalenie\n-------------------------------------------\n\n**Jak zaznacza prokuratura, w pobliżu ciała zmarłego ujawniono kanister po benzynie.**Ze wstępnych ustaleń wynika, że przyczyną zdarzenia było podpalenie. Wyniki sekcji zwłok wskazują, że na ciele zmarłego nie ujawniono śladów obrażeń, w drogach oddechowych mężczyzny ujawniono ślady świadczące o tym, że **w chwili zaistnienia pożaru pokrzywdzony żył.**\n\nProkurator przedstawił Magdalenie S. zarzut pozbawienia życia Romana S. poprzez użycie materiału łatwopalnego – benzyny, którą pokrzywdzony został polany.Kobieta została tymczasowo aresztowana.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Zobacz plenerowe wieczorne widowisko. Wydarzenie już w piątek [WSTĘP BEZPŁATNY]](https://cowkrakowie.pl/2025/09/zobacz-plenerowe-wieczorne-widowisko-wydarzenie-juz-w-piatek-wstep-bezplatny)\n\n[Na tę wiadomość czekali okoliczni mieszkańcy. Lewiatan przy ul. Strzelców otwarty [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/na-te-wiadomosc-czekali-okoliczni-mieszkancy-lewiatan-przy-ul-strzelcow-otwarty-zdjecia)\n\n[W piątek rozpoczyna się kolejne wydarzenie Krakowie. Ostatnie przygotowania [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/w-piatek-rozpoczyna-sie-kolejne-wydarzenie-krakowie-ostatnie-przygotowania-zdjecia)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/zona-podpalila-meza-mezczyzna-nie-zyje#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/zona-podpalila-meza-mezczyzna-nie-zyje#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Wtargnięcie na teren krakowskich wodociągów. Stanowisko policji\n\nURL Source: https://cowkrakowie.pl/2025/09/wtargniecie-na-teren-krakowskich-wodociagow-stanowisko-policji\n\nPublished Time: 2025-09-23T16:25:29+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Wtargnięcie na teren krakowskich wodociągów. Stanowisko policji](https://cowkrakowie.pl/wp-content/uploads/2025/06/policja1-1024x637.jpg)\n\nFot. CowKrakowie.pl\n\n**Krakowska policja opublikowała oświadczeniew związku z incydentem na terenie obiektu należącego do krakowskich wodociągów.**\n\nreklama\n\nMundurowi informują, że 30 sierpnia br. otrzymali telefoniczne zgłoszenie o dwóch osobach, które miały w sposób nieuprawniony wejść na teren zakładu krakowskich wodociągów, znajdującego się przy ul. Wodociągowej.\n\nreklama\n\nNa miejsce udał się patrol\n--------------------------\n\n**Na miejsce został skierowany patrol, który podjął interwencję i wylegitymował dwóch mężczyzn narodowości ukraińskiej ujętych przez pracowników ochrony obiektu.**Mężczyźni dobrowolnie wydali policjantom swoje telefony komórkowe, aby umożliwić sprawdzenie czy nie ma w nich nagrań ani zdjęć tej infrastruktury. **W wyniku tych sprawdzeń policjanci nie ujawnili podejrzanych materiałów foto i video obrazujących teren obiektu.**\n\nPolicja zaznacza, że ,mżczyźni nie posiadali też przy sobie innych urządzeń elektronicznych, na których mogły zostać zarejestrowane zdjęcia lub filmy przedstawiające rejon zakładu. **Tłumaczyli również, że znaleźli się w tym miejscu bo zostali błędnie doprowadzeni przez nawigację.**\n\nBrak podstaw do zatrzymania\n---------------------------\n\nOsoby wobec których podjęto interwencję sprawdzono w policyjnych systemach, w których potwierdzono, że nie były one poszukiwane.\n\n**W związku z tym, że nie doszło do uszkodzeń i zniszczeń na terenie zakładu, a także nie było innych podstaw do zatrzymania mężczyzn zostali oni zwolnieni,** a pracowników wodociągów policjanci pouczyli o możliwości złożenia stosownego zawiadomienia w związku z zaistniałym zdarzeniem.\n\nUjęci po kilku dniach\n---------------------\n\nMimo zakończonej na miejscu interwencji osoby te nadal pozostawały w zainteresowaniu policjantów. Funkcjonariusze prowadzili czynności operacyjne, które wykazały, że mężczyźni ci mogą mieć związek z przestępczością narkotykową. **Dlatego też, 16 września br. dwaj obywatele Ukrainy zostali zatrzymani i doprowadzeni do jednego z krakowskich komisariatów.**\n\n**Finalnie, podejrzenia te nie potwierdziły się.**Jednocześnie nawiązano kontakt z przedstawicielami wodociągów, którzy do tego momentu nie złożyli zawiadomienia o przestępstwie, z zapytaniem czy będą je składać.\n\nUsłyszeli zarzuty. Będzie deportacja?\n-------------------------------------\n\nW związku z tym, że przedstawiciele wodociągów zdecydowali o oficjalnym zawiadomieniu dotyczącym naruszenia miru domowego z jednoczesnym wnioskiem o ściganie sprawców, które złożone zostało 17 września br., policjanci wszczęli postępowanie w tej sprawie.\n\n**Zebrany materiał dowodowy pozwolił na przedstawienie mężczyznom zarzutu naruszenia miru domowego.**Następnie materiały w sprawie zostały przekazane do prokuratury, która zdecydowała o podtrzymaniu zarzutów i zastosowaniu wobec mężczyzn środków zapobiegawczych w postaci policyjnego dozoru.\n\nPo przedstawieniu zarzutów dwóm obywatelom Ukrainy i decyzjach prokuratury, **policjanci wystąpili do Straży Granicznej z wnioskiem o wydanie decyzji o zobowiązaniu cudzoziemców do opuszczenia Polski.**\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Brawurowy pościg ulicami Nowej Huty. Złodziej zatrzymany](https://cowkrakowie.pl/2025/09/brawurowy-poscig-ulicami-nowej-huty-zlodziej-zatrzymany)\n\n[Krakowscy policjanci prowadzili pościg](https://cowkrakowie.pl/2025/09/krakowscy-policjanci-prowadzili-poscig)\n\n[Działania służb w nocnych tramwajach](https://cowkrakowie.pl/2025/09/dzialania-sluzb-w-nocnych-tramwajach-2)\n\n[Pasażerka miała bilet i dostała mandat. Miasto zapowiada zmiany!](https://cowkrakowie.pl/2025/09/pasazerka-miala-bilet-i-dostala-mandat-miasto-zapowiada-zmiany)\n"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d231f5ca-2734-45b1-8b5e-e5da28024aa5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3229f2d5c7e949f68b8b7421938b393756f720fa00842ac7e60db1d2b30d7963"
+  },
+  "id": "kkshej61mmZkbqv1",
+  "tags": []
+}

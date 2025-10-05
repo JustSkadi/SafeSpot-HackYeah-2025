@@ -1,0 +1,92 @@
+[
+  {
+    "type_of_threat": "road accident",
+    "summary": "A traffic accident involving a motorcyclist occurred on al. Bora Komorowskiego in Krakow. Emergency services, including the Lotnicze Pogotowie Ratunkowe (Air Ambulance), were dispatched to the scene. The helicopter landed near a gas station. More information will follow.",
+    "location": "al. Bora Komorowskiego, Krakow",
+    "date": "2025-10-04",
+    "url": "https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr",
+    "latitude": 50.07325,
+    "longitude": 19.99837
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A train traveling from Kraków Główny to Chabówka fatally struck a woman in Leńcze on October 2, before 5:00 PM. Train traffic towards Zakopane was halted, and passengers were awaiting replacement transport.",
+    "location": "Leńcze, near Kraków",
+    "date": "2025-10-02",
+    "url": "https://cowkrakowie.pl/2025/10/pociag-relacji-krakow-glowny-chabowka-potracil-smiertelnie-kobiete",
+    "latitude": 49.90638,
+    "longitude": 19.84043
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A man, under the influence of alcohol, fell from a platform onto the train tracks at Kraków Główny train station and was unable to get up. Railway Protection Force officers and PKP Intercity staff rescued the man, provided first aid, and called an ambulance. The man was then taken to the hospital.",
+    "location": "Kraków Główny train station",
+    "date": "2025-10-01",
+    "url": "https://cowkrakowie.pl/2025/10/na-stacji-kolejowej-krakow-glowny-doszlo-do-niebezpiecznej-sytuacji",
+    "latitude": 50.0636,
+    "longitude": 19.9506
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A tram and a car collided in the center of Krakow, causing disruptions to tram services. Tram lines are rerouted due to the accident near Wielopole street. The affected trams are not running on Dietla street towards Rondo Grzegórzeckiego.",
+    "location": "Center of Krakow, Wielopole street, Dietla street, Rondo Grzegórzeckiego",
+    "date": "2025-10-01",
+    "url": "https://cowkrakowie.pl/2025/10/wypadek-w-centrum-krakowa-zderzyl-sie-tramwaj-z-samochodem",
+    "latitude": 50.05874,
+    "longitude": 19.95488
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A car overturned on Zakopianka road near Krakow on October 1st. The accident happened in Głogoczów, Myślenice County, causing traffic delays in the direction of Krakow. Authorities are on the scene, and drivers are urged to be cautious.",
+    "location": "Głogoczów, Myślenice County, Poland (on the Zakopianka road towards Krakow)",
+    "date": "2025-10-01",
+    "url": "https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa",
+    "latitude": 49.91944,
+    "longitude": 19.90194
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A cyclist was involved in a serious accident in the Tyniecki forest area on September 27th. The cyclist did not adjust their speed to the conditions and fell, sustaining injuries. The incident occurred in a difficult-to-access area, and the patient was transported to the hospital by the Air Ambulance Service.",
+    "location": "Tyniecki forest",
+    "date": "2025-09-27",
+    "url": "https://cowkrakowie.pl/2025/09/wypadek-rowerzysty-lotnicze-pogotowie-ratunkowe-przetransportowalo-go-do-szpitala",
+    "latitude": 50.0066,
+    "longitude": 19.8751
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A tram collided with a car on Kocmyrzowska street in Krakow. The incident occurred around 10:00 AM, leading to tram diversions via al. Andersa and Solidarności. This is one of several recent collisions between trams and cars in Krakow.",
+    "location": "Kocmyrzowska street, Krakow",
+    "date": "2025-09-26",
+    "url": "https://cowkrakowie.pl/2025/09/kolejne-zderzenie-tramwaju-z-samochodem-w-krakowie",
+    "latitude": 50.08601,
+    "longitude": 20.11959
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A heavy goods vehicle damaged an information sign and then collided with a footbridge in Krakow, Poland. The accident occurred around 6 PM on Gen. Sosabowskiego Street. Emergency services are on site, and traffic is disrupted towards Krowodrza Górka.",
+    "location": "Krakow, ul. gen. Sosabowskiego",
+    "date": "2025-09-24",
+    "url": "https://cowkrakowie.pl/2025/09/niecodzienny-wypadek-w-krakowie-uszkodzona-tablica-i-kladka",
+    "latitude": 50.09463,
+    "longitude": 19.92973
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A car collided with two trams on Krakowska street, resulting in the derailment of one tram. Tram traffic was halted, and trams were redirected via Starowiślna street. The incident occurred before Piłsudski Bridge.",
+    "location": "Krakowska street, before Piłsudski Bridge, Kraków",
+    "date": "2025-09-22",
+    "url": "https://cowkrakowie.pl/2025/09/samochod-zderzyl-sie-z-dwoma-tramwajami-jeden-z-nich-wykoleil-sie",
+    "latitude": 50.05691,
+    "longitude": 19.94583
+  },
+  {
+    "type_of_threat": "road accident",
+    "summary": "A firefighter, Sławomir Nocuń, from the Voluntary Fire Brigade in Michałów (Pińczów district) died from injuries sustained during a rescue operation on September 11th. The incident involved removing a wasps' nest. A tribute will be paid at 18:00 with sirens.",
+    "location": "Michałów (Pińczów district)",
+    "date": "2025-09-22",
+    "url": "https://cowkrakowie.pl/2025/09/straz-pozarna-odda-dzis-hold-zmarlemu-druhowi",
+    "latitude": 50.51627,
+    "longitude": 20.44841
+  }
+]

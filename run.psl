@@ -1,0 +1,92 @@
+# --- Script Configuration ---
+$projectUrl = "http://localhost:5678" # Frontend URL
+$apiUrl = "http://localhost:8080"     # Backend/API URL
+$repoUrl = "https://github.com/your-username/your-repo-name" # The URL of your project repository
+
+# --- Helper function for colored output ---
+function Write-Log {
+    param(
+        [string]$Message,
+        [string]$Color
+    )
+    Write-Host $Message -ForegroundColor $Color
+}
+
+# --- Main Script ---
+Write-Log "=========================================" "Cyan"
+Write-Log "Starting the Interactive Safety Map Setup" "Cyan"
+Write-Log "=========================================" "Cyan"
+Write-Log ""
+
+# 1. Check if Docker is running
+Write-Log "[INFO] Checking for Docker..." "Gray"
+$dockerRunning = $false
+try {
+    docker info > $null 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        $dockerRunning = $true
+    }
+}
+catch {
+    $dockerRunning = $false
+}
+
+if ($dockerRunning) {
+    Write-Log "[SUCCESS] Docker is already installed and running." "Green"
+}
+else {
+    Write-Log "[WARNING] Docker is not detected or not running. Attempting installation..." "Yellow"
+    
+    # Download Docker Desktop Installer
+    $installerUrl = "https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe"
+    $installerPath = Join-Path $env:TEMP "DockerDesktopInstaller.exe"
+    
+    Write-Log "[INFO] Downloading Docker Desktop from official source..." "Gray"
+    try {
+        Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath
+        Write-Log "[SUCCESS] Download complete." "Green"
+    }
+    catch {
+        Write-Log "[ERROR] Failed to download Docker Desktop installer. Please install it manually and re-run this script." "Red"
+        exit 1
+    }
+
+    # Run the installer with administrator rights
+    Write-Log "[ACTION] Please accept the UAC prompt to install Docker Desktop." "Yellow"
+    Write-Log "[INFO] Installing Docker... This may take several minutes." "Gray"
+    
+    try {
+        Start-Process -FilePath $installerPath -ArgumentList "install --quiet" -Wait -Verb RunAs
+        Write-Log "[SUCCESS] Docker Desktop installation seems complete." "Green"
+        Write-Log "[IMPORTANT] A system RESTART is often required after installing Docker. If the next steps fail, please restart your PC and run this script again." "Yellow"
+        Read-Host "Press Enter to continue the setup..."
+    }
+    catch {
+        Write-Log "[ERROR] Docker installation failed. Please try installing it manually from the Docker website." "Red"
+        exit 1
+    }
+}
+
+# 2. Run Docker Compose
+Write-Log "`n[INFO] Starting application containers with docker-compose..." "Gray"
+try {
+    docker-compose up -d
+    Write-Log "[SUCCESS] Docker containers are up and running in detached mode." "Green"
+}
+catch {
+    Write-Log "[ERROR] 'docker-compose up -d' failed. Please check your docker-compose.yml file and ensure Docker is running correctly." "Red"
+    exit 1
+}
+
+# 3. Open URLs in default browser
+Write-Log "`n[INFO] Opening application tabs in your default browser..." "Gray"
+Start-Process $projectUrl
+Start-Process $apiUrl
+Start-Process $repoUrl # Opening the repo as a third useful tab
+
+Write-Log ""
+Write-Log "========================================================" "Cyan"
+Write-Log "Setup complete! Your application should be accessible." "Cyan"
+Write-Log "  - Frontend: $projectUrl" "Cyan"
+Write-Log "  - API/Backend: $apiUrl" "Cyan"
+Write-Log "========================================================" "Cyan"
