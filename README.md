@@ -49,11 +49,16 @@ docker-compose up -d
 * **localhost:8080** -> local port for hosting our app ( we weren't able to host it any other way without paying a lot and still being able to use n8n platform )
 6. **When opening n8n for the first time YOU MAY NEED to log in and then authorize your email address**
 7. After successfully loging in and opening all 3 n8n tabs, in each tab open a different bot:
-* Criminal
-* Road accident
-* CultureBot
+* Criminal.json
+* Road accident.json
+* CultureBot.json
 
-Each of them should have a green button with **"Active"** message nxt to them if not please activate them
+You open the bot by clicking on a "+" button,
+then "Workflow",
+"***" three dots,
+"Import from file..." 
+and choose a json file for each BOT listed above.
+Each of them should have a green button with **"Active"** message next to them, if not please activate them.
 
 8. Next we need to set up LLM AI Credentials in all 5 Nodes looking like this:
 <img width="147" height="151" alt="image" src="https://github.com/user-attachments/assets/e2611872-8714-401e-ab01-2d1853022731" />
