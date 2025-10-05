@@ -31,24 +31,24 @@ winget install -e --id Docker.DockerDesktop
 *   **Administrator Privileges:** The script will attempt to install Docker Desktop, which requires administrator rights. You will see a UAC (User Account Control) prompt.
 
 ### Launch Instruction
-1. After installing **Docker Desktop** restart your computer and open **Docker Desktop**
+1. After installing **Docker Desktop** restart your computer and open **Docker Desktop** app
 2. Open your **Terminal** or **Powershell** as an Administrator
-3. Copy and paste:
+3. Copy and paste below command:
 ```shell
 git clone -b main https://github.com/JustSkadi/SafeSpot-HackYeah-2025.git C:\SafeSpot
 cd C:\SafeSpot
 ```
-4. Copy and paste to compose Docker Containers and install **n8n in Docker**:
+4. Copy and paste the below command to compose **Docker Containers** and install **n8n in Docker**:
 ```shell
 docker-compose up -d
 ```
 5. After dowloading, open **4 tabs** in your browser:
-* localhost:5678 -> Tab for the first AI Agent in n8n
-* localhost:5678 -> Tab for the second AI Agent in n8n
-* localhost:5678 -> Tab for the third AI Agent in n8n
-* localhost:8080 -> local port for hosting our app ( we weren't able to host it other way without paying a lot and still be able to use n8n )
-6. In **n8n when opening it for the first time YOU MAY NEED to log in and then authorize your email address**
-7. After successfully loging in and opening all 3 n8n tabs, in each tab open different bot:
+* **localhost:5678** -> Tab for the first AI Agent in n8n
+* **localhost:5678** -> Tab for the second AI Agent in n8n
+* **localhost:5678** -> Tab for the third AI Agent in n8n
+* **localhost:8080** -> local port for hosting our app ( we weren't able to host it any other way without paying a lot and still being able to use n8n platform )
+6. **When opening n8n for the first time YOU MAY NEED to log in and then authorize your email address**
+7. After successfully loging in and opening all 3 n8n tabs, in each tab open a different bot:
 * Criminal
 * Road accident
 * CultureBot
