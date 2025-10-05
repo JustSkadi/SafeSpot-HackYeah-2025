@@ -1,0 +1,92 @@
+[
+  {
+    "type_of_threat": "criminal",
+    "summary": "Two individuals were apprehended for attempting to flee after being observed vandalizing property with graffiti. They were found to be in possession of spray paint, pepper spray, and a knife. Additionally, during a traffic stop, an individual connected to the same group was found with similar items including spray paint and pepper spray.",
+    "location": "Ul. św. Barbary in Wieliczka and a residential area in Wieliczka",
+    "date": "2025-10-04",
+    "url": "https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow",
+    "latitude": 49.98587,
+    "longitude": 20.06478
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "Two men were arrested after a police chase. They were suspected of assaulting a 17-year-old. During the pursuit, the suspects drove dangerously and ignored police orders. They were found with pseudofan emblems, balaclavas, sharp objects, and a gas pistol. The driver did not have a license, and the passenger had alcohol in his system.",
+    "location": "Sidzina, a town in the Krakow district",
+    "date": "2025-10-02",
+    "url": "https://cowkrakowie.pl/2025/10/policjanci-prowadzili-poscig-wczesniej-sprawcy-dokonali-pobicia",
+    "latitude": 49.80577,
+    "longitude": 19.88529
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "A 43-year-old Ukrainian woman was arrested in Skawina by Krakow police. She was wanted by Interpol with a red notice for fraud, counterfeiting money, and corruption, and was facing a 3-year and 6-month prison sentence in Ukraine.",
+    "location": "Skawina",
+    "date": "2025-10-02",
+    "url": "https://cowkrakowie.pl/2025/10/za-ukrainka-wydano-najwyzszy-stopien-miedzynarodowych-poszukiwan",
+    "latitude": 49.99833,
+    "longitude": 19.85861
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "A Ukrainian citizen was found to be transporting over 15 kg of human hair in his luggage at Krakow Airport. The hair, originating from Turkey, was undeclared and estimated to be worth 270,000 PLN. A criminal fiscal proceeding has been initiated.",
+    "location": "Krakow Airport",
+    "date": "2025-10-01",
+    "url": "https://cowkrakowie.pl/2025/10/15-kg-ludzkich-wlosow-na-lotnisku-w-krakowie",
+    "latitude": 50.077778,
+    "longitude": 19.784722
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "A Polish citizen, arriving at Krakow Airport from Bristol, was arrested and sentenced to one year in prison. He was wanted for a theft with burglary. The arrest was made by border guards.",
+    "location": "Krakow Airport, Krakow, Poland",
+    "date": "2025-09-30",
+    "url": "https://cowkrakowie.pl/2025/09/przylecial-do-krakowa-i-trafil-na-rok-do-wiezienia",
+    "latitude": 50.07778,
+    "longitude": 19.78472
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "A 24-year-old Ukrainian woman was arrested in a Krakow hotel for her involvement in a fraud scheme. She acted as a 'picker,' providing her bank account for fraudulent transactions. After committing the fraud in February, she fled to Ukraine. The police seized $2400 in cash at the time of her arrest. The woman faces up to 8 years in prison.",
+    "location": "Krakow, Poland",
+    "date": "2025-09-29",
+    "url": "https://cowkrakowie.pl/2025/09/w-jednym-z-krakowskich-hoteli-zatrzymano-ukrainke-mloda-kobieta-byla-zaskoczona",
+    "latitude": 50.06143,
+    "longitude": 19.93658
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "A man caused a disturbance in a restaurant, then assaulted parked cars. Police apprehended him, discovering over 100 grams of mephedrone. The man faces charges for drug possession and could face up to 10 years in prison.",
+    "location": "Borek Fałęckiego, Kraków",
+    "date": "2025-09-27",
+    "url": "https://cowkrakowie.pl/2025/09/agresor-awanturowal-sie-w-restauracji-oraz-uderzal-w-zaparkowane-samochody",
+    "latitude": 49.99304,
+    "longitude": 19.91452
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "A 22-year-old citizen of Nepal was apprehended near the Krakow Main Bus Station. He entered Poland illegally, lacking proper documentation and overstaying his allowed period. He had previously applied for temporary residency with a Croatian visa, but it was deemed unlawful. He was working in the gastronomy sector. He was issued a return decision and a 10-month ban from the Schengen area.",
+    "location": "Krakow Main Bus Station area",
+    "date": "2025-09-26",
+    "url": "https://cowkrakowie.pl/2025/09/wpadl-w-okolicy-dworca-glownego-musi-opuscic-polske",
+    "latitude": 50.064778,
+    "longitude": 19.945329
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "A man died in a fire in Zabierzów Bocheński. The Krakowska prokuratura determined that the fire was started by the man's wife, who poured gasoline on him and set him on fire. The woman was arrested and charged with murder.",
+    "location": "Zabierzów Bocheński (near Kraków)",
+    "date": "2025-09-25",
+    "url": "https://cowkrakowie.pl/2025/09/zona-podpalila-meza-mezczyzna-nie-zyje",
+    "latitude": 50.03388,
+    "longitude": 19.94209
+  },
+  {
+    "type_of_threat": "criminal",
+    "summary": "Two Ukrainian citizens entered the premises of Krakow's waterworks without authorization. Initially, they were released due to lack of evidence of damage or other crimes. However, police investigations linked them to potential drug activity, leading to their arrest. They were then charged with violating a dwelling after waterworks representatives filed a complaint. The police requested the Border Guard to deport them.",
+    "location": "Krakow waterworks on Wodociągowa Street",
+    "date": "2025-09-23",
+    "url": "https://cowkrakowie.pl/2025/09/wtargniecie-na-teren-krakowskich-wodociagow-stanowisko-policji",
+    "latitude": 50.07273,
+    "longitude": 19.99921
+  }
+]
