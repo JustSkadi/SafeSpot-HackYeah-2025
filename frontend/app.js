@@ -390,7 +390,65 @@ async function loadDangerZones() {
 
 // Function to load incidents and populate the list
 async function loadIncidentsList() {
+    
+
+
+
+    
+    
     try {
+        async function loadAndMergeIncidents() {
+            try {
+                const [incidentsRes, dangerZonesRes] = await Promise.all([
+                    fetch('incidents.json'),
+                    fetch('dangerzones.json')
+                ]);
+
+                if (!incidentsRes.ok) {
+                    console.error('Could not fetch incidents.json');
+                }
+                if (!dangerZonesRes.ok) {
+                    console.error('Could not fetch dangerzones.json');
+                }
+
+                const incidentsData = incidentsRes.ok ? await incidentsRes.json() : [];
+                const dangerZonesData = dangerZonesRes.ok ? await dangerZonesRes.json() : [];
+
+                const incidents = [...incidentsData, ...dangerZonesData];
+                
+                console.log('Merged incidents:', incidents);
+                return incidents;
+
+            } catch (error) {
+                console.error("Failed to load and merge data:", error);
+                return [];
+            }
+        }
+
+        async function loadIncidentsList() {
+            try {
+                const incidents = await loadAndMergeIncidents(); // Użyj nowej funkcji
+                
+                const incidentListElement = document.querySelector('.incident-list');
+                incidentListElement.innerHTML = '';
+                
+                if (incidents.length === 0) {
+                    incidentListElement.innerHTML = '<li class="no-incidents">No incidents reported in this area</li>';
+                    return;
+                }
+                
+                incidents.forEach((incident, index) => {
+                    const listItem = createIncidentListItem(incident, index);
+                    incidentListElement.appendChild(listItem);
+                });
+                
+            } catch (error) {
+                console.error("Failed to load incidents:", error);
+                const incidentListElement = document.querySelector('.incident-list');
+                incidentListElement.innerHTML = '<li class="error-message">Failed to load incidents</li>';
+            }
+        }
+
         const response = await fetch('incidents.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
