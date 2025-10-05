@@ -1,3 +1,7 @@
+let map;
+let dangerZoneCircles = [];
+let cultureDataLoaded = false;
+
 function getSelectedFilters() {
     const filters = {
         criminal: document.getElementById('type1')?.checked || false,
@@ -27,6 +31,133 @@ function hideLoadingMessage() {
     if (loadingDiv) {
         loadingDiv.remove();
     }
+}
+
+async function triggerCultureWorkflow() {
+    try {
+        const cultureUrl = `/n8n/webhook-test/culture`;
+        
+        console.log('Calling culture workflow...');
+        
+        const response = await fetch(cultureUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                country: 'Poland',
+                timestamp: new Date().toISOString()
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Culture webhook failed: HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Culture workflow response:', data);
+        
+        // Sprawdź czy dane są w poprawnym formacie
+        const cultureArray = Array.isArray(data) ? data : [data];
+        
+        await saveCultureDataToBackend(cultureArray);
+        
+        return cultureArray;
+    } catch (error) {
+        console.error('Error in culture workflow:', error);
+        return null;
+    }
+}
+
+async function saveCultureDataToBackend(cultureData) {
+    try {
+        const response = await fetch('/api/culture', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(cultureData)
+        });
+        
+        const result = await response.json();
+        console.log('Culture data saved to backend:', result);
+    } catch (error) {
+        console.error('Error saving culture data:', error);
+    }
+}
+
+async function loadCultureData() {
+    try {
+        const response = await fetch('/api/culture');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log('No culture data found');
+        return null;
+    }
+}
+
+function displayCultureData(data) {
+    const container = document.getElementById('cultureContent');
+    
+    if (!data || !data.length) {
+        container.innerHTML = '<div class="loading-culture">No cultural information available</div>';
+        return;
+    }
+    
+    const countryData = data[0];
+    let html = '';
+    
+    if (countryData.critical_mistakes_to_avoid) {
+        html += '<div class="culture-section">';
+        html += '<h3>Critical Mistakes to Avoid</h3>';
+        countryData.critical_mistakes_to_avoid.forEach(mistake => {
+            html += '<div class="mistake-item">';
+            html += `<div class="mistake-title">${mistake.mistake}</div>`;
+            html += `<div class="mistake-why"><span class="label label-why">Why</span>${mistake.why_its_wrong}</div>`;
+            html += `<div class="mistake-correct"><span class="label label-correct">Do</span>${mistake.correct_behavior}</div>`;
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    
+    if (countryData.essential_etiquette) {
+        html += '<div class="culture-section">';
+        html += '<h3>Essential Etiquette</h3>';
+        countryData.essential_etiquette.forEach(item => {
+            html += '<div class="etiquette-item">';
+            html += `<div class="etiquette-category">${item.category.toUpperCase()}</div>`;
+            html += `<div class="etiquette-do"><span class="label label-do">Do</span>${item.do}</div>`;
+            html += `<div class="etiquette-dont"><span class="label label-dont">Don't</span>${item.dont}</div>`;
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    
+    if (countryData.cultural_norms) {
+        html += '<div class="culture-section">';
+        html += '<h3>Cultural Norms</h3>';
+        countryData.cultural_norms.forEach(norm => {
+            html += '<div class="norm-item">';
+            html += `<div class="norm-topic">${norm.topic}</div>`;
+            html += `<div class="norm-description">${norm.description}</div>`;
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    
+    if (countryData.key_traditions) {
+        html += '<div class="culture-section">';
+        html += '<h3>Key Traditions</h3>';
+        countryData.key_traditions.forEach(tradition => {
+            html += '<div class="tradition-item">';
+            html += `<div class="tradition-name">${tradition.tradition}</div>`;
+            html += `<div class="tradition-context"><span class="label label-context">Info</span>${tradition.context}</div>`;
+            if (tradition.visitor_expectations) {
+                html += `<div class="mistake-correct"><span class="label label-correct">Visitors</span>${tradition.visitor_expectations}</div>`;
+            }
+            html += '</div>';
+        });
+        html += '</div>';
+    }
+    
+    container.innerHTML = html;
 }
 
 async function triggerN8nWorkflows(latitude, longitude, placeName) {
@@ -228,23 +359,6 @@ async function searchPlaces() {
     }
 }
 
-document.getElementById('search-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        searchPlaces();
-    }
-});
-
-const Cracow = {
-    lat: 50.0647,
-    lng: 19.9450
-};
-
-const map = L.map('map').setView([Cracow.lat, Cracow.lng], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-}).addTo(map);
-
 function getThreatColor(category) {
     if (category === 'criminal') {
         return 'red';
@@ -265,30 +379,6 @@ function createCustomIcon(color) {
         shadowSize: [41, 41]
     });
 }
-
-function addLegend() {
-    const legend = L.control({ position: 'bottomright' });
-    
-    legend.onAdd = function (map) {
-        const div = L.DomUtil.create('div', 'info legend');
-        div.style.backgroundColor = 'white';
-        div.style.padding = '10px';
-        div.style.border = '2px solid rgba(0,0,0,0.2)';
-        div.style.borderRadius = '5px';
-        
-        div.innerHTML = `
-            <h4 style="margin: 0 0 10px 0;">Danger types</h4>
-            <div><span style="color: red;">●</span> Criminal</div>
-            <div><span style="color: orange;">●</span> Road accident</div>
-            <div><span style="color: blue;">●</span> Other</div>
-        `;
-        
-        return div;
-    };
-    
-}
-
-const dangerZoneCircles = [];
 
 function getOpacityByZoom(zoomLevel) {
     const minZoom = 10;
@@ -311,8 +401,6 @@ function updateCircleOpacity() {
         circle.setStyle({ fillOpacity: opacity });
     });
 }
-
-map.on('zoomend', updateCircleOpacity);
 
 function getZoneColor(crime_rate) {
     if (crime_rate > 51) return 'red';
@@ -356,7 +444,7 @@ async function loadDangerZones() {
         });
 
     } catch (error) {
-        console.error("Nie udało się wczytać lub przetworzyć pliku dangerzones.json:", error);
+        console.error("Failed to load dangerzones.json:", error);
     }
 }
 
@@ -506,36 +594,152 @@ function filterIncidents() {
         
         item.style.display = shouldShow ? 'block' : 'none';
     });
-    
-    filterMarkers(criminalChecked, accidentChecked, othersChecked);
 }
 
+function resetFilters() {
+    document.getElementById('type1').checked = false;
+    document.getElementById('type2').checked = false;
+    document.getElementById('type3').checked = false;
+    
+    const incidentItems = document.querySelectorAll('.incident-item');
+    incidentItems.forEach(item => {
+        item.style.display = 'block';
+    });
+}
+
+// INICJALIZACJA - URUCHAMIA SIĘ PO ZAŁADOWANIU DOM
 document.addEventListener('DOMContentLoaded', function() {
+    // Inicjalizacja mapy
+    const Cracow = {
+        lat: 50.0647,
+        lng: 19.9450
+    };
+
+    map = L.map('map').setView([Cracow.lat, Cracow.lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    map.on('zoomend', updateCircleOpacity);
+
+    // Załaduj dane początkowe
+    loadDangerZones();
     reloadIncidents();
     loadIncidentsList();
     
+    // Obsługa przycisków nawigacji
     const openListBtn = document.getElementById('openListBtn');
     const listPanel = document.getElementById('listPanel');
+    const mapBtn = document.getElementById('mapBtn');
+    const mapPanel = document.getElementById('mapPanel');
     
     if (openListBtn) {
         openListBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Toggle - jeśli lista jest otwarta, zamknij ją
+            if (mapPanel && mapPanel.classList.contains('active')) {
+                mapPanel.classList.remove('active');
+                mapBtn.classList.add('active');
+            }
+            
             if (listPanel.classList.contains('active')) {
                 listPanel.classList.remove('active');
                 openListBtn.classList.add('active');
-                document.getElementById('mapBtn').classList.remove('active');
             } else {
-                // Jeśli zamknięta, otwórz i załaduj dane
                 loadIncidentsList();
                 listPanel.classList.add('active');
                 openListBtn.classList.remove('active');
-                document.getElementById('mapBtn').classList.add('active');
             }
         });
     }
     
+    if (mapBtn) {
+        mapBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            if (listPanel.classList.contains('active')) {
+                listPanel.classList.remove('active');
+                openListBtn.classList.add('active');
+            }
+            
+            if (mapPanel.classList.contains('active')) {
+                mapPanel.classList.remove('active');
+                mapBtn.classList.add('active');
+            } else {
+                mapPanel.classList.add('active');
+                mapBtn.classList.remove('active');
+                
+                if (!cultureDataLoaded) {
+                    // Pokaż loading
+                    const cultureContent = document.getElementById('cultureContent');
+                    cultureContent.innerHTML = '<div class="loading-culture">Loading cultural information...</div>';
+                    
+                    // Najpierw sprawdź czy są zapisane dane
+                    const existingData = await loadCultureData();
+                    
+                    if (existingData && existingData.length > 0) {
+                        console.log('Using cached culture data');
+                        displayCultureData(existingData);
+                        cultureDataLoaded = true;
+                    } else {
+                        // Wywołaj webhook tylko jeśli nie ma danych
+                        console.log('Fetching fresh culture data from webhook');
+                        const cultureData = await triggerCultureWorkflow();
+                        
+                        if (cultureData && cultureData.length > 0) {
+                            displayCultureData(cultureData);
+                            cultureDataLoaded = true;
+                        } else {
+                            cultureContent.innerHTML = '<div class="loading-culture">Failed to load cultural information. Please try again.</div>';
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Obsługa wyszukiwania
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchPlaces();
+            }
+        });
+    }
+
+    const searchBtn = document.getElementById('searchBtn');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            searchPlaces();
+        });
+    }
+
+    // Obsługa przycisku Start
+    const startButton = document.querySelector('.start-button');
+    if (startButton) {
+        startButton.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const center = map.getCenter();
+            const placeName = 'Current map area';
+            this.style.opacity = '0.6';
+            this.style.pointerEvents = 'none';
+            await triggerN8nWorkflows(center.lat, center.lng, placeName);
+            this.style.opacity = '1';
+            this.style.pointerEvents = 'auto';
+        });
+    }
+
+    // Obsługa modal options
+    const openOptionsBtn = document.getElementById('openOptionsBtn');
+    if (openOptionsBtn) {
+        openOptionsBtn.addEventListener('click', function() {
+            document.getElementById('optionsModal').style.display = 'flex';
+        });
+    }
+
     const applyBtn = document.getElementById('applyBtn');
     if (applyBtn) {
         applyBtn.addEventListener('click', function() {
@@ -544,49 +748,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-document.getElementById('openOptionsBtn').addEventListener('click', function() {
-    document.getElementById('optionsModal').style.display = 'flex';
-});
-
-document.getElementById('searchBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    searchPlaces();
-});
-
-function resetFilters() {
-    document.getElementById('type1').checked = false;
-    document.getElementById('type2').checked = false;
-    document.getElementById('type3').checked = false;
-    
-    incidentMarkers.forEach(item => {
-        if (!map.hasLayer(item.marker)) {
-            map.addLayer(item.marker);
-        }
-    });
-    
-    const incidentItems = document.querySelectorAll('.incident-item');
-    incidentItems.forEach(item => {
-        item.style.display = 'block';
-    });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const startButton = document.querySelector('.start-button');
-    
-    if (startButton) {
-        startButton.addEventListener('click', async function(e) {
-            e.preventDefault();
-            const center = map.getCenter();
-            const placeName = 'Current map area';
-            this.style.opacity = '0.6';
-            this.style.pointerEvents = 'none';
-            console.log('Start button clicked');
-            await triggerN8nWorkflows(center.lat, center.lng, placeName);
-            this.style.opacity = '1';
-            this.style.pointerEvents = 'auto';
-        });
-    }
-});
-
-loadDangerZones();

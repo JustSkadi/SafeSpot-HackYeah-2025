@@ -1,0 +1,145 @@
+[
+  {
+    "country": "Poland",
+    "critical_mistakes_to_avoid": [
+      {
+        "mistake": "Using the 'thumbs up' gesture excessively or in inappropriate contexts",
+        "why_its_wrong": "While generally positive, overly enthusiastic thumbs-up can be seen as informal or even rude in formal or solemn situations in Poland.",
+        "correct_behavior": "Use thumbs up sparingly and prefer a polite nod or verbal affirmation especially in formal or unfamiliar settings."
+      },
+      {
+        "mistake": "Addressing strangers or acquaintances without using formal titles and last names initially",
+        "why_its_wrong": "Poles place importance on formal address, especially with older people or in business; skipping formal titles too soon can appear disrespectful.",
+        "correct_behavior": "Use 'Pan' (Mr.) or 'Pani' (Mrs./Ms.) followed by last name when first meeting someone; wait for an invitation to use first names or informal speech."
+      },
+      {
+        "mistake": "Arriving very late to social or business appointments",
+        "why_its_wrong": "Polish culture values punctuality; being late can be interpreted as a sign of disrespect or unreliability.",
+        "correct_behavior": "Aim to arrive on time or only a few minutes late. If delayed, apologize and inform the host promptly."
+      },
+      {
+        "mistake": "Refusing offered food or drink without a polite reason",
+        "why_its_wrong": "Hospitality is highly valued in Poland; refusing offers of food or drink outright can be perceived as rude or ungrateful.",
+        "correct_behavior": "If you cannot eat or drink, politely explain your reason. Otherwise, accept small portions as a sign of respect."
+      },
+      {
+        "mistake": "Talking loudly or making exaggerated gestures in public spaces",
+        "why_its_wrong": "Poles generally value restrained public behavior; loud or overly demonstrative conduct may attract negative attention or be seen as rude.",
+        "correct_behavior": "Keep volume moderate and gestures subtle, especially in public transportation, restaurants, and places of worship."
+      },
+      {
+        "mistake": "Giving an even number of flowers when presenting flower bouquets",
+        "why_its_wrong": "Even numbers of flowers are associated with funerals and mourning in Poland.",
+        "correct_behavior": "Always give an odd number of flowers unless you are attending a funeral."
+      },
+      {
+        "mistake": "Not removing shoes when invited into someone’s home",
+        "why_its_wrong": "Many Polish households consider it impolite to wear outdoor shoes inside the home due to cleanliness and respect.",
+        "correct_behavior": "Remove your shoes at the entrance when invited to a private home; hosts often provide slippers."
+      },
+      {
+        "mistake": "Avoiding or dismissing religious customs publicly",
+        "why_its_wrong": "Poland is a predominantly Catholic country with strong religious traditions; disregarding or criticizing religion can offend locals.",
+        "correct_behavior": "Show respect for religious places and customs; behave discreetly in churches and during religious ceremonies."
+      }
+    ],
+    "essential_etiquette": [
+      {
+        "category": "greetings",
+        "do": "Offer a firm handshake with direct eye contact; use formal titles initially",
+        "dont": "Do not hug or kiss on the first meeting unless invited"
+      },
+      {
+        "category": "dining",
+        "do": "Wait for the host to invite you to start eating; say 'Smacznego' (Enjoy your meal)",
+        "dont": "Do not start eating before everyone is served or begin eating with your hands"
+      },
+      {
+        "category": "gift-giving",
+        "do": "Bring small gifts like sweets or flowers (odd number); present gifts with both hands",
+        "dont": "Avoid gifts in even numbers or giving sharp objects (like knives)"
+      },
+      {
+        "category": "public behavior",
+        "do": "Maintain a calm and respectful demeanor; queue patiently",
+        "dont": "Avoid loud talking, public displays of intoxication, or disorderly conduct"
+      },
+      {
+        "category": "communication",
+        "do": "Speak politely and clearly; use formal language with strangers and elders",
+        "dont": "Do not interrupt or speak too informally without invitation"
+      },
+      {
+        "category": "religious customs",
+        "do": "Dress modestly when visiting churches; light candles quietly and respectfully",
+        "dont": "Do not take photos in churches without permission or behave irreverently"
+      },
+      {
+        "category": "body language",
+        "do": "Maintain eye contact during conversations",
+        "dont": "Avoid excessive nodding or shaking your head too rapidly, which can indicate sarcasm"
+      },
+      {
+        "category": "transportation",
+        "do": "Offer seats to elderly or pregnant passengers; valid tickets must be purchased in trams and buses",
+        "dont": "Do not board public transport without valid tickets or push to get on/out"
+      }
+    ],
+    "cultural_norms": [
+      {
+        "topic": "Formality in social interactions",
+        "description": "Poles maintain formality in social and professional interactions initially. Titles and polite forms of address are standard until deeper familiarity is established."
+      },
+      {
+        "topic": "Value of hospitality",
+        "description": "Guests are treated with high regard; hosts typically offer food or drinks and expect polite acceptance as a sign of mutual respect."
+      },
+      {
+        "topic": "Importance of punctuality",
+        "description": "Time is treated seriously, especially for meetings and appointments. Being even a few minutes late may be viewed negatively."
+      },
+      {
+        "topic": "Religious significance",
+        "description": "Catholicism deeply influences customs, holidays, and social values. Religious holidays and church attendance remain integral to community life."
+      },
+      {
+        "topic": "Reserved emotional expression",
+        "description": "Poles may initially appear reserved or modest in emotional expression, particularly with strangers; openness increases with trust."
+      }
+    ],
+    "key_traditions": [
+      {
+        "tradition": "Christmas Eve (Wigilia)",
+        "context": "December 24th, family dinner with specific customs like breaking and sharing opłatek (wafer)",
+        "visitor_expectations": "If invited, participate respectfully by joining in the sharing of opłatek and trying traditional dishes."
+      },
+      {
+        "tradition": "All Saints’ Day",
+        "context": "November 1st, visiting cemeteries to honor deceased relatives with candles and flowers",
+        "visitor_expectations": "Observe solemnity and silence at cemeteries; refrain from loud behavior during this important day."
+      },
+      {
+        "tradition": "Name days (Imieniny)",
+        "context": "Celebrated similarly or even more than birthdays, occurring on the saint’s day associated with a person’s given name",
+        "visitor_expectations": "Congratulating friends or colleagues on their name day is appreciated; small gifts or cards may be appropriate."
+      },
+      {
+        "tradition": "Śmigus-Dyngus (Wet Monday)",
+        "context": "Easter Monday tradition involving water fights, especially among youth",
+        "visitor_expectations": "If partaking, join good-naturedly; if avoiding, politely excuse to not offend locals."
+      },
+      {
+        "tradition": "Polish folk dances and costumes",
+        "context": "Performed during festivals and national holidays, representing regional heritage",
+        "visitor_expectations": "Show respect by watching attentively and applauding; asking before photographing performers is polite."
+      }
+    ],
+    "common_misconceptions": [
+      "Poland is the same as Russia or another Slavic country; in fact, Poland has a distinct language, culture, and history.",
+      "Polish people are always formal and unfriendly; many are warm, hospitable, and open once trust is established.",
+      "Poland is uniformly traditional; urban areas and younger generations embrace modern lifestyles and global culture.",
+      "Everyone in Poland speaks Russian; in reality, English and German are more commonly learned as foreign languages now.",
+      "Poland is only about vodka and pierogi; Polish cuisine and culture are diverse and sophisticated beyond stereotypes."
+    ]
+  }
+]

@@ -577,3 +577,94 @@ html, body {
     color: #f0f0f0;
     font-size: 20px;
 }
+
+/* Culture Panel Styles */
+.culture-content {
+    padding: 15px;
+    color: #f0f0f0;
+}
+
+.loading-culture {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0a0a0;
+    font-style: italic;
+}
+
+.culture-section {
+    margin-bottom: 25px;
+    background: #383838;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.culture-section h3 {
+    margin: 0 0 15px 0;
+    color: #f7a012;
+    font-size: 1.1em;
+    border-bottom: 2px solid #5a5a5a;
+    padding-bottom: 8px;
+}
+
+.mistake-item,
+.etiquette-item,
+.tradition-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: #4a4a4a;
+    border-radius: 6px;
+    border-left: 3px solid #f7a012;
+}
+
+.mistake-title,
+.etiquette-category,
+.tradition-name {
+    font-weight: bold;
+    color: #f7a012;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.mistake-why,
+.mistake-correct,
+.etiquette-do,
+.etiquette-dont,
+.tradition-context {
+    margin: 8px 0;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+.label {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin-right: 5px;
+    text-transform: uppercase;
+}
+
+.label-why { background: #c62828; }
+.label-correct { background: #2e7d32; }
+.label-do { background: #2e7d32; }
+.label-dont { background: #c62828; }
+.label-context { background: #1565c0; }
+
+.norm-item {
+    margin-bottom: 12px;
+    padding: 10px;
+    background: #4a4a4a;
+    border-radius: 6px;
+}
+
+.norm-topic {
+    font-weight: bold;
+    color: #f7a012;
+    margin-bottom: 5px;
+}
+
+.norm-description {
+    font-size: 0.9em;
+    line-height: 1.4;
+}

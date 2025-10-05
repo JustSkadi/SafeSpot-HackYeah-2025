@@ -34,12 +34,25 @@
                 <span class="material-icons">list</span><span>List</span>
             </a>
         </nav>
+        
+        <div id="mapPanel" class="slide-in-panel">
+            <div class="panel-header">
+                <h2>Cultural Guide - Poland</h2>
+            </div>
+            <div class="panel-body">
+                <div id="cultureContent" class="culture-content">
+                    <div class="loading-culture">Loading cultural information...</div>
+                </div>
+            </div>
+        </div>
+        
         <div id="listPanel" class="slide-in-panel">
             <div class="panel-header"><h2>Incident list in the area</h2></div>
             <div class="panel-body">
                 <ul class="incident-list"></ul>
             </div>
         </div>
+        
         <div id="map"></div>
     </div>
 
@@ -60,8 +73,6 @@
         </div>
     </div>
 
-
-    
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app.js"></script>
     <script src="web.js"></script>
