@@ -52,13 +52,16 @@
                 <h2>Incident Types</h2><span class="close-button" id="closeOptionsBtn">&times;</span>
             </div>
             <div class="modal-body">
+                <!-- In the options modal, fix the duplicate id="type2" -->
                 <ul class="options-list">
                     <li><input type="checkbox" id="type1" name="routeOptions" value="Criminal"><label for="type1">Criminal</label></li>
                     <li><input type="checkbox" id="type2" name="routeOptions" value="Road Accidents"><label for="type2">Road Accidents</label></li>
-					<li><input type="checkbox" id="type2" name="routeOptions" value="Others"><label for="type2">Others</label></li>
+                    <li><input type="checkbox" id="type3" name="routeOptions" value="Others"><label for="type3">Others</label></li>
                 </ul>
             </div>
-            <div class="modal-footer"><button id="applyBtn">Apply</button></div>
+            <div class="modal-footer">
+                <button id="resetBtn" onclick="resetFilters()" style="margin-right: 10px; padding: 10px 20px; background-color: #666; color: #f0f0f0; border: none; border-radius: 8px; cursor: pointer;">Reset</button>
+                <button id="applyBtn">Apply</button></div>
         </div>
     </div>
 
