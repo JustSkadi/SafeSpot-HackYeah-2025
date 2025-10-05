@@ -1,5 +1,8 @@
 # HackYeah 2025 Travel - SafeSpot
 
+**PLEASE WATCH THE DEMO VIDEO IN MAIN BRANCH FOR EASY APP DEMONSTRATION** 
+**SafeSpot - demo video.MP4**
+
 ## About project
 
 ### Overview
