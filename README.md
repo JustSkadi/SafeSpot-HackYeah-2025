@@ -7,10 +7,10 @@ Safe Spot is a web-based platform designed to enhance the safety and confidence 
 
 ### Key Features:
 
-- Travel-Focused Interactive Map: A dynamic map allows users to explore their destination, check specific neighborhoods, and plan their itineraries.
+- **Travel-Focused Interactive Map:** A dynamic map allows users to explore their destination, check specific neighborhoods, and plan their itineraries.
 - Color-Coded Safety Zones: The map uses a heatmap to highlight areas with higher concentrations of reported incidents, helping travelers identify places where extra caution may be needed.
-- Precise Incident Markers: Individual events are pinpointed on the map. Clicking on a marker reveals details about the incident.
-- List View & Data Transparency: Alongside the map, a comprehensive list of incidents is available. Crucially, every event entry includes a summary and a direct link to a verifiable source, ensuring data reliability.
+- **Precise Incident Markers:** Individual events are pinpointed on the map. Clicking on a marker reveals details about the incident.
+- **List View & Data Transparency:** Alongside the map, a comprehensive list of incidents is available. Crucially, every event entry includes a summary and a direct link to a verifiable source, ensuring data reliability.
 
 ### Objective
 The primary goal is to empower tourists with reliable, up-to-date safety information, allowing them to plan safer holidays, choose accommodations wisely, and navigate new cities with greater awareness and peace of mind.
@@ -27,10 +27,10 @@ This project uses Docker to simplify setup and ensure a consistent environment. 
 
 ### One-Step Launch
 
-Open a terminal (like Windows Terminal or Git Bash) and run the single command below. It will:
-1.  Clone the repository to your Desktop.
-2.  Navigate into the project directory.
-3.  Execute the `run.ps1` PowerShell script to automate the entire setup.
+Open a terminal (like Windows Terminal or Git Bash) and run the single-line command below. It will:
+    1.  Clone the repository to your Desktop.
+    2.  Navigate into the project directory.
+    3.  Execute the `run.ps1` PowerShell script to automate the entire setup.
 
 **Copy and paste this command into your terminal:**
 
