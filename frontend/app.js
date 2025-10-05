@@ -387,18 +387,10 @@ async function loadDangerZones() {
     }
 }
 
-const mergeJsonFiles = require('./mergeJson.js');
 
 // Function to load incidents and populate the list
 async function loadIncidentsList() {
     try {
-        try {
-            const result = await mergeJsonFiles('./backend/data', './incidents.json');
-            console.log(`Merged ${result.filesProcessed} files successfully`);
-        } catch (error) {
-            console.error('Error:', error.message);
-        }
-
         const response = await fetch('incidents.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
