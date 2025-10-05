@@ -124,5 +124,110 @@
     "longitude": 20.057,
     "crime_rate": 25,
     "size": 65410000
+  },
+  {
+    "district_name": "Brent",
+    "latitude": 51.5673,
+    "longitude": -0.2711,
+    "crime_rate": 97.06,
+    "size": 43240000
+  },
+  {
+    "district_name": "Camden",
+    "latitude": 51.5290,
+    "longitude": -0.1255,
+    "crime_rate": 161.97,
+    "size": 21800000
+  },
+  {
+    "district_name": "City of Westminster",
+    "latitude": 51.4975,
+    "longitude": -0.1357,
+    "crime_rate": 350.33,
+    "size": 21480000
+  },
+  {
+    "district_name": "Greenwich",
+    "latitude": 51.4934,
+    "longitude": 0.0098,
+    "crime_rate": 96.19,
+    "size": 47350000
+  },
+  {
+    "district_name": "Hackney",
+    "latitude": 51.5450,
+    "longitude": -0.0553,
+    "crime_rate": 116.33,
+    "size": 19060000
+  },
+  {
+    "district_name": "Hammersmith & Fulham",
+    "latitude": 51.4927,
+    "longitude": -0.2339,
+    "crime_rate": 113.46,
+    "size": 16400000
+  },
+  {
+    "district_name": "Haringey",
+    "latitude": 51.6000,
+    "longitude": -0.1119,
+    "crime_rate": 103.80,
+    "size": 29590000
+  },
+  {
+    "district_name": "Islington",
+    "latitude": 51.5465,
+    "longitude": -0.1058,
+    "crime_rate": 129.79,
+    "size": 14860000
+  },
+  {
+    "district_name": "Kensington & Chelsea",
+    "latitude": 51.4990,
+    "longitude": -0.1938,
+    "crime_rate": 144.25,
+    "size": 12130000
+  },
+  {
+    "district_name": "Lambeth",
+    "latitude": 51.4571,
+    "longitude": -0.1231,
+    "crime_rate": 115.43,
+    "size": 26820000
+  },
+  {
+    "district_name": "Manchester",
+    "latitude": 53.4808,
+    "longitude": -2.2426,
+    "crime_rate": 158.31,
+    "size": 115650000
+  },
+  {
+    "district_name": "Newcastle upon Tyne",
+    "latitude": 54.9783,
+    "longitude": -1.6174,
+    "crime_rate": 118.84,
+    "size": 113440000
+  },
+  {
+    "district_name": "Norwich",
+    "latitude": 52.6309,
+    "longitude": 1.2974,
+    "crime_rate": 115.86,
+    "size": 39020000
+  },
+  {
+    "district_name": "Southwark",
+    "latitude": 51.5025,
+    "longitude": -0.0873,
+    "crime_rate": 125.40,
+    "size": 28850000
+  },
+  {
+    "district_name": "Tower Hamlets",
+    "latitude": 51.5099,
+    "longitude": -0.0059,
+    "crime_rate": 112.28,
+    "size": 19770000
   }
 ]
