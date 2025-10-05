@@ -16,22 +16,14 @@ async function ensureIncidentFilesExist() {
         const criminalFile = path.join(dataDir, 'incidents_criminal.json');
         const roadFile = path.join(dataDir, 'incidents_road.json');
         
-        // Sprawdź czy pliki istnieją, jeśli nie - stwórz puste
-        try {
-            await fs.access(criminalFile);
-        } catch {
-            await fs.writeFile(criminalFile, JSON.stringify([], null, 2));
-            console.log('Created empty criminal incidents file');
-        }
+        // Zawsze zeruj pliki przy starcie aplikacji
+        await fs.writeFile(criminalFile, JSON.stringify([], null, 2));
+        console.log('Cleared criminal incidents file on startup');
         
-        try {
-            await fs.access(roadFile);
-        } catch {
-            await fs.writeFile(roadFile, JSON.stringify([], null, 2));
-            console.log('Created empty road incidents file');
-        }
+        await fs.writeFile(roadFile, JSON.stringify([], null, 2));
+        console.log('Cleared road incidents file on startup');
         
-        console.log('Incident files ready');
+        console.log('Incident files ready - all data cleared');
     } catch (error) {
         console.error('Error ensuring incident files exist:', error);
     }

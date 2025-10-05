@@ -7,8 +7,31 @@ function getSelectedFilters() {
     return filters;
 }
 
+function showLoadingMessage() {
+    const existingMessage = document.getElementById('loading-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'loading-message';
+    loadingDiv.className = 'loading-message';
+    loadingDiv.textContent = 'Wait, the agent is thinking...';
+    
+    const topBar = document.querySelector('.top-bar');
+    topBar.appendChild(loadingDiv);
+}
+
+function hideLoadingMessage() {
+    const loadingDiv = document.getElementById('loading-message');
+    if (loadingDiv) {
+        loadingDiv.remove();
+    }
+}
+
 async function triggerN8nWorkflows(latitude, longitude, placeName) {
-    // Change these URLs to use the nginx proxy
+    showLoadingMessage();
+    
     const criminalUrl = `/n8n/webhook-test/trigger-criminal-workflow`;
     const roadUrl = `/n8n/webhook-test/trigger-road-workflow`;
     
@@ -88,27 +111,7 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
     
     setTimeout(() => reloadIncidents(), 2000);
     
-    if (allIncidents.length > 0) {
-        L.popup()
-            .setLatLng([latitude, longitude])
-            .setContent(`
-                <div style="text-align: center; padding: 5px;">
-                    <strong>Analysis complete!</strong><br>
-                    <small>Found ${allIncidents.length} incidents</small>
-                </div>
-            `)
-            .openOn(map);
-    } else {
-        L.popup()
-            .setLatLng([latitude, longitude])
-            .setContent(`
-                <div style="text-align: center; padding: 5px;">
-                    <strong>No incidents found</strong><br>
-                    <small>Try different location</small>
-                </div>
-            `)
-            .openOn(map);
-    }
+    hideLoadingMessage();
     
     return allIncidents;
 }
@@ -220,12 +223,8 @@ async function searchPlaces() {
     if (coords) {
         map.setView([coords.latitude, coords.longitude], 15);
         await triggerN8nWorkflows(coords.latitude, coords.longitude, placeName);
-        
     } else {
-        L.popup()
-            .setLatLng(map.getCenter())
-            .setContent(`Could not find '${placeName}'`)
-            .openOn(map);
+        hideLoadingMessage();
     }
 }
 
@@ -516,10 +515,24 @@ document.addEventListener('DOMContentLoaded', function() {
     loadIncidentsList();
     
     const openListBtn = document.getElementById('openListBtn');
+    const listPanel = document.getElementById('listPanel');
+    
     if (openListBtn) {
         openListBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            loadIncidentsList();
+            
+            // Toggle - jeśli lista jest otwarta, zamknij ją
+            if (listPanel.classList.contains('active')) {
+                listPanel.classList.remove('active');
+                openListBtn.classList.add('active');
+                document.getElementById('mapBtn').classList.remove('active');
+            } else {
+                // Jeśli zamknięta, otwórz i załaduj dane
+                loadIncidentsList();
+                listPanel.classList.add('active');
+                openListBtn.classList.remove('active');
+                document.getElementById('mapBtn').classList.add('active');
+            }
         });
     }
     

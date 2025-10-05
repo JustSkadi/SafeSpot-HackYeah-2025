@@ -12,25 +12,7 @@ applyBtn.addEventListener('click', () => {
     optionsModal.style.display = 'none';
 });
 
-const listPanel = document.getElementById('listPanel');
-const openListBtn = document.getElementById('openListBtn');
-const mapBtn = document.getElementById('mapBtn');
-
-const openListPanel = (event) => {
-    event.preventDefault(); 
-    listPanel.classList.add('active');
-    openListBtn.classList.remove('active'); 
-    mapBtn.classList.add('active');
-};
-const closeListPanel = (event) => {
-    event.preventDefault();
-    listPanel.classList.remove('active');
-    mapBtn.classList.remove('active'); 
-    openListBtn.classList.add('active');
-};
-
-openListBtn.addEventListener('click', openListPanel);
-mapBtn.addEventListener('click', closeListPanel);
+// Autocomplete dla wyszukiwania
 const destinationInput = document.getElementById('search-input');
 const suggestionsList = document.getElementById('suggestionsList');
 const apiKey = '212971bb0651475ab201273217d3ec3a';
