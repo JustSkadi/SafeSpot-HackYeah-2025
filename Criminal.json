@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        192,
-        0
+        240,
+        16
       ],
-      "id": "0c41fe1e-2773-43db-873f-e5d274e5de1e",
+      "id": "49e8f463-23a2-4b76-902e-5ab271182d05",
       "name": "Edit Fields"
     },
     {
@@ -28,10 +28,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        672,
-        0
+        720,
+        16
       ],
-      "id": "fb61a1ab-7fef-4834-b9d1-d8985e12878b",
+      "id": "e0c7b5d3-744e-47cd-8c09-f254ac07e641",
       "name": "HTTP Request"
     },
     {
@@ -41,10 +41,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        0
+        1008,
+        16
       ],
-      "id": "e2a1385f-525a-4631-bf05-01b67b05e740",
+      "id": "a1d5c6a6-4f44-4b11-8b34-f9ccf83757c4",
       "name": "Code in JavaScript3"
     },
     {
@@ -59,10 +59,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1264,
-        0
+        1312,
+        16
       ],
-      "id": "349ea5d3-6184-4a0d-aa32-6df37aee5884",
+      "id": "40378c9b-d4c6-4e73-8691-9e47f7e7ad79",
       "name": "HTTP Request1",
       "retryOnFail": true,
       "maxTries": 2
@@ -76,10 +76,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        1728,
-        0
+        1776,
+        16
       ],
-      "id": "2fd1931a-948f-4aa8-98e9-da4bf98de59f",
+      "id": "df99dcc8-d967-4ea5-86e2-a16b75325d65",
       "name": "AI Agent"
     },
     {
@@ -90,14 +90,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        1728,
-        240
+        1776,
+        256
       ],
-      "id": "9be5178e-6def-428c-a7dd-bf9fe114afba",
+      "id": "18ce9ffc-f386-4a0c-a6b3-a40ee23eea89",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
-          "id": "Z1HGSEjhi41D7H53",
+          "id": "ffh8nCuJj9nmZtMP",
           "name": "OpenRouter account"
         }
       }
@@ -109,10 +109,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2160,
-        0
+        2208,
+        16
       ],
-      "id": "2c0d79b0-da84-4478-8fd3-10c51a35515f",
+      "id": "7af59ed2-f6a8-4c1d-96db-7218c5045db3",
       "name": "Code in JavaScript"
     },
     {
@@ -124,10 +124,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        2368,
-        0
+        2416,
+        16
       ],
-      "id": "12b7557f-fcdc-4960-9e70-139af953fd08",
+      "id": "e84d2dcc-7059-41da-93d6-ffebf661127b",
       "name": "AI Agent1"
     },
     {
@@ -138,14 +138,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        2368,
-        240
+        2416,
+        256
       ],
-      "id": "ea8c0c02-8ec2-4fcc-b6e3-5510fd11a030",
+      "id": "66b602a2-b8af-4702-8990-ddc279e9c1a6",
       "name": "OpenRouter Chat Model1",
       "credentials": {
         "openRouterApi": {
-          "id": "Z1HGSEjhi41D7H53",
+          "id": "ffh8nCuJj9nmZtMP",
           "name": "OpenRouter account"
         }
       }
@@ -157,10 +157,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2720,
-        0
+        2768,
+        16
       ],
-      "id": "fd2a6874-9651-48b6-863b-d63f9929e3bd",
+      "id": "1000ab2b-4f65-4df2-bb93-61a3d6b8aad9",
       "name": "Code in JavaScript1"
     },
     {
@@ -170,10 +170,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        416,
-        0
+        464,
+        16
       ],
-      "id": "619049aa-e66f-48fe-bf16-eec93b40327c",
+      "id": "24c422b4-bb35-404f-8584-126794c55f23",
       "name": "Code in JavaScript2"
     },
     {
@@ -183,10 +183,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1456,
-        0
+        1504,
+        16
       ],
-      "id": "2b0a1022-fe8e-4fff-9aee-a12aeb410de7",
+      "id": "73be6bce-38ec-4e55-b4ab-a04e37b7433e",
       "name": "Code in JavaScript6"
     },
     {
@@ -194,15 +194,17 @@
         "httpMethod": "POST",
         "path": "trigger-criminal-workflow",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -48,
-        -16
+        0,
+        0
       ],
-      "id": "a332bd65-8e30-41d0-95d3-290b3a781db0",
+      "id": "71c7eef2-630d-4776-9531-880a062b41ed",
       "name": "Webhook",
       "webhookId": "d36216c8-e0d8-497c-bae0-7fd6ee33cb0f"
     },
@@ -214,10 +216,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        2928,
-        0
+        2976,
+        16
       ],
-      "id": "27638796-342e-4e70-83ed-a5896a96c062",
+      "id": "96fbc465-c8c5-4959-ab95-c20cbfd20a20",
       "name": "Respond to Webhook"
     }
   ],
@@ -323,6 +325,58 @@
       {
         "json": {
           "data": "Title: Wtargnięcie na teren krakowskich wodociągów. Stanowisko policji\n\nURL Source: https://cowkrakowie.pl/2025/09/wtargniecie-na-teren-krakowskich-wodociagow-stanowisko-policji\n\nPublished Time: 2025-09-23T16:25:29+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Wtargnięcie na teren krakowskich wodociągów. Stanowisko policji](https://cowkrakowie.pl/wp-content/uploads/2025/06/policja1-1024x637.jpg)\n\nFot. CowKrakowie.pl\n\n**Krakowska policja opublikowała oświadczeniew związku z incydentem na terenie obiektu należącego do krakowskich wodociągów.**\n\nreklama\n\nMundurowi informują, że 30 sierpnia br. otrzymali telefoniczne zgłoszenie o dwóch osobach, które miały w sposób nieuprawniony wejść na teren zakładu krakowskich wodociągów, znajdującego się przy ul. Wodociągowej.\n\nreklama\n\nNa miejsce udał się patrol\n--------------------------\n\n**Na miejsce został skierowany patrol, który podjął interwencję i wylegitymował dwóch mężczyzn narodowości ukraińskiej ujętych przez pracowników ochrony obiektu.**Mężczyźni dobrowolnie wydali policjantom swoje telefony komórkowe, aby umożliwić sprawdzenie czy nie ma w nich nagrań ani zdjęć tej infrastruktury. **W wyniku tych sprawdzeń policjanci nie ujawnili podejrzanych materiałów foto i video obrazujących teren obiektu.**\n\nPolicja zaznacza, że ,mżczyźni nie posiadali też przy sobie innych urządzeń elektronicznych, na których mogły zostać zarejestrowane zdjęcia lub filmy przedstawiające rejon zakładu. **Tłumaczyli również, że znaleźli się w tym miejscu bo zostali błędnie doprowadzeni przez nawigację.**\n\nBrak podstaw do zatrzymania\n---------------------------\n\nOsoby wobec których podjęto interwencję sprawdzono w policyjnych systemach, w których potwierdzono, że nie były one poszukiwane.\n\n**W związku z tym, że nie doszło do uszkodzeń i zniszczeń na terenie zakładu, a także nie było innych podstaw do zatrzymania mężczyzn zostali oni zwolnieni,** a pracowników wodociągów policjanci pouczyli o możliwości złożenia stosownego zawiadomienia w związku z zaistniałym zdarzeniem.\n\nUjęci po kilku dniach\n---------------------\n\nMimo zakończonej na miejscu interwencji osoby te nadal pozostawały w zainteresowaniu policjantów. Funkcjonariusze prowadzili czynności operacyjne, które wykazały, że mężczyźni ci mogą mieć związek z przestępczością narkotykową. **Dlatego też, 16 września br. dwaj obywatele Ukrainy zostali zatrzymani i doprowadzeni do jednego z krakowskich komisariatów.**\n\n**Finalnie, podejrzenia te nie potwierdziły się.**Jednocześnie nawiązano kontakt z przedstawicielami wodociągów, którzy do tego momentu nie złożyli zawiadomienia o przestępstwie, z zapytaniem czy będą je składać.\n\nUsłyszeli zarzuty. Będzie deportacja?\n-------------------------------------\n\nW związku z tym, że przedstawiciele wodociągów zdecydowali o oficjalnym zawiadomieniu dotyczącym naruszenia miru domowego z jednoczesnym wnioskiem o ściganie sprawców, które złożone zostało 17 września br., policjanci wszczęli postępowanie w tej sprawie.\n\n**Zebrany materiał dowodowy pozwolił na przedstawienie mężczyznom zarzutu naruszenia miru domowego.**Następnie materiały w sprawie zostały przekazane do prokuratury, która zdecydowała o podtrzymaniu zarzutów i zastosowaniu wobec mężczyzn środków zapobiegawczych w postaci policyjnego dozoru.\n\nPo przedstawieniu zarzutów dwóm obywatelom Ukrainy i decyzjach prokuratury, **policjanci wystąpili do Straży Granicznej z wnioskiem o wydanie decyzji o zobowiązaniu cudzoziemców do opuszczenia Polski.**\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Brawurowy pościg ulicami Nowej Huty. Złodziej zatrzymany](https://cowkrakowie.pl/2025/09/brawurowy-poscig-ulicami-nowej-huty-zlodziej-zatrzymany)\n\n[Krakowscy policjanci prowadzili pościg](https://cowkrakowie.pl/2025/09/krakowscy-policjanci-prowadzili-poscig)\n\n[Działania służb w nocnych tramwajach](https://cowkrakowie.pl/2025/09/dzialania-sluzb-w-nocnych-tramwajach-2)\n\n[Pasażerka miała bilet i dostała mandat. Miasto zapowiada zmiany!](https://cowkrakowie.pl/2025/09/pasazerka-miala-bilet-i-dostala-mandat-miasto-zapowiada-zmiany)\n"
+        }
+      }
+    ],
+    "AI Agent": [
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Vandalism and possession of weapons/harmful items.\",\n  \"summary\": \"Two young men were apprehended in Wieliczka after attempting to flee while applying graffiti. They were found with spray paint, pepper spray, and a knife branded with a soccer team's emblem. Later, a 20-year-old man was stopped with similar items in his car, also linked to a soccer club.\",\n  \"location\": \"ul. św. Barbary, Wieliczka and unspecified residential area in Wieliczka\",\n  \"date\": \"2025-10-04\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Assault, resisting arrest, illegal driving, possession of weapons and pseudofanatic symbols.\",\n  \"summary\": \"Police pursued and arrested two men after they assaulted a 17-year-old. The suspects fled in a Peugeot after the assault. The pursuit ended in a nearby town. The men, linked to a pseudofanatic group, were found to be in possession of weapons and emblems. One of them drove without a license and both ignored police orders. They now face charges for assault, resisting arrest, and related offenses.\",\n  \"location\": \"Sidzina, Kraków, and a town in the Kraków district\",\n  \"date\": \"2025-10-02\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/policjanci-prowadzili-poscig-wczesniej-sprawcy-dokonali-pobicia\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Fraud, counterfeiting of money, and corruption.\",\n  \"summary\": \"A 43-year-old Ukrainian citizen, sought by Interpol with a red notice, was arrested in Skawina, Poland. She was wanted by Ukrainian justice for fraud, counterfeiting money, and corruption, and faced a 3-year, 6-month prison sentence.\",\n  \"location\": \"Skawina, Poland\",\n  \"date\": \"2025-10-02\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/za-ukrainka-wydano-najwyzszy-stopien-miedzynarodowych-poszukiwan\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Smuggling\",\n  \"summary\": \"A Ukrainian citizen was caught at Krakow Airport attempting to smuggle over 15 kg of human hair from Turkey, worth approximately 270,000 PLN, without declaring it to customs. A criminal fiscal proceeding has been initiated.\",\n  \"location\": \"Krakow Airport\",\n  \"date\": \"2025-10-01\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/15-kg-ludzkich-wlosow-na-lotnisku-w-krakowie\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Theft with breaking and entering\",\n  \"summary\": \"A 47-year-old Polish citizen arriving at Krakow Airport from Bristol was arrested. He was wanted by the justice system and sentenced to a year in prison for theft with breaking and entering.\",\n  \"location\": \"Krakow Airport, Krakow\",\n  \"date\": \"2025-09-30T06:41:00+00:00\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/przylecial-do-krakowa-i-trafil-na-rok-do-wiezienia\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Organized crime; fraud\",\n  \"summary\": \"A 24-year-old Ukrainian woman was arrested in a Krakow hotel for her involvement in an organized crime group that defrauded a resident of Myślenice of over 400,000 złotych. She acted as a 'picker,' allowing her account to be used for money transfers. She fled to Ukraine after the fraud but was arrested when she visited Poland. Police seized $2400 from her. She faces up to 8 years in prison.\",\n  \"location\": \"Krakow, Poland\",\n  \"date\": \"2025-09-29T15:21:14+00:00\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/w-jednym-z-krakowskich-hoteli-zatrzymano-ukrainke-mloda-kobieta-byla-zaskoczona\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Assault and drug possession\",\n  \"summary\": \"A man caused a disturbance in a restaurant and then attacked parked vehicles. Police apprehended the suspect, who was also found to be in possession of over 100 grams of mephedrone. He was charged with possessing a significant amount of narcotics and faces up to 10 years in prison.\",\n  \"location\": \"Borek Fałęckiego (Kraków)\",\n  \"date\": \"2025-09-27\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/agresor-awanturowal-sie-w-restauracji-oraz-uderzal-w-zaparkowane-samochody\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Illegal immigration/Violation of immigration laws\",\n  \"summary\": \"A 22-year-old citizen of Nepal was apprehended near Krakow's main bus station for illegal stay in Poland. He entered the country irregularly and applied for a temporary residence permit while already staying unlawfully. He was employed in the gastronomy sector. He was issued a return order with a 10-month ban from entering Poland and other Schengen area countries.\",\n  \"location\": \"Near Krakow's main bus station (dworca głównego)\",\n  \"date\": \"2025-09-26\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/wpadl-w-okolicy-dworca-glownego-musi-opuscic-polske\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Homicide by arson\",\n  \"summary\": \"A man died in a house fire in Zabierzów Bocheński. The Krakow prosecutor's office determined the fire was caused by arson and that the victim was alive during the fire. The man's wife has been charged with using gasoline as an accelerant to kill her husband.\",\n  \"location\": \"Zabierzów Bocheński, near Krakow\",\n  \"date\": \"2025-09-25\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/zona-podpalila-meza-mezczyzna-nie-zyje\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Violation of property, potential drug-related activity, and potential deportation.\",\n  \"summary\": \"Two Ukrainian citizens entered the Krakow waterworks without permission. Initially, no illegal activity was found. Later, they were arrested on suspicion of drug-related crimes, which were not confirmed. The waterworks then filed a complaint, resulting in charges of property violation. The police requested the Border Guard to deport them.\",\n  \"location\": \"Krakow waterworks on Wodociągowa street in Krakow, Poland\",\n  \"date\": \"2025-09-23\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/wtargniecie-na-teren-krakowskich-wodociagow-stanowisko-policji\"\n}\n```"
         }
       }
     ]
@@ -476,11 +530,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d231f5ca-2734-45b1-8b5e-e5da28024aa5",
+  "versionId": "b2089d9d-b92e-4616-9093-462d7888ddf9",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "3229f2d5c7e949f68b8b7421938b393756f720fa00842ac7e60db1d2b30d7963"
+    "instanceId": "e85a2cbfa1cf2d896b1ac62dfbde0552a296d8bacfaf9b61409512f73444ac1a"
   },
-  "id": "kkshej61mmZkbqv1",
+  "id": "DKNhu66faPLvJMJ8",
   "tags": []
 }

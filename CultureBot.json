@@ -1,0 +1,169 @@
+{
+  "name": "CultureBot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "culture",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -496,
+        -32
+      ],
+      "id": "ec4d6994-5ade-43ea-9361-1b2c16481ccf",
+      "name": "Webhook",
+      "webhookId": "1c490185-2ee5-47d7-8fc6-ba4cc93b8e13"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"country\": \"Poland\",\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -208,
+        -32
+      ],
+      "id": "c55c3b5d-3bc0-4ae1-ace6-fd19e1958385",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a cultural etiquette expert specializing in helping travelers avoid common mistakes when visiting foreign countries.\n\nWhen given a country name {{ $json.country }}, provide a comprehensive cultural guide in JSON format with the following structure:\n\n```json\n{\n  \"country\": \"country name\",\n  \"critical_mistakes_to_avoid\": [\n    {\n      \"mistake\": \"brief description of what NOT to do\",\n      \"why_its_wrong\": \"cultural explanation\",\n      \"correct_behavior\": \"what to do instead\"\n    }\n  ],\n  \"essential_etiquette\": [\n    {\n      \"category\": \"greetings/dining/gift-giving/public_behavior/etc\",\n      \"do\": \"what travelers should do\",\n      \"dont\": \"what travelers should avoid\"\n    }\n  ],\n  \"cultural_norms\": [\n    {\n      \"topic\": \"topic name\",\n      \"description\": \"detailed explanation\"\n    }\n  ],\n  \"key_traditions\": [\n    {\n      \"tradition\": \"tradition name\",\n      \"context\": \"when/where it occurs\",\n      \"visitor_expectations\": \"how visitors should behave\"\n    }\n  ],\n  \"common_misconceptions\": [\n    \"misconception that travelers often have about this country\"\n  ]\n}\n```\n\nFocus on:\n- Practical mistakes foreigners commonly make (e.g., in Japan: passing items with one hand, sticking chopsticks upright in rice, not removing shoes indoors)\n- Non-obvious cultural differences that can cause offense\n- Body language and gestures that have different meanings\n- Social etiquette in dining, greetings, and public spaces\n- Religious or traditional customs visitors must respect\n- Communication style differences\n\nPrioritize information that:\n1. Prevents unintentional offense or embarrassment\n2. Helps visitors show respect for local culture\n3. Addresses the most frequent mistakes tourists actually make\n4. Has practical daily relevance\n\nBe specific and actionable. Include 5-8 critical mistakes, 6-10 essential etiquette rules, 4-6 cultural norms, 3-5 key traditions, and 3-5 common misconceptions.\n\nProvide the response in valid JSON format only, with no additional text. {{ $json.country }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -32
+      ],
+      "id": "6e71798a-d600-45be-9b68-9967e067aed0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        0,
+        192
+      ],
+      "id": "dcb385e2-ed25-48e0-b095-751e8f1e760f",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "ffh8nCuJj9nmZtMP",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code Node - Extract JSON from AI response\n\n// Get the input data\nconst inputData = $input.all();\n\n// Process each item\nreturn inputData.map(item => {\n  try {\n    // Get the output field from the AI response\n    let rawOutput = item.json.output;\n    \n    // Remove markdown code blocks if present\n    // This handles ```json ... ``` format\n    let cleanedOutput = rawOutput\n      .replace(/^```json\\s*/i, '')  // Remove opening ```json\n      .replace(/\\s*```$/, '')        // Remove closing ```\n      .trim();\n    \n    // Parse the JSON string\n    const parsedData = JSON.parse(cleanedOutput);\n    \n    // Return the parsed JSON as the output\n    return {\n      json: parsedData\n    };\n    \n  } catch (error) {\n    // If parsing fails, return error information\n    return {\n      json: {\n        error: true,\n        message: error.message,\n        originalOutput: item.json.output\n      }\n    };\n  }\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        -32
+      ],
+      "id": "43c8ab0e-ccc3-4273-872c-f74853c9996f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        592,
+        -32
+      ],
+      "id": "15645516-916d-4030-83d0-74397ccb26f6",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d4bd8e08-7030-4fca-a981-3d37549eb8fc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e85a2cbfa1cf2d896b1ac62dfbde0552a296d8bacfaf9b61409512f73444ac1a"
+  },
+  "id": "KPw1lutKb6sa6pza",
+  "tags": []
+}

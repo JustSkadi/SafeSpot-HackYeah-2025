@@ -10,10 +10,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1696,
-        64
+        224,
+        0
       ],
-      "id": "957b509e-9fc5-45c3-aa1c-476cf410905f",
+      "id": "07cf14ea-c794-4009-9dc0-addb9205289d",
       "name": "Edit Fields"
     },
     {
@@ -28,10 +28,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1216,
-        64
+        704,
+        0
       ],
-      "id": "08189478-1a01-40c8-8038-67e186748ed4",
+      "id": "1900f81a-a186-4aad-8acf-f483d3fa80c7",
       "name": "HTTP Request"
     },
     {
@@ -41,10 +41,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -928,
-        64
+        992,
+        0
       ],
-      "id": "aa82521d-6407-40a0-9f76-b2f0148ce696",
+      "id": "87c5f70d-60db-4455-b0d6-adac61cdb359",
       "name": "Code in JavaScript3"
     },
     {
@@ -59,10 +59,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -624,
-        64
+        1296,
+        0
       ],
-      "id": "fd295c1f-d009-4769-8f95-e0472f9aa8fe",
+      "id": "0514d0e6-194d-4450-b46b-fafb82b146ff",
       "name": "HTTP Request1",
       "retryOnFail": true,
       "maxTries": 2
@@ -76,10 +76,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -160,
-        64
+        1760,
+        0
       ],
-      "id": "452e2e07-01dd-4c22-a41e-8690517543e4",
+      "id": "3018eaae-03ae-4827-9e1c-23f07ec83555",
       "name": "AI Agent"
     },
     {
@@ -90,14 +90,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        -160,
-        304
+        1760,
+        240
       ],
-      "id": "a975937a-f25b-4da3-a359-199352209eb0",
+      "id": "915a50d3-d7be-4d14-8109-91ba4d1e9e51",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
-          "id": "Z1HGSEjhi41D7H53",
+          "id": "ffh8nCuJj9nmZtMP",
           "name": "OpenRouter account"
         }
       }
@@ -109,10 +109,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        288,
-        64
+        2208,
+        0
       ],
-      "id": "c84fd7a0-f8f7-4443-b866-97db17c1faf9",
+      "id": "5ac4e52e-f80e-4a17-90aa-718362b49379",
       "name": "Code in JavaScript"
     },
     {
@@ -124,10 +124,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        496,
-        64
+        2416,
+        0
       ],
-      "id": "20f955fc-10ed-4a9a-8a24-1493f51e80c4",
+      "id": "7b512726-cff4-4111-af26-77f68dd128bc",
       "name": "AI Agent1"
     },
     {
@@ -138,14 +138,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        496,
-        304
+        2416,
+        240
       ],
-      "id": "056f3466-a180-4949-82a6-91a70167a82e",
+      "id": "bbfbb6e7-e0a4-4663-a388-072a170e2eec",
       "name": "OpenRouter Chat Model1",
       "credentials": {
         "openRouterApi": {
-          "id": "Z1HGSEjhi41D7H53",
+          "id": "ffh8nCuJj9nmZtMP",
           "name": "OpenRouter account"
         }
       }
@@ -157,10 +157,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        848,
-        64
+        2768,
+        0
       ],
-      "id": "7f078c3e-ef0a-4f80-946e-ea7668c20229",
+      "id": "22b3ea71-e1a1-4302-a06b-ff8712023cfd",
       "name": "Code in JavaScript1"
     },
     {
@@ -170,10 +170,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1472,
-        64
+        448,
+        0
       ],
-      "id": "dc38fa10-1ba8-4a99-89d7-4879d502bc01",
+      "id": "8e41e98f-3e7e-4eb7-a49d-080ff5e5f93c",
       "name": "Code in JavaScript2"
     },
     {
@@ -183,10 +183,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -432,
-        64
+        1488,
+        0
       ],
-      "id": "07455368-a778-4f09-9b93-b05c34091a8c",
+      "id": "b752e951-dff5-4875-b939-67b8bba4e44c",
       "name": "Code in JavaScript6"
     },
     {
@@ -194,15 +194,17 @@
         "httpMethod": "POST",
         "path": "trigger-road-workflow",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1920,
-        64
+        0,
+        0
       ],
-      "id": "56e3d72c-f041-4bcb-b396-e8a775a0d093",
+      "id": "cabb8be7-4b73-4ba7-83f6-d2d0694aca55",
       "name": "Webhook",
       "webhookId": "1c490185-2ee5-47d7-8fc6-ba4cc93b8e13"
     },
@@ -214,10 +216,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1056,
-        64
+        2976,
+        0
       ],
-      "id": "964c8aa5-c00b-4a9e-9914-df8bdda1a46c",
+      "id": "810f05a6-726a-46df-80a6-15f71dd8f001",
       "name": "Respond to Webhook"
     }
   ],
@@ -417,6 +419,110 @@
           "output": "{\"latitude\": 50.51627, \"longitude\": 20.44841}\n"
         }
       }
+    ],
+    "HTTP Request1": [
+      {
+        "json": {
+          "data": "Title: Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR\n\nURL Source: https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr\n\nPublished Time: 2025-10-04T17:13:43+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-1024x666.jpg)\n\nFot. Patrol 998-Małopolska\n\n**Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in. Lotnicze Pogotowie Ratunkowe.**\n\nreklama\n\nZobacz więcej\n\nKraków\n\nUbezpieczenie podróży\n\nZarezerwuj nocleg Kraków\n\nRezerwuj parking w Krakowie\n\nZarezerwuj stolik restauracja Kraków\n\nUbezpieczenie podróży do Krakowa\n\nKursy językowe Kraków\n\nPamiątki z Krakowa\n\nPrzewodnik po Krakowie\n\nZarezerwuj wycieczkę po Krakowie\n\nZe wstępnych ustaleń w sobotę, 4 października przed godziną 17:00 na al. Bora-Komorowskiego doszło do zdarzenia drogowego z udziałem motocyklisty. Na miejsce zadysponowano służby ratunkowe – w tym Lotnicze Pogotowie Ratunkowe, gdzie śmigłowiec wylądował przy stacji paliw. Więcej informacji wkrótce.\n\nreklama\n\nZobacz więcej\n\nHotele w Krakowie\n\nBilety na wydarzenia\n\nUbezpieczenie podróży\n\nKup bilety na festiwal\n\nKrakowie\n\nNieruchomości Kraków\n\nKursy językowe Kraków\n\nKoncerty Kraków\n\nRestauracje Kraków\n\nRezerwuj parking w Krakowie\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Podczas próby ucieczki młode osoby zostały zatrzymane przez policjantów](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow)\n\n[Mury Obronne Krakowa. Niebawem zostaną zamknięte dla zwiedzających [ZDJĘCIA]](https://cowkrakowie.pl/2025/10/mury-obronne-krakowa-niebawem-zostana-zamkniete-dla-zwiedzajacych-zdjecia)\n\n![Image 2: \"wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek2-1024x666.jpg)\n\nFot. Patrol 998-Małopolska\n\nreklama\n\nZobacz więcej\n\nWiadomości sportowe\n\nŻycie nocne\n\nBilety na koncerty Kraków\n\nLokalne produkty spożywcze Kraków\n\nKursy językowe w Krakowie\n\nUsługi fotograficzne Kraków\n\nInformacje ogólne\n\nkrakowskich\n\nKraków\n\nUbezpieczenie podróżne Kraków\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr#content-more-cat)\n\n*   [![Image 3: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 4: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 5: \"Grafitii\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/maczeta-320x220.jpg)](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow)\n\n### [Podczas próby ucieczki młode osoby zostały zatrzymane przez policjantów](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow)\n\nreklama Dwie osoby zostały ujęte przez wielickich funkcjonariuszy policji. Mundurowi zabez…\n\n4 października 2025 14:20   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Pociąg relacji Kraków Główny – Chabówka potrącił śmiertelnie kobietę\n\nURL Source: https://cowkrakowie.pl/2025/10/pociag-relacji-krakow-glowny-chabowka-potracil-smiertelnie-kobiete\n\nPublished Time: 2025-10-02T18:03:37+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Pociąg relacji Kraków Główny – Chabówka potrącił śmiertelnie kobietę](https://cowkrakowie.pl/wp-content/uploads/2025/10/policja-1024x599.jpg)\n\n**Tragiczny wypadek. Pociąg relacji Kraków Główny – Chabówka potrącił śmiertelnie kobietę.**\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKraków\n\nWiadomości z ostatniej chwili\n\nKrakowa\n\nWynajem samochodów Kraków\n\nWiadomości lokalne\n\nMapy Krakowa\n\nBilety na wydarzenia Kraków\n\nPrzewodniki po Krakowie\n\nKrakowskie\n\nDo tragedii doszło dziś, 2 października przed godziną 17:00 w miejscowości Leńcze. Pociąg relacji Kraków Główny – Chabówka potrącił śmiertelnie kobietę. Ruch pozostałych pociągów został wstrzymany w kierunku Zakopanego.\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKraków\n\nNoclegi Kraków\n\nLoty do Krakowa\n\nTransport Kraków\n\nWynajmij mieszkanie Kraków\n\nKup bilety na Wawel\n\nKup bilety do muzeum\n\nKup mapę Krakowa\n\nWycieczki po Krakowie\n\nPasażerowie pociągu, który brał udział w tym zdarzeniu oczekują na transport zastępczy.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Nietypowa sytuacja na lotnisku. Na miejsce wezwano policję](https://cowkrakowie.pl/2025/10/nietypowa-sytuacja-na-lotnisku-na-miejsce-wezwano-policje)\n\n[Policjanci prowadzili pościg. Wcześniej sprawcy dokonali pobicia](https://cowkrakowie.pl/2025/10/policjanci-prowadzili-poscig-wczesniej-sprawcy-dokonali-pobicia)\n\n[12 października czeka nas na paraliż komunikacyjny w Krakowie](https://cowkrakowie.pl/2025/10/12-pazdziernika-czeka-nas-na-paraliz-komunikacyjny-w-krakowie)\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKraków\n\nKup bilety komunikacji miejskiej\n\nKup bilety do muzeum\n\nHotele w Krakowie\n\nZarezerwuj nocleg Kraków\n\nRezerwuj parking w Krakowie\n\nWynajmij samochód Kraków\n\nKup pamiątki z Krakowa\n\nZarezerwuj wycieczkę po Krakowie\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/pociag-relacji-krakow-glowny-chabowka-potracil-smiertelnie-kobiete#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/pociag-relacji-krakow-glowny-chabowka-potracil-smiertelnie-kobiete#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Na stacji kolejowej Kraków Główny doszło do niebezpiecznej sytuacji\n\nURL Source: https://cowkrakowie.pl/2025/10/na-stacji-kolejowej-krakow-glowny-doszlo-do-niebezpiecznej-sytuacji\n\nPublished Time: 2025-10-01T15:45:45+00:00\n\nMarkdown Content:\nŹródło SOK\n\n![Image 1: Na stacji kolejowej Kraków Główny doszło do niebezpiecznej sytuacji](https://cowkrakowie.pl/wp-content/uploads/2025/10/dworzec-1024x587.jpg)\n\nFot. CowKrakowie.pl\n\n**Na stacji kolejowej Kraków Główny doszło do niebezpiecznej sytuacji. Na pomoc ruszyli m.in. Funkcjonariusze Straży Ochrony Kolei.**\n\nreklama\n\nZobacz więcej\n\nKraków\n\nKrakowie\n\nWynajem aut Kraków\n\nkrakowskich\n\nKup bilety na koncert Kraków\n\nKup bilety na festiwal\n\nRezerwuj parking w Krakowie\n\nRestauracje Kraków\n\nZarezerwuj nocleg Kraków\n\nNieruchomości Kraków\n\nDo zdarzenia doszło we wrześniu, jednak dopiero dziś, 1 października Straż Ochrony Kolei poinformowała o tym niebezpiecznym incydencie.\n\nreklama\n\nZobacz więcej\n\nKraków\n\nKrakowie\n\nPrzewodnik po Krakowie\n\nUbezpieczenie podróży do Krakowa\n\nRezerwuj hotel w Krakowie\n\nKup bilety na festiwal\n\nKup książkę o Krakowie\n\nKursy językowe Kraków\n\nKoncerty Kraków\n\nUbezpieczenie podróży\n\nOsoba postronna powiadomiła służbę dyżurną Komendy Regionalnej Straży Ochrony Kolei w Krakowie o **mężczyźnie, który spadł z peronu na tory i nie był w stanie się podnieść.** Miał on problemy z utrzymaniem się na nogach, a jego stan wskazywał na to, że znajduje się pod wpływem alkoholu – relacjonuje SOK.\n\nFunkcjonariusze ruszyli na pomoc\n--------------------------------\n\nNa miejsce natychmiast udali się funkcjonariusze Straży Ochrony Kolei, którzy niezwłocznie wskoczyli za mężczyzną, aby go wyciągnąć z torów w bezpieczne miejsce. Mundurowym pomogli rewidenci PKP Intercity, którzy byli już na peronie.\n\nFunkcjonariusze SOK sprawdzili stan zdrowia mężczyzny i udzielili mu pomocy przedmedycznej oraz wezwali pogotowie. **Ostatecznie mężczyzna został przewieziony do szpitala.**\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Kraków. Szczęśliwy finał poszukiwań seniorki](https://cowkrakowie.pl/2025/10/krakow-szczesliwy-final-poszukiwan-seniorki)\n\n[15 kg ludzkich włosów na lotnisku w Krakowie](https://cowkrakowie.pl/2025/10/15-kg-ludzkich-wlosow-na-lotnisku-w-krakowie)\n\n[Na tarasie w Sukiennicach odbędzie się koncert](https://cowkrakowie.pl/2025/10/na-tarasie-w-sukiennicach-odbedzie-sie-koncert)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/na-stacji-kolejowej-krakow-glowny-doszlo-do-niebezpiecznej-sytuacji#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/na-stacji-kolejowej-krakow-glowny-doszlo-do-niebezpiecznej-sytuacji#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Wypadek w centrum Krakowa. Zderzył się tramwaj z samochodem\n\nURL Source: https://cowkrakowie.pl/2025/10/wypadek-w-centrum-krakowa-zderzyl-sie-tramwaj-z-samochodem\n\nPublished Time: 2025-10-01T10:00:27+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Wypadek w centrum Krakowa. Zderzył się tramwaj z samochodem](https://cowkrakowie.pl/wp-content/uploads/2025/10/mpk-1024x637.jpg)\n\nFot. poglądowe\n\n**Utrudnienia w kursowaniu krakowskich tramwajów. W centrum miasta doszło do wypadku.**\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nkrakowskich\n\nSalony samochodowe w pobliżu\n\nKrakowa\n\nKraków\n\nKrakowski\n\nMapy Krakowa\n\nBilety na komunikację miejską\n\nZakupy w Krakowie\n\nKrakowskie\n\nKrakowski przewoźnik informuje w swoim komunikacie, że tramwaje nie kursują ul. Dietla, w kierunku ronda Grzegórzeckiego. Powodem utrudnień w kursach jest zderzenie samochodu z tramwajem w rejonie ul. Wielopole.\n\nreklama\n\nZobacz więcej\n\nKrakowski\n\nkrakowskich\n\nKrakowie\n\nKraków\n\nSalony samochodowe w pobliżu\n\nKrakowa\n\nWiadomości sportowe\n\nUsługi przewodnika miejskiego\n\nKrakowskie\n\nWiadomości lokalne\n\nLinie kierowane są przez ul. Westerplatte i Lubicz.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Dachowanie na drodze w kierunku Krakowa](https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa)\n\n[Msza święta z udziałem zwierząt w Krakowie](https://cowkrakowie.pl/2025/09/msza-swieta-z-udzialem-zwierzat-w-krakowie)\n\n[Jeździsz przez rondo Barei? Ta informacja jest dla ciebie](https://cowkrakowie.pl/2025/09/jezdzisz-przez-rondo-barei-ta-informacja-jest-dla-ciebie)\n\nreklama\n\nZobacz więcej\n\nKrakowski\n\nSalony samochodowe w pobliżu\n\nkrakowskich\n\nKraków\n\nKrakowie\n\nKrakowa\n\nŹródło informacji\n\nPrzewodnik po Krakowie\n\nLokalne produkty spożywcze Kraków\n\nBaza wiedzy\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/wypadek-w-centrum-krakowa-zderzyl-sie-tramwaj-z-samochodem#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/wypadek-w-centrum-krakowa-zderzyl-sie-tramwaj-z-samochodem#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Dachowanie na drodze w kierunku Krakowa\n\nURL Source: https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa\n\nPublished Time: 2025-10-01T09:51:28+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Dachowanie na drodze w kierunku Krakowa](https://cowkrakowie.pl/wp-content/uploads/2025/10/dachowanie-1024x645.jpg)\n\nFot. Patrol 998-Małopolska\n\n**Do niebezpiecznego zdarzenia drogowego doszło dziś, 1 października rano. Na zakopiance dachował samochód osobowy.**\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKrakowa\n\nKraków\n\nWiadomości z ostatniej chwili\n\nRezerwacje noclegów Kraków\n\nWydarzenia Kraków\n\nFotografie Krakowa\n\nKursy językowe w Krakowie\n\nUsługi fotograficzne Kraków\n\nInformacje lokalne\n\nDo wypadku doszło w powiecie myślenickim w miejscowości Głogoczów. Jak informuje portal Patrol998-Małopolska, służby pracują na miejscu zdarzenia. W kierunku Krakowa występują utrudnienia w ruchu drogowym. Apelujemy o zachowanie szczególnej ostrożności.\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKraków\n\nKrakowa\n\nUbezpieczenie podróżne Kraków\n\nWynajem rowerów Kraków\n\nRezerwacje noclegów Kraków\n\nWarsztaty artystyczne Kraków\n\nKrakowskie\n\nWiadomości bieżące\n\nWydarzenia Kraków\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Festiwal Roślin Kraków 2025. Wydarzenie już w pierwszy weekend października](https://cowkrakowie.pl/2025/09/festiwal-roslin-krakow-2025-wydarzenie-juz-w-pierwszy-weekend-pazdziernika)\n\n[PKP Intercity. Startują nowe szybkie połączenia z Krakowa i nie tylko!](https://cowkrakowie.pl/2025/10/pkp-intercity-startuja-nowe-szybkie-polaczenia-z-krakowa-i-nie-tylko)\n\n[ZOO. Komunikat dla odwiedzających](https://cowkrakowie.pl/2025/10/zoo-komunikat-dla-odwiedzajacych)\n\nreklama\n\nZobacz więcej\n\nKraków\n\nKrakowie\n\nKrakowa\n\nŻycie nocne\n\nWynajem samochodów Kraków\n\nFotografie Krakowa\n\nInformacje lokalne\n\nSerwis informacyjny\n\nBilety na komunikację miejską\n\nPrzewodniki po Krakowie\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Wypadek rowerzysty. Lotnicze Pogotowie Ratunkowe przetransportowało go do szpitala\n\nURL Source: https://cowkrakowie.pl/2025/09/wypadek-rowerzysty-lotnicze-pogotowie-ratunkowe-przetransportowalo-go-do-szpitala\n\nPublished Time: 2025-09-27T21:27:19+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Wypadek rowerzysty. Lotnicze Pogotowie Ratunkowe przetransportowało go do szpitala](https://cowkrakowie.pl/wp-content/uploads/2025/04/lpr-1-1024x590.jpg)\n\nFot. poglądowe\n\n**Do poważnego wypadku z udziałem rowerzysty doszło w sobotę, 27 września na terenie lasu Tynieckiego. Do akcji ratunkowej zadysponowano m.in. Lotnicze Pogotowie Ratunkowe.**\n\nreklama\n\nZobacz więcej\n\nKrakowskie\n\nkrakowskim\n\nKrakowie\n\nKraków\n\nWarsztaty artystyczne Kraków\n\nPakiety turystyczne Kraków\n\nKrakowa\n\nTematy społeczne\n\nSerwis informacyjny\n\nWiadomości bieżące\n\nWypadek wydarzył się w godzinach dziś, w godzinach popołudniowych. Jak informuje portal Kraków112 – Krakowskie Ratownictwo w Obiektywie– osoba jadąca na rowerze nie dostosowała prędkości do warunków panujących w tym miejscu. W wyniku czego rowerzysta przewrócił się i doznał obrażeń ciała. **(zdarzenie miało miejsce w trudno dostępnym terenie)**.\n\nreklama\n\nZobacz więcej\n\nKrakowskie\n\nkrakowskim\n\nKraków\n\nKrakowie\n\nKsiążki o historii Krakowa\n\nWynajem rowerów Kraków\n\nPakiety turystyczne Kraków\n\nInformacje ogólne\n\nUsługi fotograficzne Kraków\n\nUsługi przewodnika miejskiego\n\nPoszkodowany mężczyzna został przetransportowany do karetki pogotowia, a następnie przemieszczony w miejsce, gdzie pacjenta przejął zespół Lotniczego Pogotowia Ratunkowego.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Te inwestycje poprawiają bezpieczeństwo na krakowskim lotnisku](https://cowkrakowie.pl/2025/09/te-inwestycje-poprawiaja-bezpieczenstwo-na-krakowskim-lotnisku)\n\n[Ten koncert gwiazdy będzie wielkim show w Arenie. Ogłoszono support](https://cowkrakowie.pl/2025/09/ten-koncert-gwiazdy-bedzie-wielkim-show-w-arenie-ogloszono-support)\n\n[Targi Książki Kraków 2025. Znamy ceny biletów](https://cowkrakowie.pl/2025/09/targi-ksiazki-krakow-2025-znamy-ceny-biletow)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/wypadek-rowerzysty-lotnicze-pogotowie-ratunkowe-przetransportowalo-go-do-szpitala#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/wypadek-rowerzysty-lotnicze-pogotowie-ratunkowe-przetransportowalo-go-do-szpitala#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Kolejne zderzenie tramwaju z samochodem w Krakowie\n\nURL Source: https://cowkrakowie.pl/2025/09/kolejne-zderzenie-tramwaju-z-samochodem-w-krakowie\n\nPublished Time: 2025-09-26T11:25:38+00:00\n\nMarkdown Content:\nKolejne zderzenie tramwaju z samochodem w Krakowie - Wiadomości z Krakowa, Kraków Informacje - Co w Krakowie\n\n===============\n\nSzukaj: \n\n*   [Strona główna](https://cowkrakowie.pl/) \n*   [Aktualności](https://cowkrakowie.pl/category/aktualnosci) \n*   [Wydarzenia](https://cowkrakowie.pl/category/wydarzenia)\n    *   [Koncerty](https://cowkrakowie.pl/category/koncerty)\n    *   [Za darmo](https://cowkrakowie.pl/category/za-darmo)\n\n*   [Na sygnale](https://cowkrakowie.pl/category/na-sygnale)\n    *   [Kryminalne](https://cowkrakowie.pl/category/kryminalne)\n    *   [Wypadki](https://cowkrakowie.pl/category/wypadki)\n\n*   [Fotorelacje](https://cowkrakowie.pl/category/fotorelacje) \n*   [Kontakt](https://cowkrakowie.pl/kontakt) \n*   [Reklama](https://cowkrakowie.pl/reklamy) \n\n[![Image 5: Co w Krakowie](https://cowkrakowie.pl/wp-content/uploads/2020/08/CowKrakowie_1x.png)](https://cowkrakowie.pl/ \"Co w Krakowie\")\n------------------------------------------------------------------------------------------------------------------------------------------\n\n[reklama![Image 6: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/10/800x200.jpg)](https://rweek.pl/COWKRAKOWIEPL)\n\n[![Image 7: Co w Krakowie](https://cowkrakowie.pl/wp-content/uploads/2020/08/cropped-CowKrakowie-bez-tla-%E2%80%94-kopia.png)](https://cowkrakowie.pl/ \"Co w Krakowie\")\n*   [Strona główna](https://cowkrakowie.pl/) \n*   [Aktualności](https://cowkrakowie.pl/category/aktualnosci) \n*   [Wydarzenia](https://cowkrakowie.pl/category/wydarzenia)\n    *   [Koncerty](https://cowkrakowie.pl/category/koncerty)\n    *   [Za darmo](https://cowkrakowie.pl/category/za-darmo)\n\n*   [Na sygnale](https://cowkrakowie.pl/category/na-sygnale)\n    *   [Kryminalne](https://cowkrakowie.pl/category/kryminalne)\n    *   [Wypadki](https://cowkrakowie.pl/category/wypadki)\n\n*   [Fotorelacje](https://cowkrakowie.pl/category/fotorelacje) \n*   [Kontakt](https://cowkrakowie.pl/kontakt) \n*   [Reklama](https://cowkrakowie.pl/reklamy) \n\n[](https://cowkrakowie.pl/feed)\n\nKolejne zderzenie tramwaju z samochodem w Krakowie\n==================================================\n\n Wysłany dnia 26 września 2025 11:25\n\nAutor CowKrakowie.pl\n\n![Image 8: Kolejne zderzenie tramwaju z samochodem w Krakowie](https://cowkrakowie.pl/wp-content/uploads/2025/09/zderzenie-1024x681.jpg)\n\nFot. Patrol 998-Małopolska\n\n[reklama![Image 9: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/09/Krakow_800x200.jpg)](https://www.ikea.com/pl/pl/stores/krakow/zakonczenie-przebudowy-ikea-krakow-pub2d0e4df0/)\n\n**W ostatnich dniach na terenie Krakowa doszło do kilku zderzeń samochodów z tramwajami. Dziś rano na ulicy Kocmyrzowskiej miał miejsce kolejny tego typu wypadek.**\n\nreklama\n\nZobacz więcej\n\nKrakowa\n\nKrakowscy\n\nkrakowskich\n\nSalony samochodowe w pobliżu\n\nKrakowski\n\nKraków\n\nKrakowie\n\nNoclegi Kraków\n\nRestauracje Kraków\n\nKup bilety na Wawel\n\nDo wypadku doszło w okolicy godziny 10:00 na ulicy Kocmyrzowskiej. Na czas działań służb tramwaje w kierunku Jarzębiny skierowane zostały przez al. Andersa i Solidarności.\n\nreklama\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Już dziś odbędzie się Małopolska Noc Naukowców 2025](https://cowkrakowie.pl/2025/09/juz-dzis-odbedzie-sie-malopolska-noc-naukowcow-2025)\n\n[Wpadł w okolicy Dworca Głównego. Musi opuścić Polskę](https://cowkrakowie.pl/2025/09/wpadl-w-okolicy-dworca-glownego-musi-opuscic-polske)\n\n[Planują rozbudowę obwodnicy Krakowa](https://cowkrakowie.pl/2025/09/planuja-rozbudowe-obwodnicy-krakowa)\n\n[reklama![Image 10: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/10/Disturbed_800x200.jpg)](https://www.livenation.pl/event/disturbed-the-sickness-25th-anniversary-tour-krak%C3%B3w-tickets-edp1570568)\n\n[Poprzedni artykuł Już dziś odbędzie się Małopolska Noc Naukowców 2025](https://cowkrakowie.pl/2025/09/juz-dzis-odbedzie-sie-malopolska-noc-naukowcow-2025)\n\n[Następny artykuł Kładka nad rzeką zamknięta. Eksploatacja przeprawy wiązałaby się z ryzykiem](https://cowkrakowie.pl/2025/09/kladka-nad-rzeka-zamknieta-eksploatacja-przeprawy-wiazalaby-sie-z-ryzykiem)\n\nreklama\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/kolejne-zderzenie-tramwaju-z-samochodem-w-krakowie#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/kolejne-zderzenie-tramwaju-z-samochodem-w-krakowie#content-more-cat)\n\n*   [![Image 11: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb) ### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał … 4 października 2025 21:00     \n*   [![Image 12: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem) ### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za… 4 października 2025 19:00     \n*   [![Image 13: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr) ### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.… 4 października 2025 17:13     \n\n Załaduj więcej powiązanych artykułów\n\n*   [![Image 14: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb) ### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał … 4 października 2025 21:00     \n*   [![Image 15: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem) ### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za… 4 października 2025 19:00     \n*   [![Image 16: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr) ### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.… 4 października 2025 17:13     \n\n Wczytaj więcej Aktualności \n\n#### Najnowsze\n\n[![Image 17: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n4 października 2025 21:00\n\nNa terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał udział Burmistrz …\n\n[![Image 18: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-104x74.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n4 października 2025 19:00\n\n[![Image 19: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-104x74.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n4 października 2025 17:13\n\n[![Image 20: \"Grafitii\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/maczeta-104x74.jpg)](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow)\n\n### [Podczas próby ucieczki młode osoby zostały zatrzymane przez policjantów](https://cowkrakowie.pl/2025/10/podczas-proby-ucieczki-mlode-osoby-zostaly-zatrzymane-przez-policjantow)\n\n4 października 2025 14:20\n\n[![Image 21: \"Mury Obronne Krakowa\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/muryobronne6-104x74.jpg)](https://cowkrakowie.pl/2025/10/mury-obronne-krakowa-niebawem-zostana-zamkniete-dla-zwiedzajacych-zdjecia)\n\n### [Mury Obronne Krakowa. Niebawem zostaną zamknięte dla zwiedzających [ZDJĘCIA]](https://cowkrakowie.pl/2025/10/mury-obronne-krakowa-niebawem-zostana-zamkniete-dla-zwiedzajacych-zdjecia)\n\n4 października 2025 10:53\n\n#### Reklama\n\nreklama\n\n[![Image 22: cwk_image](https://cowkrakowie.pl/wp-content/uploads/2025/10/Disturbed_400x500.jpg)](https://www.livenation.pl/event/disturbed-the-sickness-25th-anniversary-tour-krak%C3%B3w-tickets-edp1570568)\n\n[![Image 23](https://cowkrakowie.pl/wp-content/uploads/2025/09/400x500_FFF_5.png)](https://forumff.pl/)\n\n Copyright © 2025 Co w Krakowie - [Napisz do nas](mailto:kontakt@cowkrakowie.pl) - [Polityka prywatności](https://cowkrakowie.pl/polityka-cookies) - [Kontakt](https://cowkrakowie.pl/kontakt)\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Niecodzienny wypadek w Krakowie. Uszkodzona tablica i kładka\n\nURL Source: https://cowkrakowie.pl/2025/09/niecodzienny-wypadek-w-krakowie-uszkodzona-tablica-i-kladka\n\nPublished Time: 2025-09-24T19:43:27+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Niecodzienny wypadek w Krakowie. Uszkodzona tablica i kładka](https://cowkrakowie.pl/wp-content/uploads/2025/09/wypadek1-1.jpg)\n\nFot. Kris\n\n**Do niecodziennego zdarzenia drogowego doszło dziś na terenie Krakowa. Samochód ciężarowy uszkodził tablicę informacyjną, która umieszczona była nad jezdnią. Następnie uderzył w kładkę dla pieszych.**\n\nreklama\n\nZobacz więcej\n\nPojazd\n\nKrakowie\n\npojazdów\n\npojazdem\n\nKrakowskiego\n\nKraków\n\nSamochód ciężarowy\n\nKrakowa\n\nciężarowym\n\nKsiążki o Małopolsce\n\nWypadek miał miejsce około godziny 18:00 na ul. gen. Sosabowskiego w Krakowie. Kierujący pojazdem ciężarowym, zahaczył podnośnikiem o tablicę informacyjną, a następnie uderzył w kładkę nad jezdnią.\n\nreklama\n\nZobacz więcej\n\npojazdem\n\nKraków\n\nSamochód ciężarowy\n\nciężarowym\n\nKrakowa\n\nKrakowie\n\nKrakowskiego\n\nPojazd\n\npojazdów\n\nZarezerwuj wycieczkę po Krakowie\n\nNa miejscu pracują służby, w kierunku Krowodrzy Górki kierowcy muszą liczyć się z utrudnieniami w ruchu. Apelujemy o zachowanie ostrożności.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Potańcówka z Maciejem Musiałem w Krakowie. Wydarzenie już w ten piątek](https://cowkrakowie.pl/2025/09/potancowka-z-maciejem-musialem-w-krakowie-wydarzenie-juz-w-ten-piatek)\n\n[Rusza tegoroczny sezon grzewczy w Krakowie](https://cowkrakowie.pl/2025/09/rusza-tegoroczny-sezon-grzewczy-w-krakowie)\n\n[Kraków. Kultowa kawiarnia zostanie zamknięta](https://cowkrakowie.pl/2025/09/krakow-kultowa-kawiarnia-zostanie-zamknieta)\n\n![Image 2: \"wypadek trasa wolbromska\"](https://cowkrakowie.pl/wp-content/uploads/2025/09/wypadek2-4.jpg)\n\nFot. Kris\n\nreklama\n\nZobacz więcej\n\nciężarowym\n\npojazdów\n\npojazdem\n\nSamochód ciężarowy\n\nKrakowa\n\nKrakowie\n\nKrakowskiego\n\nKraków\n\nPojazd\n\nWydarzenia Kraków\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/niecodzienny-wypadek-w-krakowie-uszkodzona-tablica-i-kladka#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/niecodzienny-wypadek-w-krakowie-uszkodzona-tablica-i-kladka#content-more-cat)\n\n*   [![Image 3: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 4: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 5: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Samochód zderzył się z dwoma tramwajami. Jeden z nich wykoleił się\n\nURL Source: https://cowkrakowie.pl/2025/09/samochod-zderzyl-sie-z-dwoma-tramwajami-jeden-z-nich-wykoleil-sie\n\nPublished Time: 2025-09-22T11:42:09+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Samochód zderzył się z dwoma tramwajami. Jeden z nich wykoleił się](https://cowkrakowie.pl/wp-content/uploads/2025/06/mpk2-1024x558.jpg)\n\nFot. CowKrakowie.pl\n\n**Wstrzymany został ruch tramwajowy na ulicy Krakowskiej. Przed mostem Piłsudskiego doszło do zderzenia samochodu osobowego z dwoma tramwajami.**\n\nreklama\n\nZobacz więcej\n\nKrakowskiej\n\nSalony samochodowe w pobliżu\n\nKrakowski\n\nKrakowską\n\nKraków\n\nKrakowie\n\nKup bilety komunikacji miejskiej\n\nSpa Kraków\n\nPrzewodnik po Krakowie\n\nPamiątki z Krakowa\n\nKrakowski przewoźnik informuje o wstrzymaniu ruchu. Obecnie nie ma przejazdu przez ul. Krakowską. Doszło tutaj do zderzenia samochodu z dwoma tramwajami przed wjazdem na most Piłsudskiego przy ul. Podgórskiej, **w efekcie jeden tramwaj się wykoleił.** Tramwaje w obu kierunkach kierowane są przez ul. Starowiślną.\n\nreklama\n\nZobacz więcej\n\nKraków\n\nKrakowską\n\nKrakowski\n\nKrakowie\n\nKrakowskiej\n\nSalony samochodowe w pobliżu\n\nRezerwacje noclegów Kraków\n\nReklama lokalna\n\nLokalne produkty spożywcze Kraków\n\nWiadomości lokalne\n\n**Te artykuły mogą Cię zainteresować:**\n\n[Nurkowie posprzątali dno Zakrzówka [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/nurkowie-posprzatali-dno-zakrzowka-zdjecia)\n\n[Zlikwidowano linię autobusową i przystanki](https://cowkrakowie.pl/2025/09/zlikwidowano-linie-autobusowa-i-przystanki)\n\n[Drugi etap remontu. Od soboty kolejne zmiany w kursowaniu komunikacji miejskiej](https://cowkrakowie.pl/2025/09/drugi-etap-remontu-od-soboty-kolejne-zmiany-w-kursowaniu-komunikacji-miejskiej)\n\nreklama\n\nZobacz więcej\n\nKrakowie\n\nKrakowską\n\nKrakowski\n\nSalony samochodowe w pobliżu\n\nKraków\n\nKrakowskiej\n\nKup mapę Krakowa\n\nNoclegi Kraków\n\nNieruchomości Kraków\n\nWycieczki po Krakowie\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/samochod-zderzyl-sie-z-dwoma-tramwajami-jeden-z-nich-wykoleil-sie#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/samochod-zderzyl-sie-z-dwoma-tramwajami-jeden-z-nich-wykoleil-sie#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      },
+      {
+        "json": {
+          "data": "Title: Straż pożarna odda dziś hołd zmarłemu druhowi\n\nURL Source: https://cowkrakowie.pl/2025/09/straz-pozarna-odda-dzis-hold-zmarlemu-druhowi\n\nPublished Time: 2025-09-22T08:23:14+00:00\n\nMarkdown Content:\nAutor CowKrakowie.pl\n\n![Image 1: Straż pożarna odda dziś hołd zmarłemu druhowi](https://cowkrakowie.pl/wp-content/uploads/2025/09/strazpozarna-1-1024x597.jpg)\n\nFot. CowKrakowie.pl\n\n**W poniedziałek, 22 września straż pożarna odda hołd druhowi, który zmarł w wyniku obrażeń odniesionych podczas działań ratowniczych.**\n\nreklama\n\nZobacz więcej\n\nUsługi przewodnika miejskiego\n\nAktualności Kraków\n\nKsiążki o historii Krakowa\n\nPakiety turystyczne Kraków\n\nKrakowie\n\nSerwis informacyjny\n\nWiadomości z ostatniej chwili\n\nRezerwacje noclegów Kraków\n\nBilety na wydarzenia Kraków\n\nTematy społeczne\n\nZwiązek Ochotniczych Straży Pożarnych poinformował, że w związku ze śmiercią druha Sławomira Nocunia, strażaka Ochotniczej Straży Pożarnej w Michałowie (pow. pińczowski), który zmarł w wyniku obrażeń odniesionych podczas działań ratowniczych – oddany zostanie dziś hołd\n\nreklama\n\nZobacz więcej\n\nUsługi fotograficzne Kraków\n\nKraków\n\nWydarzenia Kraków\n\nWiadomości Kraków\n\nWydarzenia kulturalne\n\nŻycie nocne\n\nRezerwacje noclegów Kraków\n\nKrakowie\n\nWynajem rowerów Kraków\n\nkrakowskich\n\nStrażacy oddadzą hołd zmarłemu\n------------------------------\n\nZwiązkowcy apelują do kolegów strażaków o oddanie zmarłemu. O godzinie 18:00 włączone zostaną sygnały świetlno – dźwiękowe w pojazdach pożarniczych.\n\nDruh zmarł 19 września w następstwie obrażeń odniesionych podczas akcji prowadzonej 11 września. Jak podaje Radio Kielce, strażak brał wówczas udział w usuwaniu gniazda owadów błonkoskrzydłych. W trakcie działań miał zostać użądlony.\n\n**Te artykuły mogą Cię zainteresować:**\n\n[„Oddajcie mi za bilet”. Coroczne pretensje pasażerów](https://cowkrakowie.pl/2025/09/oddajcie-mi-za-bilet-coroczne-pretensje-pasazerow)\n\n[Piana party, koncerty, dmuchańce i moc atrakcji. Tak było w Nowej Hucie [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/piana-party-koncerty-dmuchance-i-moc-atrakcji-tak-bylo-w-nowej-hucie-zdjecia)\n\n[Nowy dar na Wawelu [ZDJĘCIA]](https://cowkrakowie.pl/2025/09/nowy-dar-na-wawelu-zdjecia)\n\n*   [Powiązane artykuły](https://cowkrakowie.pl/2025/09/straz-pozarna-odda-dzis-hold-zmarlemu-druhowi#content-more-ralated)\n*   [Więcej w Aktualności](https://cowkrakowie.pl/2025/09/straz-pozarna-odda-dzis-hold-zmarlemu-druhowi#content-more-cat)\n\n*   [![Image 2: \"Straż miejska\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/strazmiejska-1-320x220.jpg)](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\n### [Kraków. Kolejne wzmożone działania służb](https://cowkrakowie.pl/2025/10/krakow-kolejne-wzmozone-dzialania-sluzb)\n\nreklama Na terenie Krakowa służby przeprowadziły kolejne wzmożone działania. W akcji brał …\n\n4 października 2025 21:00   \n*   [![Image 3: \"Festiwal roślin Kraków 2025\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/kwiaty4-320x220.jpg)](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\n### [Ten festiwal zawsze cieszy się ogromnym zainteresowaniem](https://cowkrakowie.pl/2025/10/ten-festiwal-zawsze-cieszy-sie-ogromnym-zainteresowaniem)\n\nreklama W ten weekend w Krakowie odbywa się kolejna edycja Festiwalu Roślin. Wydarzenie za…\n\n4 października 2025 19:00   \n*   [![Image 4: \"Wypadek\"](https://cowkrakowie.pl/wp-content/uploads/2025/10/wypadek-320x220.jpg)](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\n### [Przy stacji paliw na al. Bora Komorowskiego wylądował śmigłowiec LPR](https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr)\n\nreklama Akcja ratunkowa na al. Bora Komorowskiego w Krakowie. Do akcji zadysponowano m.in.…\n\n4 października 2025 17:13   \n\nZaładuj więcej powiązanych artykułów\n"
+        }
+      }
+    ],
+    "AI Agent": [
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"traffic accident\",\n  \"summary\": \"A traffic accident involving a motorcyclist occurred on al. Bora Komorowskiego in Krakow. Emergency services, including the Air Ambulance (LPR), were dispatched to the scene. The helicopter landed near a gas station. More information will be provided later.\",\n  \"location\": \"al. Bora Komorowskiego, Krakow\",\n  \"date\": \"2025-10-04\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/przy-stacji-paliw-na-al-bora-komorowskiego-wyladowal-smiglowiec-lpr\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Fatal train accident\",\n  \"summary\": \"A train traveling from Kraków Główny to Chabówka fatally struck a woman in Leńcze. The incident occurred on October 2nd before 5:00 PM, causing the suspension of train traffic towards Zakopane. Passengers are awaiting replacement transport.\",\n  \"location\": \"Leńcze\",\n  \"date\": \"2025-10-02\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/pociag-relacji-krakow-glowny-chabowka-potracil-smiertelnie-kobiete\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Potential injury/death due to falling on train tracks\",\n  \"summary\": \"A man fell from the platform onto the train tracks at Kraków Główny station. He was unable to get up and appeared to be intoxicated. Straży Ochrony Kolei officers and PKP Intercity staff rescued the man and provided first aid before an ambulance took him to the hospital.\",\n  \"location\": \"Kraków Główny train station\",\n  \"date\": \"2025-10-01\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/na-stacji-kolejowej-krakow-glowny-doszlo-do-niebezpiecznej-sytuacji\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Traffic accident\",\n  \"summary\": \"A tram and a car collided in the center of Krakow, causing disruption to tram services. Tram lines are rerouted due to the accident on Dietla street near Wielopole street.\",\n  \"location\": \"Krakow, specifically Dietla and Wielopole streets\",\n  \"date\": \"2025-10-01\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/wypadek-w-centrum-krakowa-zderzyl-sie-tramwaj-z-samochodem\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Traffic accident\",\n  \"summary\": \"A car overturned on the road towards Krakow in Głogoczów, Myślenice County. Emergency services are at the scene, causing traffic delays. Motorists are urged to be cautious.\",\n  \"location\": \"Głogoczów, Myślenice County\",\n  \"date\": \"2025-10-01\",\n  \"url\": \"https://cowkrakowie.pl/2025/10/dachowanie-na-drodze-w-kierunku-krakowa\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"bicycle accident\",\n  \"summary\": \"A cyclist was injured in an accident in Tyniecki forest. The cyclist didn't adjust speed to the conditions. The man was transported by the Air Ambulance to the hospital.\",\n  \"location\": \"Tyniecki forest\",\n  \"date\": \"2025-09-27\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/wypadek-rowerzysty-lotnicze-pogotowie-ratunkowe-przetransportowalo-go-do-szpitala\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Traffic accident\",\n  \"summary\": \"A tram collided with a car on Kocmyrzowska street in Krakow around 10:00 AM. This was one of several such accidents in recent days. Tram services were diverted due to the incident.\",\n  \"location\": \"Kocmyrzowska street, Krakow\",\n  \"date\": \"2025-09-26\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/kolejne-zderzenie-tramwaju-z-samochodem-w-krakowie\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Traffic accident\",\n  \"summary\": \"A heavy goods vehicle damaged an information board over the road and then struck a pedestrian bridge in Krakow. The accident occurred on Gen. Sosabowskiego street around 6 p.m., causing traffic disruptions towards Krowodrzy Górki. Authorities are on the scene and drivers are urged to be cautious.\",\n  \"location\": \"ul. gen. Sosabowskiego, Krakow\",\n  \"date\": \"2025-09-24\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/niecodzienny-wypadek-w-krakowie-uszkodzona-tablica-i-kladka\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Traffic accident\",\n  \"summary\": \"A car collided with two trams on Krakowska street, causing the tram traffic to be stopped. One of the trams derailed near Piłsudski Bridge. Traffic is being rerouted via Starowiślna street.\",\n  \"location\": \"Krakowska street, near Piłsudski Bridge, Kraków\",\n  \"date\": \"2025-09-22\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/samochod-zderzyl-sie-z-dwoma-tramwajami-jeden-z-nich-wykoleil-sie\"\n}\n```"
+        }
+      },
+      {
+        "json": {
+          "output": "```json\n{\n  \"type_of_threat\": \"Fatality during rescue operations\",\n  \"summary\": \"A firefighter, Sławomir Nocuń, died from injuries sustained during a rescue operation while removing a wasps' nest. Firefighters will pay tribute to the deceased by activating lights and sirens at 18:00. The incident occurred on September 11th, leading to his death on September 19th.\",\n  \"location\": \"Michałów (Pińczów district)\",\n  \"date\": \"2025-09-22T08:23:14+00:00\",\n  \"url\": \"https://cowkrakowie.pl/2025/09/straz-pozarna-odda-dzis-hold-zmarlemu-druhowi\"\n}\n```"
+        }
+      }
     ]
   },
   "connections": {
@@ -568,10 +674,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "3931102b-4d8f-4c11-ae1d-7895ff3ded31",
+  "versionId": "fafdebf1-f020-4a06-81b2-e2e296015b44",
   "meta": {
-    "instanceId": "3229f2d5c7e949f68b8b7421938b393756f720fa00842ac7e60db1d2b30d7963"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e85a2cbfa1cf2d896b1ac62dfbde0552a296d8bacfaf9b61409512f73444ac1a"
   },
-  "id": "clfg8HEHMtsQRwR8",
+  "id": "QpvJjnF6FwnsKeDV",
   "tags": []
 }
