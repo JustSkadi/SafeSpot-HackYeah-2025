@@ -55,8 +55,12 @@ docker-compose up -d
 
 You open the bot by clicking on a "+" button,
 then "Workflow",
+<img width="223" height="206" alt="image" src="https://github.com/user-attachments/assets/9842f292-5136-4035-b0da-a08690735e80" />
+
 "***" three dots,
 "Import from file..." 
+<img width="262" height="357" alt="image" src="https://github.com/user-attachments/assets/8ae4265c-734e-4d7c-b3ae-daf34adc5da1" />
+
 and choose a json file for each BOT listed above.
 Each of them should have a green button with **"Active"** message next to them, if not please activate them.
 
