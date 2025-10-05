@@ -22,6 +22,7 @@ This project uses Docker to simplify setup and ensure a consistent environment. 
 ### Prerequisites
 
 *   **Git:** You must have Git installed.
+*   **Docker Desktop:** You must install Docker Desktop.
 *   **Windows:** This script is designed for Windows and uses PowerShell.
 *   **Administrator Privileges:** The script will attempt to install Docker Desktop, which requires administrator rights. You will see a UAC (User Account Control) prompt.
 
@@ -32,11 +33,7 @@ Open a terminal (like Windows Terminal or Git Bash) and run the single-line comm
 2.  Navigate into the project directory.
 3. Execute the `run.ps1` PowerShell script to automate the entire setup.
 
-**Copy and paste this command into your terminal to install PowerShell:**
+**Open bash and paste this command:**
 ```bash
-winget install --id Git.Git -e; winget install --id Microsoft.PowerShell -e
-```
-**Then close the terminal, open it again and paste this command:**
-```bash
-git clone https://github.com/JustSkadi/HackYeah-2025-Travel.git "$HOME/Desktop/HackYeah-2025-Travel" && cd "$HOME/Desktop/HackYeah-2025-Travel" && pwsh -ExecutionPolicy Bypass -File ./run.ps1
+git clone https://github.com/JustSkadi/HackYeah-2025-Travel.git "$HOME/Desktop/HackYeah-2025-Travel" && cd "$HOME/Desktop/HackYeah-2025-Travel" && start ./run.sh
 ```
