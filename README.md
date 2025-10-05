@@ -32,7 +32,11 @@ Open a terminal (like Windows Terminal or Git Bash) and run the single-line comm
 2.  Navigate into the project directory.
 3. Execute the `run.ps1` PowerShell script to automate the entire setup.
 
-**Copy and paste this command into your terminal:**
-
+**Copy and paste this command into your terminal to install PowerShell:**
+```bash
+winget install --id Git.Git -e; winget install --id Microsoft.PowerShell -e
+```
+**Then close the terminal, open it again and paste this command:**
 ```bash
 git clone https://github.com/JustSkadi/HackYeah-2025-Travel.git "$HOME/Desktop/HackYeah-2025-Travel" && cd "$HOME/Desktop/HackYeah-2025-Travel" && pwsh -ExecutionPolicy Bypass -File ./run.ps1
+```
