@@ -35,4 +35,4 @@ Open a terminal (like Windows Terminal or Git Bash) and run the single command b
 **Copy and paste this command into your terminal:**
 
 ```bash
-git clone https://github.com/tiruriru "$HOME/Desktop/your-repo-name" && cd "$HOME/Desktop/your-repo-name" && pwsh -ExecutionPolicy Bypass -File ./run.ps1
+git clone https://github.com/JustSkadi/HackYeah-2025-Travel.git "$HOME/Desktop/HackYeah-2025-Travel" && cd "$HOME/Desktop/HackYeah-2025-Travel" && pwsh -ExecutionPolicy Bypass -File ./run.ps1
