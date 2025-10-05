@@ -8,9 +8,9 @@ function getSelectedFilters() {
 }
 
 async function triggerN8nWorkflows(latitude, longitude, placeName) {
-    const n8nHost = window.location.hostname;
-    const criminalUrl = `http://${n8nHost}:5678/webhook-test/trigger-criminal-workflow`;
-    const roadUrl = `http://${n8nHost}:5678/webhook-test/trigger-road-workflow`;
+    // Change these URLs to use the nginx proxy
+    const criminalUrl = `/n8n/webhook-test/trigger-criminal-workflow`;
+    const roadUrl = `/n8n/webhook-test/trigger-road-workflow`;
     
     const payload = {
         latitude: latitude,
