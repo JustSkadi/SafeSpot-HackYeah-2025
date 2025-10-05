@@ -35,13 +35,13 @@ openListBtn.addEventListener('click', openListPanel);
 mapBtn.addEventListener('click', closeListPanel);
 
 // --- AUTOSUGGEST LOGIC WITH API ---
-const destinationInput = document.getElementById('destinationInput');
+const searchInput = document.getElementById('search-input'); // Changed from destinationInput
 const suggestionsList = document.getElementById('suggestionsList');
 const apiKey = '212971bb0651475ab201273217d3ec3a';
 let debounceTimeout;
 
-destinationInput.addEventListener('input', () => {
-    const query = destinationInput.value;
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value;
     
     // Clear the previous timeout
     clearTimeout(debounceTimeout);
@@ -65,7 +65,7 @@ destinationInput.addEventListener('input', () => {
                         const li = document.createElement('li');
                         li.textContent = feature.properties.formatted;
                         li.addEventListener('click', () => {
-                            destinationInput.value = feature.properties.formatted;
+                            searchInput.value = feature.properties.formatted;
                             suggestionsList.classList.remove('active');
                             suggestionsList.innerHTML = '';
                         });
@@ -84,7 +84,7 @@ destinationInput.addEventListener('input', () => {
 });
 
 document.addEventListener('click', (event) => {
-    if (event.target !== destinationInput) {
+    if (event.target !== searchInput) {
         suggestionsList.classList.remove('active');
     }
 });

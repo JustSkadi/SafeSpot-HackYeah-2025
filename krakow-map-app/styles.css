@@ -159,7 +159,11 @@ html, body {
     transition: color 0.2s; flex-basis: 33.33%; text-decoration: none;
 }
 .nav-item .material-icons { font-size: 28px; margin-bottom: 2px; }
-.nav-item:hover, .nav-item.active { color: #ffffff; }
+
+/* MODIFIED RULE: Changed active color and separated from hover */
+.nav-item:hover { color: #ffffff; }
+.nav-item.active { color: #f7a012; }
+
 
 .start-button {
     position: relative; bottom: 35px; color: #f0f0f0; font-weight: bold;
@@ -457,3 +461,9 @@ html, body {
 .incident-list { list-style-type: none; padding: 0; margin: 0; }
 .incident-list li { padding: 15px 5px; border-bottom: 1px solid #5a5a5a; }
 .incident-list li:last-child { border-bottom: none; }
+
+/* ADDED STYLE: Style for the custom PNG icon */
+.custom-find-me-icon {
+    width: 36px;
+    height: 36px;
+}
