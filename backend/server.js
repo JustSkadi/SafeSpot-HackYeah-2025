@@ -16,7 +16,6 @@ async function ensureIncidentFilesExist() {
         const criminalFile = path.join(dataDir, 'incidents_criminal.json');
         const roadFile = path.join(dataDir, 'incidents_road.json');
         
-        // Zawsze zeruj pliki przy starcie aplikacji
         await fs.writeFile(criminalFile, JSON.stringify([], null, 2));
         console.log('Cleared criminal incidents file on startup');
         
@@ -59,7 +58,6 @@ app.get('/api/incidents/:type', async (req, res) => {
         const type = req.params.type;
         const DATA_FILE = path.join(__dirname, 'data', `incidents_${type}.json`);
         
-        // Jeśli plik nie istnieje, stwórz pusty
         try {
             await fs.access(DATA_FILE);
         } catch {
@@ -101,6 +99,43 @@ app.delete('/api/incidents', async (req, res) => {
         res.json({ success: true, message: 'All incidents cleared' });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+// NOWE ENDPOINTY DLA CULTURE
+app.post('/api/culture', async (req, res) => {
+    try {
+        const cultureData = req.body;
+        const CULTURE_FILE = path.join(__dirname, 'data', 'culture.json');
+        
+        await fs.mkdir(path.join(__dirname, 'data'), { recursive: true });
+        await fs.writeFile(CULTURE_FILE, JSON.stringify(cultureData, null, 2));
+        
+        console.log('Saved culture data');
+        
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving culture data:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/culture', async (req, res) => {
+    try {
+        const CULTURE_FILE = path.join(__dirname, 'data', 'culture.json');
+        
+        try {
+            await fs.access(CULTURE_FILE);
+        } catch {
+            return res.json([]);
+        }
+        
+        const data = await fs.readFile(CULTURE_FILE, 'utf8');
+        const cultureData = JSON.parse(data);
+        res.json(cultureData);
+    } catch (error) {
+        console.log('Error reading culture data:', error);
+        res.json([]);
     }
 });
 
