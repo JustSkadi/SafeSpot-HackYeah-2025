@@ -28,9 +28,9 @@ This project uses Docker to simplify setup and ensure a consistent environment. 
 ### One-Step Launch
 
 Open a terminal (like Windows Terminal or Git Bash) and run the single-line command below. It will:
-    1.  Clone the repository to your Desktop.
-    2.  Navigate into the project directory.
-    3.  Execute the `run.ps1` PowerShell script to automate the entire setup.
+1.  Clone the repository to your Desktop.
+2.  Navigate into the project directory.
+3. Execute the `run.ps1` PowerShell script to automate the entire setup.
 
 **Copy and paste this command into your terminal:**
 
