@@ -33,7 +33,7 @@ openListBtn.addEventListener('click', openListPanel);
 mapBtn.addEventListener('click', closeListPanel);
 const destinationInput = document.getElementById('search-input');
 const suggestionsList = document.getElementById('suggestionsList');
-const apiKey = '27347d5bf3324df0b0530b229e41148a';
+const apiKey = '212971bb0651475ab201273217d3ec3a';
 let debounceTimeout;
 
 destinationInput.addEventListener('input', () => {

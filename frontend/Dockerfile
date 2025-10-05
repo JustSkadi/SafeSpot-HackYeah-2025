@@ -6,6 +6,6 @@ COPY app.js /usr/share/nginx/html/
 COPY web.js /usr/share/nginx/html/
 COPY dangerzones.json /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY mergeJson.js /usr/share/nginx/html/
+COPY custom-location-icon.png /usr/share/nginx/html/
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

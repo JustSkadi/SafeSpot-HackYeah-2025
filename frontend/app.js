@@ -647,6 +647,11 @@ document.getElementById('openOptionsBtn').addEventListener('click', function() {
     document.getElementById('optionsModal').style.display = 'flex';
 });
 
+document.getElementById('searchBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    searchPlaces();
+});
+
 // Optional: Add a "Reset Filters" button in your modal
 function resetFilters() {
     document.getElementById('type1').checked = false;
