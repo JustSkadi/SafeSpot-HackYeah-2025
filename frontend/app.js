@@ -1,7 +1,16 @@
+function getSelectedFilters() {
+    const filters = {
+        criminal: document.getElementById('type1')?.checked || false,
+        roadAccidents: document.getElementById('type2')?.checked || false,
+        others: document.getElementById('type3')?.checked || false
+    };
+    return filters;
+}
+
 async function triggerN8nWorkflows(latitude, longitude, placeName) {
     const n8nHost = window.location.hostname;
-    const url = `http://${n8nHost}:5678/webhook-test/trigger-criminal-workflow`;
-    const url2 = `http://${n8nHost}:5678/webhook-test/trigger-road-workflow`;
+    const criminalUrl = `http://${n8nHost}:5678/webhook-test/trigger-criminal-workflow`;
+    const roadUrl = `http://${n8nHost}:5678/webhook-test/trigger-road-workflow`;
     
     const payload = {
         latitude: latitude,
@@ -9,38 +18,101 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
         location: placeName,
         timestamp: new Date().toISOString()
     };
+
+    const filters = getSelectedFilters();
+    
+    const shouldRunCriminal = filters.criminal || (!filters.criminal && !filters.roadAccidents && !filters.others);
+    const shouldRunRoad = filters.roadAccidents || (!filters.criminal && !filters.roadAccidents && !filters.others);
+
+    let allIncidents = [];
+    
     try {
-        console.log('Triggering n8n workflow for:', placeName);
-        console.log('Webhook URL:', url);
-        console.log('Payload:', payload);
+        console.log('Selected filters:', filters);
+        console.log('Running workflows - Criminal:', shouldRunCriminal, 'Road:', shouldRunRoad);
         
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        if (shouldRunCriminal) {
+            try {
+                console.log('Triggering criminal workflow for:', placeName);
+                console.log('Webhook URL:', criminalUrl);
+                console.log('Payload:', payload);
+                
+                const response = await fetch(criminalUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Raw response from criminal workflow:', data);
+                console.log('Criminal workflow finished successfully');
+                
+                let incidents = data;
+                
+                if (!Array.isArray(data) && data.items) {
+                    incidents = data.items;
+                } else if (!Array.isArray(data) && data.data) {
+                    incidents = data.data;
+                }
+                
+                console.log('Processed criminal incidents:', incidents);
+                console.log('Criminal incidents count:', Array.isArray(incidents) ? incidents.length : 0);
+                
+                if (Array.isArray(incidents) && incidents.length > 0) {
+                    console.log('Sending criminal incidents to backend:', incidents.length);
+                    await saveIncidentsToBackend(incidents, 'criminal');
+                    allIncidents = allIncidents.concat(incidents);
+                }
+            } catch (error) {
+                console.error('Error in criminal workflow:', error);
+            }
         }
         
-        const data = await response.json();
-        console.log('Raw response from n8n:', data);
-        console.log('Response type:', Array.isArray(data) ? 'Array' : typeof data);
-        console.log('Response length:', Array.isArray(data) ? data.length : 'N/A');
-        let incidents = data;
-        
-        if (!Array.isArray(data) && data.items) {
-            incidents = data.items;
-        } else if (!Array.isArray(data) && data.data) {
-            incidents = data.data;
+        if (shouldRunRoad) {
+            try {
+                console.log('Triggering road workflow for:', placeName);
+                console.log('Webhook URL:', roadUrl);
+                console.log('Payload:', payload);
+                
+                const response = await fetch(roadUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Raw response from road workflow:', data);
+                console.log('Road workflow finished successfully');
+                
+                let incidents = data;
+                
+                if (!Array.isArray(data) && data.items) {
+                    incidents = data.items;
+                } else if (!Array.isArray(data) && data.data) {
+                    incidents = data.data;
+                }
+                
+                console.log('Processed road incidents:', incidents);
+                console.log('Road incidents count:', Array.isArray(incidents) ? incidents.length : 0);
+                
+                if (Array.isArray(incidents) && incidents.length > 0) {
+                    console.log('Sending road incidents to backend:', incidents.length);
+                    await saveIncidentsToBackend(incidents, 'road');
+                    allIncidents = allIncidents.concat(incidents);
+                }
+            } catch (error) {
+                console.error('Error in road workflow:', error);
+            }
         }
-        console.log('Processed incidents:', incidents);
-        console.log('Incidents count:', Array.isArray(incidents) ? incidents.length : 0);
-        if (Array.isArray(incidents) && incidents.length > 0) {
-            console.log('Sending to backend:', incidents.length, 'incidents');
-            await saveIncidentsToBackend(incidents);
-            
+        
+        if (allIncidents.length > 0) {
             setTimeout(() => reloadIncidents(), 2000);
             
             L.popup()
@@ -48,12 +120,12 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
                 .setContent(`
                     <div style="text-align: center; padding: 5px;">
                         <strong>Analysis complete!</strong><br>
-                        <small>Found ${incidents.length} incidents</small>
+                        <small>Found ${allIncidents.length} incidents</small>
                     </div>
                 `)
                 .openOn(map);
         } else {
-            console.log('No incidents found or invalid response');
+            console.log('No incidents found');
             L.popup()
                 .setLatLng([latitude, longitude])
                 .setContent(`
@@ -65,7 +137,7 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
                 .openOn(map);
         }
         
-        return incidents;
+        return allIncidents;
         
     } catch (error) {
         console.error('Error triggering workflow:', error);
@@ -82,12 +154,12 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
     }
 }
 
-async function saveIncidentsToBackend(incidents) {
+async function saveIncidentsToBackend(incidents, type) {
     try {
-        console.log('Saving to backend - incidents:', incidents);
-        console.log('Saving to backend - count:', incidents.length);
+        console.log(`Saving to backend - ${type} incidents:`, incidents);
+        console.log(`Saving to backend - count:`, incidents.length);
         
-        const response = await fetch('/api/incidents', {
+        const response = await fetch(`/api/incidents/${type}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(incidents)
@@ -100,6 +172,7 @@ async function saveIncidentsToBackend(incidents) {
         console.error('Error saving to backend:', error);
     }
 }
+
 async function reloadIncidents() {
     try {
         map.eachLayer(layer => {
@@ -108,12 +181,35 @@ async function reloadIncidents() {
             }
         });
         
-        const response = await fetch('/api/incidents');
-        const incidents = await response.json();
+        const filters = getSelectedFilters();
+        const shouldLoadCriminal = filters.criminal || (!filters.criminal && !filters.roadAccidents && !filters.others);
+        const shouldLoadRoad = filters.roadAccidents || (!filters.criminal && !filters.roadAccidents && !filters.others);
         
-        console.log('Reloading from backend:', incidents.length, 'incidents');
+        let allIncidents = [];
         
-        incidents.forEach(incident => {
+        if (shouldLoadCriminal) {
+            try {
+                const response = await fetch('/api/incidents/criminal');
+                const incidents = await response.json();
+                console.log('Reloading criminal incidents from backend:', incidents.length);
+                allIncidents = allIncidents.concat(incidents);
+            } catch (error) {
+                console.log('No criminal incidents file found');
+            }
+        }
+        
+        if (shouldLoadRoad) {
+            try {
+                const response = await fetch('/api/incidents/road');
+                const incidents = await response.json();
+                console.log('Reloading road incidents from backend:', incidents.length);
+                allIncidents = allIncidents.concat(incidents);
+            } catch (error) {
+                console.log('No road incidents file found');
+            }
+        }
+        
+        allIncidents.forEach(incident => {
             if (incident.latitude && incident.longitude) {
                 const markerColor = getThreatColor(incident.type_of_threat || '');
                 const customIcon = createCustomIcon(markerColor);
@@ -134,11 +230,12 @@ async function reloadIncidents() {
             }
         });
         
-        console.log(`Loaded ${incidents.length} incidents from backend`);
+        console.log(`Loaded ${allIncidents.length} total incidents from backend`);
     } catch (error) {
         console.error('Error reloading incidents:', error);
     }
 }
+
 async function getCoordinates(placeName) {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(placeName)}`;
     try {
@@ -214,6 +311,7 @@ function createCustomIcon(color) {
 async function loadIncidents() {
     await reloadIncidents();
 }
+
 function addLegend() {
     const legend = L.control({ position: 'bottomright' });
     
@@ -274,6 +372,7 @@ async function loadDangerZones() {
         console.error("Error loading danger zones:", error);
     }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     const startButton = document.querySelector('.start-button');
     

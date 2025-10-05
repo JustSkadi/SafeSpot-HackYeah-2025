@@ -4,21 +4,45 @@ const fs = require('fs').promises;
 const path = require('path');
 const app = express();
 const PORT = 3000;
-const DATA_FILE = path.join(__dirname, 'data', 'incidents.json');
 
 app.use(cors());
 app.use(express.json());
-app.post('/api/incidents', async (req, res) => {
+
+async function clearIncidentsOnStartup() {
     try {
+        const dataDir = path.join(__dirname, 'data');
+        await fs.mkdir(dataDir, { recursive: true });
+        
+        const criminalFile = path.join(dataDir, 'incidents_criminal.json');
+        const roadFile = path.join(dataDir, 'incidents_road.json');
+        
+        await fs.writeFile(criminalFile, JSON.stringify([], null, 2));
+        await fs.writeFile(roadFile, JSON.stringify([], null, 2));
+        
+        console.log('Cleared all incident files on startup');
+    } catch (error) {
+        console.error('Error clearing incidents on startup:', error);
+    }
+}
+
+clearIncidentsOnStartup();
+
+app.post('/api/incidents/:type', async (req, res) => {
+    try {
+        const type = req.params.type;
         const newIncidents = Array.isArray(req.body) ? req.body : [req.body];
+        
+        const DATA_FILE = path.join(__dirname, 'data', `incidents_${type}.json`);
+        
         await fs.mkdir(path.join(__dirname, 'data'), { recursive: true });
         await fs.writeFile(DATA_FILE, JSON.stringify(newIncidents, null, 2));
         
-        console.log(`Saved ${newIncidents.length} new incidents (replaced old data)`);
+        console.log(`Saved ${newIncidents.length} new ${type} incidents (replaced old data)`);
         
         res.json({ 
             success: true, 
-            total: newIncidents.length 
+            total: newIncidents.length,
+            type: type
         });
     } catch (error) {
         console.error('Error saving incidents:', error);
@@ -26,20 +50,41 @@ app.post('/api/incidents', async (req, res) => {
     }
 });
 
-app.get('/api/incidents', async (req, res) => {
+app.get('/api/incidents/:type', async (req, res) => {
     try {
+        const type = req.params.type;
+        const DATA_FILE = path.join(__dirname, 'data', `incidents_${type}.json`);
+        
         const data = await fs.readFile(DATA_FILE, 'utf8');
         const incidents = JSON.parse(data);
         res.json(incidents);
     } catch (error) {
-        console.log('No incidents file found, returning empty array');
+        console.log(`No ${req.params.type} incidents file found, returning empty array`);
         res.json([]);
+    }
+});
+
+app.delete('/api/incidents/:type', async (req, res) => {
+    try {
+        const type = req.params.type;
+        const DATA_FILE = path.join(__dirname, 'data', `incidents_${type}.json`);
+        
+        await fs.writeFile(DATA_FILE, JSON.stringify([], null, 2));
+        console.log(`All ${type} incidents cleared`);
+        res.json({ success: true, message: `All ${type} incidents cleared` });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
 app.delete('/api/incidents', async (req, res) => {
     try {
-        await fs.writeFile(DATA_FILE, JSON.stringify([], null, 2));
+        const criminalFile = path.join(__dirname, 'data', 'incidents_criminal.json');
+        const roadFile = path.join(__dirname, 'data', 'incidents_road.json');
+        
+        await fs.writeFile(criminalFile, JSON.stringify([], null, 2));
+        await fs.writeFile(roadFile, JSON.stringify([], null, 2));
+        
         console.log('All incidents cleared');
         res.json({ success: true, message: 'All incidents cleared' });
     } catch (error) {
