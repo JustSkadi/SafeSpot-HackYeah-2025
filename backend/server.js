@@ -8,7 +8,7 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-async function clearIncidentsOnStartup() {
+async function ensureIncidentFilesExist() {
     try {
         const dataDir = path.join(__dirname, 'data');
         await fs.mkdir(dataDir, { recursive: true });
@@ -16,16 +16,28 @@ async function clearIncidentsOnStartup() {
         const criminalFile = path.join(dataDir, 'incidents_criminal.json');
         const roadFile = path.join(dataDir, 'incidents_road.json');
         
-        await fs.writeFile(criminalFile, JSON.stringify([], null, 2));
-        await fs.writeFile(roadFile, JSON.stringify([], null, 2));
+        // Sprawdź czy pliki istnieją, jeśli nie - stwórz puste
+        try {
+            await fs.access(criminalFile);
+        } catch {
+            await fs.writeFile(criminalFile, JSON.stringify([], null, 2));
+            console.log('Created empty criminal incidents file');
+        }
         
-        console.log('Cleared all incident files on startup');
+        try {
+            await fs.access(roadFile);
+        } catch {
+            await fs.writeFile(roadFile, JSON.stringify([], null, 2));
+            console.log('Created empty road incidents file');
+        }
+        
+        console.log('Incident files ready');
     } catch (error) {
-        console.error('Error clearing incidents on startup:', error);
+        console.error('Error ensuring incident files exist:', error);
     }
 }
 
-clearIncidentsOnStartup();
+ensureIncidentFilesExist();
 
 app.post('/api/incidents/:type', async (req, res) => {
     try {
@@ -55,11 +67,19 @@ app.get('/api/incidents/:type', async (req, res) => {
         const type = req.params.type;
         const DATA_FILE = path.join(__dirname, 'data', `incidents_${type}.json`);
         
+        // Jeśli plik nie istnieje, stwórz pusty
+        try {
+            await fs.access(DATA_FILE);
+        } catch {
+            await fs.writeFile(DATA_FILE, JSON.stringify([], null, 2));
+            console.log(`Created empty ${type} incidents file`);
+        }
+        
         const data = await fs.readFile(DATA_FILE, 'utf8');
         const incidents = JSON.parse(data);
         res.json(incidents);
     } catch (error) {
-        console.log(`No ${req.params.type} incidents file found, returning empty array`);
+        console.log(`Error reading ${req.params.type} incidents:`, error);
         res.json([]);
     }
 });

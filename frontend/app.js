@@ -26,7 +26,6 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
     console.log('Selected filters:', filters);
     console.log('Running workflows - Criminal:', shouldRunCriminal, 'Road:', shouldRunRoad);
     
-    // Twórz tablicę Promise'ów - każdy workflow działa niezależnie
     const workflowPromises = [];
     
     if (shouldRunCriminal) {
@@ -75,12 +74,10 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
         workflowPromises.push(roadPromise);
     }
     
-    // Czekaj aż WSZYSTKIE workflow'y się skończą (lub zfailują)
     const results = await Promise.allSettled(workflowPromises);
     
     let allIncidents = [];
     
-    // Przetwórz wyniki
     for (const result of results) {
         if (result.status === 'fulfilled' && result.value.incidents.length > 0) {
             console.log(`Saving ${result.value.type} incidents:`, result.value.incidents.length);
@@ -89,7 +86,6 @@ async function triggerN8nWorkflows(latitude, longitude, placeName) {
         }
     }
     
-    // Pokaż wynik
     setTimeout(() => reloadIncidents(), 2000);
     
     if (allIncidents.length > 0) {
@@ -271,10 +267,6 @@ function createCustomIcon(color) {
     });
 }
 
-async function loadIncidents() {
-    await reloadIncidents();
-}
-
 function addLegend() {
     const legend = L.control({ position: 'bottomright' });
     
@@ -297,17 +289,9 @@ function addLegend() {
     
 }
 
-
-
-// Store circles for updating opacity
 const dangerZoneCircles = [];
 
-// Function to calculate opacity based on zoom level
 function getOpacityByZoom(zoomLevel) {
-    // Zoom levels typically range from 1 to 19
-    // At zoom 10 -> opacity 0.5
-    // At zoom 15 -> opacity 0.25
-    // At zoom 19 -> opacity 0.01
     const minZoom = 10;
     const maxZoom = 19;
     const maxOpacity = 0.325;
@@ -316,12 +300,10 @@ function getOpacityByZoom(zoomLevel) {
     if (zoomLevel <= minZoom) return maxOpacity;
     if (zoomLevel >= maxZoom) return minOpacity;
     
-    // Linear interpolation
     const ratio = (zoomLevel - minZoom) / (maxZoom - minZoom);
     return maxOpacity - (ratio * (maxOpacity - minOpacity));
 }
 
-// Update circle opacity when zoom changes
 function updateCircleOpacity() {
     const currentZoom = map.getZoom();
     const opacity = getOpacityByZoom(currentZoom);
@@ -331,9 +313,7 @@ function updateCircleOpacity() {
     });
 }
 
-// Add zoom event listener
 map.on('zoomend', updateCircleOpacity);
-
 
 function getZoneColor(crime_rate) {
     if (crime_rate > 51) return 'red';
@@ -351,12 +331,8 @@ async function loadDangerZones() {
         }
         const zones = await response.json();
 
-        // ZMIANA: Sortujemy strefy według crime_rate (rosnąco)
-        // Dzięki temu zielone (niski crime_rate) będą dodane pierwsze (na dole),
-        // a czerwone (wysoki crime_rate) będą dodane ostatnie (na wierzchu)
         const sortedZones = zones.sort((a, b) => a.crime_rate - b.crime_rate);
 
-        // Get initial opacity based on current zoom
         const currentZoom = map.getZoom();
         const initialOpacity = getOpacityByZoom(currentZoom);
 
@@ -369,47 +345,59 @@ async function loadDangerZones() {
                 const circle = L.circle([zone.latitude, zone.longitude], {
                     color: 'none',
                     fillColor: color,
-                    fillOpacity: initialOpacity, // Use dynamic opacity
+                    fillOpacity: initialOpacity,
                     radius: radius
                 }).addTo(map).bindPopup(`
                     <b>District:</b> ${zone.district_name}<br>
                     <b>Crime rate:</b> ${zone.crime_rate}<br>
                 `);
                 
-                // Store circle reference for opacity updates
                 dangerZoneCircles.push(circle);
             }
         });
-        // addZoneLegend();
 
     } catch (error) {
         console.error("Nie udało się wczytać lub przetworzyć pliku dangerzones.json:", error);
     }
 }
 
-
-// Function to load incidents and populate the list
 async function loadIncidentsList() {
     try {
-        const response = await fetch('incidents.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const incidents = await response.json();
+        const filters = getSelectedFilters();
+        const shouldLoadCriminal = filters.criminal || (!filters.criminal && !filters.roadAccidents && !filters.others);
+        const shouldLoadRoad = filters.roadAccidents || (!filters.criminal && !filters.roadAccidents && !filters.others);
         
-        // Get the incident list container
+        let incidents = [];
+        
+        if (shouldLoadCriminal) {
+            try {
+                const response = await fetch('/api/incidents/criminal');
+                const criminalIncidents = await response.json();
+                incidents = incidents.concat(criminalIncidents);
+            } catch (error) {
+                console.log('No criminal incidents found');
+            }
+        }
+        
+        if (shouldLoadRoad) {
+            try {
+                const response = await fetch('/api/incidents/road');
+                const roadIncidents = await response.json();
+                incidents = incidents.concat(roadIncidents);
+            } catch (error) {
+                console.log('No road incidents found');
+            }
+        }
+        
         const incidentListElement = document.querySelector('.incident-list');
         
-        // Clear existing hardcoded items
         incidentListElement.innerHTML = '';
         
-        // Check if there are incidents
         if (incidents.length === 0) {
             incidentListElement.innerHTML = '<li class="no-incidents">No incidents reported in this area</li>';
             return;
         }
         
-        // Create list items for each incident
         incidents.forEach((incident, index) => {
             const listItem = createIncidentListItem(incident, index);
             incidentListElement.appendChild(listItem);
@@ -422,23 +410,29 @@ async function loadIncidentsList() {
     }
 }
 
-// Function to create a list item for an incident
 function createIncidentListItem(incident, index) {
     const li = document.createElement('li');
     li.className = 'incident-item';
     li.dataset.incidentId = index;
     
-    // Create the incident type badge
     const typeBadge = getIncidentTypeBadge(incident.type_of_threat);
     
-    // Format the date if available
     const dateStr = incident.date ? formatDate(incident.date) : 'Date unknown';
     
-    // Create the HTML structure for the list item
+    let cardTypeClass = '';
+    const typeStr = (incident.type_of_threat || '').toLowerCase();
+    if (typeStr.includes('criminal')) {
+        cardTypeClass = 'criminal-type';
+    } else if (typeStr.includes('road') || typeStr.includes('accident')) {
+        cardTypeClass = 'accident-type';
+    } else {
+        cardTypeClass = 'other-type';
+    }
+    
     li.innerHTML = `
-        <div class="incident-card">
+        <div class="incident-card ${cardTypeClass}">
             <div class="incident-header">
-                <span class="incident-type-badge ${typeBadge.class}"> ${incident.type_of_threat || 'Unknown'}</span>
+                <span class="incident-type-badge ${typeBadge.class}">${incident.type_of_threat || 'Unknown'}</span>
                 <span class="incident-date">${dateStr}</span>
             </div>
             <div class="incident-location">
@@ -458,24 +452,17 @@ function createIncidentListItem(incident, index) {
         </div>
     `;
     
-    // Add click event to center map on incident location
     li.addEventListener('click', function() {
         if (incident.latitude && incident.longitude) {
-            // Close the list panel
             document.getElementById('listPanel').classList.remove('active');
             
-            // Center map on the incident
             map.setView([incident.latitude, incident.longitude], 16);
-            
-            // Optional: Open the popup for this incident if you have markers
-            // You'd need to store marker references to do this
         }
     });
     
     return li;
 }
 
-// Function to get badge styling based on incident type
 function getIncidentTypeBadge(type) {
     const typeStr = (type || '').toLowerCase();
     
@@ -488,7 +475,6 @@ function getIncidentTypeBadge(type) {
     }
 }
 
-// Function to format date
 function formatDate(dateString) {
     if (!dateString) return 'Date unknown';
     
@@ -497,18 +483,15 @@ function formatDate(dateString) {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return date.toLocaleDateString('en-US', options);
     } catch (e) {
-        return dateString; // Return original string if parsing fails
+        return dateString;
     }
 }
 
-// Function to filter incidents based on selected types
-// Updated filterIncidents function
 function filterIncidents() {
     const criminalChecked = document.getElementById('type1').checked;
     const accidentChecked = document.getElementById('type2').checked;
     const othersChecked = document.getElementById('type3').checked;
     
-    // Filter list items
     const incidentItems = document.querySelectorAll('.incident-item');
     
     incidentItems.forEach(item => {
@@ -520,30 +503,26 @@ function filterIncidents() {
         if (accidentChecked && (typeText.includes('road') || typeText.includes('accident'))) shouldShow = true;
         if (othersChecked && !typeText.includes('criminal') && !typeText.includes('road') && !typeText.includes('accident')) shouldShow = true;
         
-        // If no filters are selected, show all
         if (!criminalChecked && !accidentChecked && !othersChecked) shouldShow = true;
         
         item.style.display = shouldShow ? 'block' : 'none';
     });
     
-    // Filter map markers
     filterMarkers(criminalChecked, accidentChecked, othersChecked);
 }
 
-// Load incidents when the page loads
 document.addEventListener('DOMContentLoaded', function() {
+    reloadIncidents();
     loadIncidentsList();
     
-    // Add event listener for the List button
     const openListBtn = document.getElementById('openListBtn');
     if (openListBtn) {
         openListBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            loadIncidentsList(); // Refresh the list when opened
+            loadIncidentsList();
         });
     }
     
-    // Add event listener for Apply button in options modal
     const applyBtn = document.getElementById('applyBtn');
     if (applyBtn) {
         applyBtn.addEventListener('click', function() {
@@ -553,96 +532,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Function to create a list item for an incident
-function createIncidentListItem(incident, index) {
-    const li = document.createElement('li');
-    li.className = 'incident-item';
-    li.dataset.incidentId = index;
-    
-    // Create the incident type badge
-    const typeBadge = getIncidentTypeBadge(incident.type_of_threat);
-    
-    // Format the date if available
-    const dateStr = incident.date ? formatDate(incident.date) : 'Date unknown';
-    
-    // Determine the card type class
-    let cardTypeClass = '';
-    const typeStr = (incident.type_of_threat || '').toLowerCase();
-    if (typeStr.includes('criminal')) {
-        cardTypeClass = 'criminal-type';
-    } else if (typeStr.includes('road') || typeStr.includes('accident')) {
-        cardTypeClass = 'accident-type';
-    } else {
-        cardTypeClass = 'other-type';
-    }
-    
-    // Create the HTML structure for the list item
-    li.innerHTML = `
-        <div class="incident-card ${cardTypeClass}">
-            <div class="incident-header">
-                <span class="incident-type-badge ${typeBadge.class}">${typeBadge.icon} ${incident.type_of_threat || 'Unknown'}</span>
-                <span class="incident-date">${dateStr}</span>
-            </div>
-            <div class="incident-location">
-                <span class="material-icons location-icon">location_on</span>
-                <span>${incident.location || 'Unknown location'}</span>
-            </div>
-            <div class="incident-summary">
-                ${incident.summary || 'No description available'}
-            </div>
-            ${incident.url ? `
-                <div class="incident-link">
-                    <a href="${incident.url}" target="_blank" class="read-more">
-                        Read more <span class="material-icons">open_in_new</span>
-                    </a>
-                </div>
-            ` : ''}
-        </div>
-    `;
-    
-    // Add click event to center map on incident location
-    li.addEventListener('click', function() {
-        if (incident.latitude && incident.longitude) {
-            // Close the list panel
-            document.getElementById('listPanel').classList.remove('active');
-            
-            // Center map on the incident
-            map.setView([incident.latitude, incident.longitude], 16);
-        }
-    });
-    
-    return li;
-}
-
-// Updated filterIncidents function
-function filterIncidents() {
-    const criminalChecked = document.getElementById('type1').checked;
-    const accidentChecked = document.getElementById('type2').checked;
-    const othersChecked = document.getElementById('type3').checked;
-    
-    // Filter list items
-    const incidentItems = document.querySelectorAll('.incident-item');
-    
-    incidentItems.forEach(item => {
-        const typeText = item.querySelector('.incident-type-badge').textContent.toLowerCase();
-        
-        let shouldShow = false;
-        
-        if (criminalChecked && typeText.includes('criminal')) shouldShow = true;
-        if (accidentChecked && (typeText.includes('road') || typeText.includes('accident'))) shouldShow = true;
-        if (othersChecked && !typeText.includes('criminal') && !typeText.includes('road') && !typeText.includes('accident')) shouldShow = true;
-        
-        // If no filters are selected, show all
-        if (!criminalChecked && !accidentChecked && !othersChecked) shouldShow = true;
-        
-        item.style.display = shouldShow ? 'block' : 'none';
-    });
-    
-    // Filter map markers
-    filterMarkers(criminalChecked, accidentChecked, othersChecked);
-}
-
-// Add this to show current filter state when opening options
 document.getElementById('openOptionsBtn').addEventListener('click', function() {
     document.getElementById('optionsModal').style.display = 'flex';
 });
@@ -652,20 +541,17 @@ document.getElementById('searchBtn').addEventListener('click', function(e) {
     searchPlaces();
 });
 
-// Optional: Add a "Reset Filters" button in your modal
 function resetFilters() {
     document.getElementById('type1').checked = false;
     document.getElementById('type2').checked = false;
     document.getElementById('type3').checked = false;
     
-    // Show all markers
     incidentMarkers.forEach(item => {
         if (!map.hasLayer(item.marker)) {
             map.addLayer(item.marker);
         }
     });
     
-    // Show all list items
     const incidentItems = document.querySelectorAll('.incident-item');
     incidentItems.forEach(item => {
         item.style.display = 'block';
@@ -690,7 +576,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-
-
-loadIncidents();
 loadDangerZones();
