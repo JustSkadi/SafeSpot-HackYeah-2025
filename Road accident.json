@@ -3,25 +3,6 @@
   "nodes": [
     {
       "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "hours"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -416,
-        0
-      ],
-      "id": "67a1e7e4-5604-4d9a-8fce-4b582a09a8fd",
-      "name": "Schedule Trigger"
-    },
-    {
-      "parameters": {
         "mode": "raw",
         "jsonOutput": "{\n  \"city\": \"Krakow\"\n}",
         "options": {}
@@ -29,10 +10,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -224,
-        0
+        -1696,
+        64
       ],
-      "id": "ebfafdca-34f6-4687-97ff-86b38fd04dc6",
+      "id": "957b509e-9fc5-45c3-aa1c-476cf410905f",
       "name": "Edit Fields"
     },
     {
@@ -47,10 +28,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        256,
-        0
+        -1216,
+        64
       ],
-      "id": "d4c08931-b945-4fb2-acaf-b995ffd40cd5",
+      "id": "08189478-1a01-40c8-8038-67e186748ed4",
       "name": "HTTP Request"
     },
     {
@@ -60,10 +41,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        544,
-        0
+        -928,
+        64
       ],
-      "id": "310a6a24-a56a-45f6-be1f-55a415444b28",
+      "id": "aa82521d-6407-40a0-9f76-b2f0148ce696",
       "name": "Code in JavaScript3"
     },
     {
@@ -78,10 +59,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        848,
-        0
+        -624,
+        64
       ],
-      "id": "5c2ef5a5-2400-40e5-8f5e-3314d8bf64e0",
+      "id": "fd295c1f-d009-4769-8f95-e0472f9aa8fe",
       "name": "HTTP Request1",
       "retryOnFail": true,
       "maxTries": 2
@@ -95,10 +76,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        1312,
-        0
+        -160,
+        64
       ],
-      "id": "4a040ecd-ed4a-4866-a1a7-acdf6ec2d5d1",
+      "id": "452e2e07-01dd-4c22-a41e-8690517543e4",
       "name": "AI Agent"
     },
     {
@@ -109,14 +90,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        1312,
-        240
+        -160,
+        304
       ],
-      "id": "15594441-c464-419b-874f-2b5dad79f94f",
+      "id": "a975937a-f25b-4da3-a359-199352209eb0",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
-          "id": "tAucVYSbIfHxuj5p",
+          "id": "Z1HGSEjhi41D7H53",
           "name": "OpenRouter account"
         }
       }
@@ -128,10 +109,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1744,
-        0
+        288,
+        64
       ],
-      "id": "a61fbdd3-2786-4e3d-ae29-2a3e2c31460d",
+      "id": "c84fd7a0-f8f7-4443-b866-97db17c1faf9",
       "name": "Code in JavaScript"
     },
     {
@@ -143,10 +124,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        1952,
-        0
+        496,
+        64
       ],
-      "id": "cb46787f-44d1-4532-aab2-efe043b3c849",
+      "id": "20f955fc-10ed-4a9a-8a24-1493f51e80c4",
       "name": "AI Agent1"
     },
     {
@@ -157,14 +138,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        1952,
-        240
+        496,
+        304
       ],
-      "id": "505845e7-5cbc-4cd0-b9d3-160219561a01",
+      "id": "056f3466-a180-4949-82a6-91a70167a82e",
       "name": "OpenRouter Chat Model1",
       "credentials": {
         "openRouterApi": {
-          "id": "tAucVYSbIfHxuj5p",
+          "id": "Z1HGSEjhi41D7H53",
           "name": "OpenRouter account"
         }
       }
@@ -176,10 +157,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2304,
-        0
+        848,
+        64
       ],
-      "id": "485c5aa9-4683-4d86-989a-f9d84c1a8200",
+      "id": "7f078c3e-ef0a-4f80-946e-ea7668c20229",
       "name": "Code in JavaScript1"
     },
     {
@@ -189,10 +170,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        0,
-        0
+        -1472,
+        64
       ],
-      "id": "36fa70fb-fda5-4c3f-861d-c52cdf130868",
+      "id": "dc38fa10-1ba8-4a99-89d7-4879d502bc01",
       "name": "Code in JavaScript2"
     },
     {
@@ -202,11 +183,42 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1040,
-        0
+        -432,
+        64
       ],
-      "id": "bf6ef8f5-c7fb-4852-8e8e-1af6580f9913",
+      "id": "07455368-a778-4f09-9b93-b05c34091a8c",
       "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger-road-workflow",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1920,
+        64
+      ],
+      "id": "56e3d72c-f041-4bcb-b396-e8a775a0d093",
+      "name": "Webhook",
+      "webhookId": "1c490185-2ee5-47d7-8fc6-ba4cc93b8e13"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1056,
+        64
+      ],
+      "id": "964c8aa5-c00b-4a9e-9914-df8bdda1a46c",
+      "name": "Respond to Webhook"
     }
   ],
   "pinData": {
@@ -408,17 +420,6 @@
     ]
   },
   "connections": {
-    "Schedule Trigger": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Edit Fields": {
       "main": [
         [
@@ -518,11 +519,6 @@
         ]
       ]
     },
-    "Code in JavaScript1": {
-      "main": [
-        []
-      ]
-    },
     "Code in JavaScript2": {
       "main": [
         [
@@ -544,17 +540,38 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "2c585b8f-4e72-48f4-bf4b-1c174bfeec6a",
+  "versionId": "3931102b-4d8f-4c11-ae1d-7895ff3ded31",
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "c5ed1f7d683bc2004db329a62b7f50bf2f134e1bd588a2f714b164409a182e14"
+    "instanceId": "3229f2d5c7e949f68b8b7421938b393756f720fa00842ac7e60db1d2b30d7963"
   },
-  "id": "cm2VDEPaaLu8B9jz",
+  "id": "clfg8HEHMtsQRwR8",
   "tags": []
 }

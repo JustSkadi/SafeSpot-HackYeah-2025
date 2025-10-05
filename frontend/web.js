@@ -1,4 +1,3 @@
-// --- Options Modal Logic ---
 const optionsModal = document.getElementById('optionsModal');
 const openOptionsBtn = document.getElementById('openOptionsBtn');
 const closeOptionsBtn = document.getElementById('closeOptionsBtn');
@@ -13,7 +12,6 @@ applyBtn.addEventListener('click', () => {
     optionsModal.style.display = 'none';
 });
 
-// --- List Panel Logic ---
 const listPanel = document.getElementById('listPanel');
 const openListBtn = document.getElementById('openListBtn');
 const mapBtn = document.getElementById('mapBtn');
@@ -33,9 +31,7 @@ const closeListPanel = (event) => {
 
 openListBtn.addEventListener('click', openListPanel);
 mapBtn.addEventListener('click', closeListPanel);
-
-// --- AUTOSUGGEST LOGIC WITH API ---
-const destinationInput = document.getElementById('destinationInput');
+const destinationInput = document.getElementById('search-input');
 const suggestionsList = document.getElementById('suggestionsList');
 const apiKey = '27347d5bf3324df0b0530b229e41148a';
 let debounceTimeout;
@@ -43,7 +39,6 @@ let debounceTimeout;
 destinationInput.addEventListener('input', () => {
     const query = destinationInput.value;
     
-    // Clear the previous timeout
     clearTimeout(debounceTimeout);
 
     if (query.length < 3) {
@@ -52,7 +47,6 @@ destinationInput.addEventListener('input', () => {
         return;
     }
 
-    // Set a new timeout to fetch suggestions after 300ms of inactivity
     debounceTimeout = setTimeout(() => {
         const apiUrl = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&apiKey=${apiKey}`;
 
@@ -80,7 +74,7 @@ destinationInput.addEventListener('input', () => {
                 console.error('Error fetching suggestions:', error);
                 suggestionsList.classList.remove('active');
             });
-    }, 300); // Debounce delay
+    }, 300);
 });
 
 document.addEventListener('click', (event) => {
